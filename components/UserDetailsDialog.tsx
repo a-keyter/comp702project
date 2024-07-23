@@ -27,7 +27,7 @@ function UserDetailsDialog() {
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="name" className="text-right">
-              Name
+              Name 
             </Label>
             <Input
               id="name"
@@ -36,11 +36,11 @@ function UserDetailsDialog() {
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
+            <Label htmlFor="nickname" className="text-right">
+              Nickname
             </Label>
             <Input
-              id="username"
+              id="nickname"
               defaultValue="@peduarte"
               className="col-span-3"
             />
