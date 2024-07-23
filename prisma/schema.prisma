@@ -3,9 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 enum Role {
@@ -13,11 +13,102 @@ enum Role {
   STUDENT
 }
 
+enum AssessmentItemType {
+  MCQ
+  CONTEXT
+}
+
 model User {
-  id            String   @id
-  name          String
-  nickname      String   @unique
-  createdAt     DateTime @default(now()) @map(name: "created_at")
-  updatedAt     DateTime @updatedAt @map(name: "updated_at")
-  role          Role
+  id                 String       @id
+  name               String
+  nickname           String       @unique
+  createdAt          DateTime     @default(now()) @map(name: "created_at")
+  updatedAt          DateTime     @updatedAt @map(name: "updated_at")
+  role               Role
+  createdClasses     Class[]      @relation("CreatedBy")
+  memberOfClasses    Class[]      @relation("ClassMembers")
+  createdAssessments Assessment[] @relation("AssessmentCreator")
+  submissions        Submission[] @relation("UserSubmissions")
+  responses          Response[]   @relation("UserResponses")
+}
+
+model Class {
+  id          String       @id
+  title       String
+  description String
+  createdAt   DateTime     @default(now()) @map(name: "created_at")
+  updatedAt   DateTime     @updatedAt @map(name: "updated_at")
+  createdBy   User         @relation("CreatedBy", fields: [createdById], references: [id])
+  createdById String
+  members     User[]       @relation("ClassMembers")
+  assessments Assessment[] @relation("ClassAssessments")
+}
+
+model Assessment {
+  id              String           @id @default(uuid())
+  title           String
+  description     String
+  createdAt       DateTime         @default(now()) @map(name: "created_at")
+  updatedAt       DateTime         @updatedAt @map(name: "updated_at")
+  createdBy       User             @relation("AssessmentCreator", fields: [createdById], references: [id])
+  createdById     String
+  class           Class            @relation("ClassAssessments", fields: [classId], references: [id])
+  classId         String
+  assessmentItems AssessmentItem[]
+  submissions     Submission[]
+}
+
+model AssessmentItem {
+  id             String             @id @default(uuid())
+  index          Int
+  content        String
+  type           AssessmentItemType
+  assessment     Assessment         @relation(fields: [assessmentId], references: [id])
+  assessmentId   String
+  responses      Response[]
+  answers        Answer[]
+
+  @@unique([assessmentId, index])
+}
+
+model Answer {
+  id               String         @id @default(uuid())
+  content          String
+  isCorrect        Boolean
+  assessmentItem   AssessmentItem @relation(fields: [assessmentItemId], references: [id])
+  assessmentItemId String
+  responses        Response[]
+}
+
+model Submission {
+  id           String     @id @default(uuid())
+  createdAt    DateTime   @default(now()) @map(name: "created_at")
+  assessment   Assessment @relation(fields: [assessmentId], references: [id])
+  assessmentId String
+  user         User       @relation("UserSubmissions", fields: [userId], references: [id])
+  userId       String
+  responses    Response[]
+  feedback     UserFeedback?
+}
+
+model Response {
+  id               String         @id @default(uuid())
+  createdAt        DateTime       @default(now()) @map(name: "created_at")
+  submission       Submission     @relation(fields: [submissionId], references: [id])
+  submissionId     String
+  assessmentItem   AssessmentItem @relation(fields: [assessmentItemId], references: [id])
+  assessmentItemId String
+  user             User           @relation("UserResponses", fields: [userId], references: [id])
+  userId           String
+  givenAnswer      Answer         @relation(fields: [givenAnswerId], references: [id])
+  givenAnswerId    String
+}
+
+model UserFeedback {
+  id           String     @id @default(uuid())
+  content      String
+  createdAt    DateTime   @default(now()) @map(name: "created_at")
+  updatedAt    DateTime   @updatedAt @map(name: "updated_at")
+  submission   Submission @relation(fields: [submissionId], references: [id])
+  submissionId String     @unique
 }
