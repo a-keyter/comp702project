@@ -19,6 +19,7 @@ import { Switch } from "./ui/switch";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createUser } from "@/lib/actions/createNewUser";
+import LoadingSpinner from "./LoadingSpinner";
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -33,6 +34,8 @@ const FormSchema = z.object({
 export function OnboardForm() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false)
+
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -46,15 +49,17 @@ export function OnboardForm() {
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       setError(null);
-      console.log(data);
+      setLoading(true)
 
       // Call the createUser function
       const newUser = await createUser(data);
 
+      setLoading(false)
       // If successful, redirect to dashboard
       router.push("/dashboard");
     } catch (err) {
       // Handle any errors
+      setLoading(false)
       console.error("Error creating user:", err);
       setError(
         "An error occurred while creating your profile. Please try again."
@@ -105,7 +110,7 @@ export function OnboardForm() {
               <div className="space-y-0.5">
                 <FormLabel className="text-base">Teacher Mode?</FormLabel>
                 <FormDescription>
-                  Teachers can create classess and assessments. <br />
+                  Teachers can create classes and assessments. <br />
                   Do not use this mode if you are not a teacher.
                 </FormDescription>
               </div>
@@ -119,7 +124,7 @@ export function OnboardForm() {
           )}
         />
         <div className="w-full flex justify-center">
-          <Button type="submit">Lets get started!</Button>
+          <Button type="submit">Lets get started!{loading && <div className="pl-4"><LoadingSpinner/></div>}</Button>
           {error && <p className="error">{error}</p>}
         </div>
       </form>

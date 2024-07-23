@@ -1,31 +1,20 @@
-import { Button } from "@/components/ui/button";
+'use client';
+
 import { Card, CardTitle } from "@/components/ui/card";
-import { Edit } from "lucide-react";
-
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import UserDetailsDialog from "./UserDetailsDialog";
+import { SafeUser } from "@/lib/actions/getUserDetails";
 
-function UserDetails() {
+function UserDetails({ user }: { user: SafeUser }) {
   return (
     <Card className="p-2 flex flex-col gap-y-4 w-full max-w-2xl">
       <CardTitle>User Details</CardTitle>
       <div className="flex justify-between">
         <div>
-          <p>Name: {"Test User"}</p>
-          <p>Username: {"Test_User_123"}</p>
-          <p>Role: {"Teacher"}</p>
+          <p>Name: {user.name}</p>
+          <p>Nickname: {user.nickname}</p>
+          <p>Role: {user.role}</p>
         </div>
-        <UserDetailsDialog/>
+        <UserDetailsDialog user={user} />
       </div>
     </Card>
   );

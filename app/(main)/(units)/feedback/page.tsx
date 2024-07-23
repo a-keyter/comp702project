@@ -1,8 +1,12 @@
+import { getUserDetails } from "@/lib/actions/getUserDetails";
+import { redirect } from "next/navigation";
 
-function page() {
-    return (
-      <div>page</div>
-    )
+async function page() {
+  const user = await getUserDetails();
+  if (!user) {
+    return redirect("/onboard");
   }
-  
-  export default page
+  return <div>Feedback Table</div>;
+}
+
+export default page;

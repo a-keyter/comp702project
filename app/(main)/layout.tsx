@@ -14,9 +14,9 @@ export default function ApplicationLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="h-screen flex flex-col items-center w-full gap-y-6">
+    <main className="h-screen flex flex-col items-center w-full">
       <UserNav />
-      <main className="flex-grow flex flex-col items-center w-full gap-y-6">
+      <main className="flex-grow flex flex-col items-center w-full">
         {children}
       </main>
       <Footer />
