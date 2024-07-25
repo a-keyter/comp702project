@@ -2,7 +2,7 @@
 
 import { Card, CardTitle } from "@/components/ui/card";
 import UserDetailsDialog from "./UserDetailsDialog";
-import { SafeUser } from "@/lib/actions/getUserDetails";
+import { SafeUser } from "@/lib/userUtils/getUserDetails";
 
 function UserDetails({ user }: { user: SafeUser }) {
   return (

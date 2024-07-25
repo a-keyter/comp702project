@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "./ui/switch";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { createUser } from "@/lib/actions/createNewUser";
+import { createUser } from "@/lib/userUtils/createNewUser";
 import LoadingSpinner from "./LoadingSpinner";
 
 const FormSchema = z.object({

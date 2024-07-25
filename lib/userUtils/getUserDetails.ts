@@ -2,8 +2,10 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "../initPrisma";
+import { User } from "@prisma/client";
 
-export async function getUserById(id: string) {
+// Util for fetching User - NEVER PASS THE USER ID TO CLIENT
+export async function getUserById(id: string): Promise<User | null> {
   try {
     const user = await prisma.user.findUnique({
       where: { id: id },
@@ -17,12 +19,32 @@ export async function getUserById(id: string) {
   }
 }
 
+// Util for fetching User - NEVER PASS THE USER ID TO CLIENT
+export async function getUserByNickname(nickname: string): Promise<User | null> {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        nickname: nickname,
+      },
+    });
+
+    return user;
+  } catch (error) {
+    console.error("Error fetching user by nickname:", error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+// Frontend should NEVER see userId.
 export type SafeUser = {
   name: string;
   nickname: string;
   role: string;
 };
 
+// GET CURRENT USER DETAILS
 export async function getUserDetails(): Promise<SafeUser | null> {
   const { userId } = auth();
 
@@ -43,3 +65,5 @@ export async function getUserDetails(): Promise<SafeUser | null> {
     role: user.role,
   };
 }
+
+

@@ -28,6 +28,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import LoadingSpinner from "../LoadingSpinner";
 import { ShuffleIcon } from "lucide-react";
+import { createNewClass } from "@/lib/classUtils/createNewClass";
 
 const FormSchema = z.object({
   title: z.string().min(2, {
@@ -36,10 +37,10 @@ const FormSchema = z.object({
   classCode: z
     .string()
     .min(6, {
-      message: "Class code must be 6 characters.",
+      message: "Class code must be at least 6 characters.",
     })
-    .max(6, {
-      message: "Class code must be 6 characters.",
+    .max(8, {
+      message: "Class code must be 8 characters at most.",
     }),
   description: z.string().min(10, {
     message: "Description must be at least 10 characters.",
@@ -67,14 +68,14 @@ function CreateClassDialog() {
       setLoading(true);
 
       // Call the createNewClass function (to be implemented)
-      // await createNewClass(data);
+      await createNewClass(data);
 
       // Close the dialog if successful
       setLoading(false);
       setOpen(false);
 
       // Reload the page to show the new class
-      router.refresh();
+      router.push(`/classes/${data.classCode.toLowerCase()}`);
     } catch (err) {
       setLoading(false);
       console.error("Error creating new class:", err);
@@ -83,14 +84,14 @@ function CreateClassDialog() {
   }
 
   const generateRandomClassCode = () => {
-    const randomCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const randomCode = Math.floor(1000000 + Math.random() * 9000000).toString();
     form.setValue("classCode", randomCode);
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Create New Class</Button>
+        <Button>+ New Class </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -108,7 +109,7 @@ function CreateClassDialog() {
               render={({ field }) => (
                 <FormItem>
                   <div className="flex items-center justify-between">
-                    <FormLabel>Class Code</FormLabel>
+                    <FormLabel>Class Code (6 to 8 characters)</FormLabel>
                     <button
                       onClick={(e) => {
                         e.preventDefault();

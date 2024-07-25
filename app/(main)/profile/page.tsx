@@ -1,6 +1,6 @@
 
 import UserDetails from "@/components/UserDetails";
-import { getUserDetails } from "@/lib/actions/getUserDetails";
+import { getUserDetails } from "@/lib/userUtils/getUserDetails";
 import { redirect } from "next/navigation";
 
 export default async function ProfilePage() {

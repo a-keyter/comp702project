@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { SafeUser } from "@/lib/actions/getUserDetails";
+import { SafeUser } from "@/lib/userUtils/getUserDetails";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -25,7 +25,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { updateUserDetails } from "@/lib/actions/updateUserDetails";
+import { updateUserDetails } from "@/lib/userUtils/updateUserDetails";
 import { useRouter } from "next/navigation";
 import LoadingSpinner from "./LoadingSpinner";
 

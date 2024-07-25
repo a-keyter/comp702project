@@ -1,4 +1,7 @@
-import { getUserDetails } from "@/lib/actions/getUserDetails";
+import { classColumns } from "@/components/classesTable/columns";
+import { ClassDataTable } from "@/components/classesTable/data-table";
+import { getUserClasses } from "@/lib/classUtils/getClassDetails";
+import { getUserDetails } from "@/lib/userUtils/getUserDetails";
 import { redirect } from "next/navigation";
 
 async function page() {
@@ -6,7 +9,21 @@ async function page() {
   if (!user) {
     return redirect("/onboard");
   }
-  return <div>page</div>;
+
+  const classes = await getUserClasses();
+
+  return (
+    <div className="w-full max-w-4xl">
+      {classes && (
+        <ClassDataTable
+          columns={classColumns}
+          data={classes}
+          role={user.role}
+          tableSize="large"
+        />
+      )}
+    </div>
+  );
 }
 
 export default page;
