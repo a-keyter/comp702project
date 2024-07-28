@@ -6,7 +6,7 @@ import { SafeUser } from "@/lib/userUtils/getUserDetails";
 
 function UserDetails({ user }: { user: SafeUser }) {
   return (
-    <Card className="p-2 flex flex-col gap-y-4 w-full max-w-2xl">
+    <Card className="p-2 flex flex-col gap-y-2 w-full max-w-2xl mx-auto">
       <CardTitle>User Details</CardTitle>
       <div className="flex justify-between">
         <div>

@@ -30,6 +30,7 @@ import {
 import { Card } from "../ui/card";
 import { Input } from "../ui/input";
 import CreateClassDialog from "../CreateClassDialog";
+import Link from "next/link";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -69,10 +70,9 @@ export function ClassDataTable<TData, TValue>({
   });
 
   return (
-    <div>
-      <Card className="rounded-md border flex flex-col gap-y-1 px-2 pt-1">
+      <Card className="rounded-md border flex flex-col gap-y-1 px-2 pt-1 h-full">
         <div className="flex justify-between items-center">
-          <h2 className="font-semibold text-xl pl-2">Your Classes</h2>
+          <Link href="/classes" className="font-semibold text-xl pl-2">Classes</Link>
           <div className="flex gap-x-4 py-1 w-full max-w-md justify-end">
           <Input
           placeholder="Search classes..."
@@ -135,6 +135,7 @@ export function ClassDataTable<TData, TValue>({
           </TableBody>
         </Table>
 
+        <div className="flex flex-1"></div>
         <div className="flex items-center justify-end space-x-2 pb-2">
           <Button
             variant="outline"
@@ -154,6 +155,5 @@ export function ClassDataTable<TData, TValue>({
           </Button>
         </div>
       </Card>
-    </div>
   );
 }

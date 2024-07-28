@@ -19,7 +19,7 @@ export default async function Dashboard() {
   const assessments = await getUserAssessments();
 
   return (
-    <div className="w-full max-w-4xl flex flex-col space-y-2">
+    <div className="w-full max-w-4xl flex flex-col flex-grow space-y-1">
       {classes && (
         <ClassDataTable
           columns={classColumns}

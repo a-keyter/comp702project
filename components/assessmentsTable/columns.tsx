@@ -17,7 +17,16 @@ import Link from "next/link";
 import { Assessment } from "@prisma/client";
  
 
-export const assessmentColumns: ColumnDef<Assessment & { submissionCount: number; averageScore: number | string }>[] = [
+type AssessmentWithStats = Assessment & {
+  submissionCount: number;
+  averageScore: number | string;
+  class: {
+    id: string;
+    title: string;
+  };
+};
+
+export const assessmentColumns: ColumnDef<AssessmentWithStats>[] = [
   {
     accessorKey: "title",
     header: ({ column }) => {
@@ -40,6 +49,24 @@ export const assessmentColumns: ColumnDef<Assessment & { submissionCount: number
           </Link>
         );
       },
+  },
+  {
+    accessorKey: "class.title",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="w-full flex justify-start "
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Class
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      return <Link href={`/classes/${row.original.class.id}`}className="pl-4">{row.original.class.title}</Link>;
+    },
   },
   {
     accessorKey: "submissionCount",

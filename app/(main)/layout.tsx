@@ -16,7 +16,7 @@ export default function ApplicationLayout({
   return (
     <main className="h-screen flex flex-col items-center w-full">
       <UserNav />
-      <main className="flex-grow flex flex-col items-center w-full">
+      <main className="flex-grow flex flex-col items-center w-full mb-1">
         {children}
       </main>
       <Footer />

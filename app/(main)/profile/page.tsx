@@ -1,17 +1,29 @@
-
+import { classColumns } from "@/components/classesTable/columns";
+import { ClassDataTable } from "@/components/classesTable/data-table";
 import UserDetails from "@/components/UserDetails";
+import { getUserClasses } from "@/lib/classUtils/getClassDetails";
 import { getUserDetails } from "@/lib/userUtils/getUserDetails";
 import { redirect } from "next/navigation";
 
 export default async function ProfilePage() {
   const user = await getUserDetails();
   if (!user) {
-    return redirect('/onboard');
+    return redirect("/onboard");
   }
+
+  const classes = await getUserClasses();
+
   return (
-    <div className="flex flex-col w-full max-w-4xl gap-y-4 items-center">
+    <div className="flex flex-col w-full max-w-4xl gap-y-2">
       <UserDetails user={user} />
-      <div className="w-full h-60 bg-slate-300">Small Classes Table </div>
+      {classes && (
+        <ClassDataTable
+          columns={classColumns}
+          data={classes}
+          role={user.role}
+          tableSize="small"
+        />
+      )}
     </div>
   );
 }

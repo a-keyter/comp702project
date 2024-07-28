@@ -14,8 +14,8 @@ import { SignOutButton } from "@clerk/nextjs";
 
 function UserNav() {
   return (
-    <nav className="flex justify-between w-full max-w-4xl items-center pt-4 pb-2 border-b-slate-300 border-b-2 mb-2">
-      <div title="logo" className="font-bold text-2xl">
+    <nav className="flex justify-between w-full max-w-4xl items-center pt-4 pb-2 border-b-slate-300 border-b-2 mb-1">
+      <div title="logo" className="font-bold text-2xl ml-2">
         <Link href={"/dashboard"}>Ambi-Learn</Link>
       </div>
       <div title="nav buttons" className="flex gap-x-4">

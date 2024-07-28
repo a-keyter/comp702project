@@ -31,6 +31,7 @@ import { Card } from "../ui/card";
 import { Input } from "../ui/input";
 import CreateAssessmentDialog from "../CreateAssessmentDialog";
 import { SafeClass } from "@/lib/classUtils/getClassDetails";
+import Link from "next/link";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -73,10 +74,9 @@ export function AssessmentDataTable<TData, TValue>({
   });
 
   return (
-    <div>
-      <Card className="rounded-md border flex flex-col gap-y-1 px-2 pt-1">
+      <Card className="rounded-md border flex flex-col gap-y-1 px-2 pt-1 h-full">
         <div className="flex justify-between items-center">
-          <h2 className="font-semibold text-xl pl-2">Your Assessments</h2>
+          <Link href="/assessments"className="font-semibold text-xl pl-2">Assessments</Link>
           <div className="flex gap-x-4 py-1 w-full max-w-md justify-end">
           <Input
           placeholder="Search assessments..."
@@ -138,6 +138,7 @@ export function AssessmentDataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
+        <div className="flex flex-1"></div>
 
         <div className="flex items-center justify-end space-x-2 pb-2">
           <Button
@@ -158,6 +159,5 @@ export function AssessmentDataTable<TData, TValue>({
           </Button>
         </div>
       </Card>
-    </div>
   );
 }

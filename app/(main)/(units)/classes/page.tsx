@@ -13,7 +13,7 @@ async function page() {
   const classes = await getUserClasses();
 
   return (
-    <div className="w-full max-w-4xl">
+    <div className="w-full max-w-4xl h-full">
       {classes && (
         <ClassDataTable
           columns={classColumns}

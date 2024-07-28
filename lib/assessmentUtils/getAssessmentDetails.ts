@@ -56,6 +56,7 @@ export async function getUserAssessments() {
         class: {
           select: {
             id: true,
+            title: true,
           },
         },
         assessmentItems: true,
