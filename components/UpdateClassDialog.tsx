@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { SafeUser } from "@/lib/userUtils/getUserDetails";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -25,80 +24,88 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { updateUserDetails } from "@/lib/userUtils/updateUserDetails";
+import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import LoadingSpinner from "./LoadingSpinner";
+import { SafeClass } from "@/lib/classUtils/getClassDetails";
+import { updateClassDetails } from "@/lib/classUtils/updateClassDetails";
 
 const FormSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
+  title: z.string().min(2, {
+    message: "Title must be at least 2 characters.",
   }),
-  nickname: z.string().min(2, {
-    message: "Nickname must be at least 2 characters.",
+  description: z.string().min(10, {
+    message: "Description must be at least 10 characters.",
   }),
 });
 
-function UpdateUserDialog({ user }: { user: SafeUser }) {
+function UpdateClassDialog({ classData }: { classData: SafeClass }) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      name: user.name,
-      nickname: user.nickname,
+      title: classData.title,
+      description: classData.description,
     },
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       setError(null);
-      setLoading(true)
+      setLoading(true);
 
-      // Call the updateUserDetails function
-      await updateUserDetails(data);
+      // Call the updateClassDetails function (you'll need to implement this)
+      await updateClassDetails(classData.id, data);
 
-      // Close the dialog if successful
-      setLoading(false)
+      setLoading(false);
       setOpen(false);
 
       // Reload the page to show update
       router.refresh();
-
     } catch (err) {
-      setLoading(false)
-      console.error("Error updating user details:", err);
-      setError("An error occurred while updating your profile. Please try again.");
+      setLoading(false);
+      console.error("Error updating class details:", err);
+      setError("An error occurred while updating the class. Please try again.");
     }
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Edit Profile</Button>
+        <Button variant="default">Edit Class</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
+          <DialogTitle>Edit Class</DialogTitle>
           <DialogDescription>
-            Make changes to your profile here. Click save when you are done.
+            Make changes to your class here. Click save when you are done.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <div>
+              <p className="text-sm">Class Code</p>
+              <Input
+                title="You cannot change the class code."
+                disabled
+                placeholder={classData.id}
+              ></Input>
+            </div>
             <FormField
               control={form.control}
-              name="name"
+              name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Title</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
                   <FormDescription>
-                    This name is used to identify your profile.
+                    This is the title of your class.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -106,22 +113,29 @@ function UpdateUserDialog({ user }: { user: SafeUser }) {
             />
             <FormField
               control={form.control}
-              name="nickname"
+              name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nickname</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Textarea {...field} />
                   </FormControl>
                   <FormDescription>
-                    This is your public display name.
+                    Provide a brief description of your class.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <div className="flex justify-end">
-              <Button type="submit">Save changes{loading && <div className="pl-4"><LoadingSpinner/></div>}</Button>
+              <Button type="submit">
+                Save changes
+                {loading && (
+                  <div className="pl-4">
+                    <LoadingSpinner />
+                  </div>
+                )}
+              </Button>
             </div>
             {error && <p className="text-red-500 text-sm">{error}</p>}
           </form>
@@ -131,4 +145,4 @@ function UpdateUserDialog({ user }: { user: SafeUser }) {
   );
 }
 
-export default UpdateUserDialog;
+export default UpdateClassDialog;

@@ -1,3 +1,5 @@
+"use server"
+
 import { Class } from "@prisma/client";
 import { prisma } from "../initPrisma";
 import { getUserById, SafeUser } from "../userUtils/getUserDetails";

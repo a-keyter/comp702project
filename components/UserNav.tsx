@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { Clipboard, StopCircle, User, Users } from "lucide-react";
+import { Clipboard, Home, StopCircle, User, Users } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -18,9 +18,9 @@ function UserNav() {
       <div title="logo" className="font-bold text-2xl ml-2">
         <Link href={"/dashboard"}>Ambi-Learn</Link>
       </div>
-      <div title="nav buttons" className="flex gap-x-4">
+      <div className="flex">
         <Link href={"/classes"}>
-          <Button variant={"ghost"} className="flex flex-col">
+          <Button variant={"ghost"} className="flex flex-col px-2">
             <div>
               <Users />
             </div>
@@ -28,7 +28,7 @@ function UserNav() {
           </Button>
         </Link>
         <Link href={"/assessments"}>
-          <Button variant={"ghost"} className="flex flex-col ">
+          <Button variant={"ghost"} className="flex flex-col px-2">
             <div>
               <Clipboard />
             </div>{" "}
@@ -36,17 +36,24 @@ function UserNav() {
           </Button>
         </Link>
         <Link href={"/feedback"}>
-          <Button variant={"ghost"} className="flex flex-col ">
+          <Button variant={"ghost"} className="flex flex-col px-2">
             <div>
               <StopCircle />
             </div>
-            Feedback
+            Discuss
           </Button>
         </Link>
-
+        <Link href={"/dashboard"}>
+          <Button variant={"ghost"} className="flex flex-col px-2">
+            <div>
+              <Home />
+            </div>
+            Dashboard
+          </Button>
+        </Link>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant={"ghost"} className="flex flex-col ">
+            <Button variant={"ghost"} className="flex flex-col px-2">
               <div>
                 <User />
               </div>
@@ -56,18 +63,23 @@ function UserNav() {
           <DropdownMenuContent>
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-             <DropdownMenuItem>
-              <Link href={"/profile"} className="w-full">Profile</Link>
+            <DropdownMenuItem>
+              <Link href={"/profile"} className="w-full">
+                Profile
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link href={"/dashboard"} className="w-full">Dashboard</Link>
+              <Link href={"/dashboard"} className="w-full">
+                Dashboard
+              </Link>
             </DropdownMenuItem>
-           
+
             <DropdownMenuItem>
-              <SignOutButton redirectUrl={"/"}/>
+              <SignOutButton redirectUrl={"/"} />
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        
       </div>
     </nav>
   );
