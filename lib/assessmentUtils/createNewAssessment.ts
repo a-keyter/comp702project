@@ -1,4 +1,8 @@
+"use server"
+
+import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
+import { prisma } from "../initPrisma";
 
 const FormSchema = z.object({
     classCode: z
@@ -23,7 +27,33 @@ const FormSchema = z.object({
 
 type FormData = z.infer<typeof FormSchema>;
 
-export async function createNewAssessment(formData: FormData) {
-    console.log(formData)
-    return ("hello-world")
-}
+export async function createNewAssessment(formData: FormData): Promise<string> {
+
+    // Validate the form data
+    const validatedData = FormSchema.parse(formData);
+
+    // Fetch the current user ID using Clerk auth
+    const { userId } = auth();
+
+    if (!userId) {
+      throw new Error("User not authenticated");
+    }
+
+    try {  
+      // Create new assessment
+      const newAssessment = await prisma.assessment.create({
+        data: {
+          title: formData.title,
+          objectives: formData.objectives,
+          classId: formData.classCode,
+          createdById: userId, // Replace with actual user ID, e.g., from session
+        },
+      });
+  
+      // Return the assessment ID
+      return newAssessment.id;
+    } catch (error) {
+      console.error("Error creating new assessment:", error);
+      throw error;
+    }
+  }

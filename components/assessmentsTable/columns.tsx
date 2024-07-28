@@ -1,7 +1,5 @@
 "use client";
 
-
-import { SafeClass } from "@/lib/classUtils/getClassDetails";
 import { ColumnDef } from "@tanstack/react-table";
 
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
@@ -16,10 +14,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Link from "next/link";
+import { Assessment } from "@prisma/client";
  
 
-
-export const classColumns: ColumnDef<SafeClass>[] = [
+export const assessmentColumns: ColumnDef<Assessment & { submissionCount: number; averageScore: number | string }>[] = [
   {
     accessorKey: "title",
     header: ({ column }) => {
@@ -35,17 +33,21 @@ export const classColumns: ColumnDef<SafeClass>[] = [
         )
       },
     cell: ({ row }) => {
-        const thisClass = row.original;
+        const thisAssessment = row.original;
         return (
-          <Link href={`/classes/${thisClass.id}`}>
-            <p className="pl-4">{thisClass.title}</p>
+          <Link href={`/assessments/${thisAssessment.id}`}>
+            <p className="pl-4">{thisAssessment.title}</p>
           </Link>
         );
       },
   },
   {
-    accessorKey: "id",
-    header: "Class Code",
+    accessorKey: "submissionCount",
+    header: "Submissions"
+  },
+  {
+    accessorKey: "averageScore",
+    header: "Average Score"
   },
   {
     accessorKey: "updatedAt",
@@ -75,13 +77,11 @@ export const classColumns: ColumnDef<SafeClass>[] = [
         })
       return <div className="pl-4">{formatted}</div>;
     },
-    
   },
-
   {
     id: "actions",
     cell: ({ row }) => {
-      const thisClass = row.original
+      const thisAssessment = row.original
  
       return (
         <DropdownMenu>
@@ -93,13 +93,7 @@ export const classColumns: ColumnDef<SafeClass>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(thisClass.id)}
-            >
-              Copy class ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit class</DropdownMenuItem>
+            <DropdownMenuItem>Edit Assessment</DropdownMenuItem>
             <DropdownMenuItem>Delete class</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

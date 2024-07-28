@@ -89,6 +89,7 @@ model Submission {
   userId       String
   responses    Response[]
   feedback     UserFeedback?
+  score        Float?
 }
 
 model Response {

@@ -30,6 +30,7 @@ import {
 import { Card } from "../ui/card";
 import { Input } from "../ui/input";
 import CreateAssessmentDialog from "../CreateAssessmentDialog";
+import { SafeClass } from "@/lib/classUtils/getClassDetails";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -42,7 +43,9 @@ export function AssessmentDataTable<TData, TValue>({
   role,
   tableSize,
   classCode,
-}: DataTableProps<TData, TValue> & { role: string; tableSize: string, classCode: string | null }) {
+  classTitle,
+  classes
+}: DataTableProps<TData, TValue> & { role: string; tableSize: string, classCode: string | null, classTitle: string | null, classes: SafeClass[] | null}) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -83,7 +86,7 @@ export function AssessmentDataTable<TData, TValue>({
           }
           className="w-full"
         />
-            {role === "TEACHER" && <CreateAssessmentDialog classCode={classCode} />}
+            {role === "TEACHER" && <CreateAssessmentDialog classCode={classCode} classTitle={classTitle} classes={classes}/>}
           </div>
         </div>
 

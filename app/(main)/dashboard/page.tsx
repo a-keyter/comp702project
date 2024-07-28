@@ -6,6 +6,8 @@ import { getUserDetails } from "@/lib/userUtils/getUserDetails";
 import { redirect } from "next/navigation";
 import { AssessmentDataTable } from "@/components/assessmentsTable/data-table";
 import CreateAssessmentDialog from "@/components/CreateAssessmentDialog";
+import { assessmentColumns } from "@/components/assessmentsTable/columns";
+import { getUserAssessments } from "@/lib/assessmentUtils/getAssessmentDetails";
 
 export default async function Dashboard() {
   const user = await getUserDetails();
@@ -14,6 +16,7 @@ export default async function Dashboard() {
   }
 
   const classes = await getUserClasses();
+  const assessments = await getUserAssessments();
 
   return (
     <div className="w-full max-w-4xl flex flex-col space-y-2">
@@ -25,12 +28,18 @@ export default async function Dashboard() {
           tableSize="small"
         ></ClassDataTable>
       )}
-      {/* {classes && <AssessmentDataTable columns={classColumns} data={classes} role={user.role} tableSize="small" classCode={null}/>} */}
+      {assessments && (
+        <AssessmentDataTable
+          columns={assessmentColumns}
+          data={assessments}
+          role={user.role}
+          tableSize="small"
+          classCode={null}
+          classTitle={null}
+          classes={classes}
+        />
+      )}
 
-      <div className="w-full h-60 bg-slate-300 flex justify-between">
-        <p>Small Assessments Table </p>
-        <CreateAssessmentDialog classCode={null} classTitle={null} classes={classes}/>
-      </div>
     </div>
   );
 }
