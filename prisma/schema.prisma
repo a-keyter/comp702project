@@ -47,7 +47,7 @@ model Class {
 model Assessment {
   id              String           @id @default(uuid())
   title           String
-  description     String
+  objectives      String
   createdAt       DateTime         @default(now()) @map(name: "created_at")
   updatedAt       DateTime         @updatedAt @map(name: "updated_at")
   createdBy       User             @relation("AssessmentCreator", fields: [createdById], references: [id])

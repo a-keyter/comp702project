@@ -1,3 +1,4 @@
+import CreateAssessmentDialog from '@/components/CreateAssessmentDialog';
 import { getClassById } from '@/lib/classUtils/getClassDetails';
 import { getUserById } from '@/lib/userUtils/getUserDetails';
 import { notFound } from 'next/navigation';
@@ -33,7 +34,10 @@ async function ClassPage({ params }: { params: { id: string } }) {
             <p>Creator information not available</p>
           )}
         </div>
+
       </div>
+      <CreateAssessmentDialog classCode={classData.id} classTitle={classData.title} classes={null}/>
+
     </div>
   );
 }

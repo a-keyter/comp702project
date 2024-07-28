@@ -29,19 +29,20 @@ import {
 } from "@/components/ui/table";
 import { Card } from "../ui/card";
 import { Input } from "../ui/input";
-import CreateClassDialog from "../CreateClassDialog";
+import CreateAssessmentDialog from "../CreateAssessmentDialog";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function ClassDataTable<TData, TValue>({
+export function AssessmentDataTable<TData, TValue>({
   columns,
   data,
   role,
   tableSize,
-}: DataTableProps<TData, TValue> & { role: string; tableSize: string }) {
+  classCode,
+}: DataTableProps<TData, TValue> & { role: string; tableSize: string, classCode: string | null }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -72,17 +73,17 @@ export function ClassDataTable<TData, TValue>({
     <div>
       <Card className="rounded-md border flex flex-col gap-y-1 px-2 pt-1">
         <div className="flex justify-between items-center">
-          <h2 className="font-semibold text-xl pl-2">Your Classes</h2>
+          <h2 className="font-semibold text-xl pl-2">Your Assessments</h2>
           <div className="flex gap-x-4 py-1 w-full max-w-md justify-end">
           <Input
-          placeholder="Search classes..."
+          placeholder="Search assessments..."
           value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("title")?.setFilterValue(event.target.value)
           }
           className="w-full"
         />
-            {role === "TEACHER" && <CreateClassDialog />}
+            {role === "TEACHER" && <CreateAssessmentDialog classCode={classCode} />}
           </div>
         </div>
 

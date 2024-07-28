@@ -34,6 +34,27 @@ export async function getClassById(classId: string): Promise<Class | null> {
   }
 }
 
+// FETCH SPECIFIC CLASS Title
+export async function getClassTitleById(classId: string): Promise<string | null> {
+  try {
+  const classData = await prisma.class.findUnique({
+      select: {
+        title: true
+      },
+      where: {
+        id: classId.toLowerCase(), // Ensure we're using lowercase for consistency
+      },
+    });
+    return classData ? classData.title : null;
+  } catch (error) {
+    console.error("Error fetching class title:", error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+
 export async function getClassWithCreator(classCode: string) {
   try {
     // Fetch the class data
@@ -104,6 +125,9 @@ export async function getUserClasses() {
         description: true,
         createdAt: true,
         updatedAt: true
+      },
+      orderBy: {
+        updatedAt: 'desc'
       }
     });
   } else if (user.role === 'STUDENT') {
@@ -122,6 +146,9 @@ export async function getUserClasses() {
         description: true,
         createdAt: true,
         updatedAt: true
+      },
+      orderBy: {
+        updatedAt: 'desc'
       }
     });
   } else {

@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import LoadingSpinner from "../LoadingSpinner";
+import LoadingSpinner from "./LoadingSpinner";
 import { ShuffleIcon } from "lucide-react";
 import { createNewClass } from "@/lib/classUtils/createNewClass";
 
@@ -41,6 +41,9 @@ const FormSchema = z.object({
     })
     .max(8, {
       message: "Class code must be 8 characters at most.",
+    })
+    .regex(/^[a-zA-Z0-9-]+$/, {
+      message: "Class code must contain only alphanumeric characters and hyphens (No spaces).",
     }),
   description: z.string().min(10, {
     message: "Description must be at least 10 characters.",
