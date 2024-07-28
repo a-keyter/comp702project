@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, CardTitle } from "@/components/ui/card";
-import UserDetailsDialog from "./UserDetailsDialog";
+import UpdateUserDialog from "./UpdateUserDialog";
 import { SafeUser } from "@/lib/userUtils/getUserDetails";
 
 function UserDetails({ user }: { user: SafeUser }) {
@@ -14,7 +14,7 @@ function UserDetails({ user }: { user: SafeUser }) {
           <p>Nickname: {user.nickname}</p>
           <p>Role: {user.role}</p>
         </div>
-        <UserDetailsDialog user={user} />
+        <UpdateUserDialog user={user} />
       </div>
     </Card>
   );

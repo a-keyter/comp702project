@@ -38,7 +38,7 @@ const FormSchema = z.object({
   }),
 });
 
-function UserDetailsDialog({ user }: { user: SafeUser }) {
+function UpdateUserDialog({ user }: { user: SafeUser }) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false)
@@ -133,4 +133,4 @@ function UserDetailsDialog({ user }: { user: SafeUser }) {
   );
 }
 
-export default UserDetailsDialog;
+export default UpdateUserDialog;
