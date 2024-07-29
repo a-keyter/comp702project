@@ -1,6 +1,7 @@
 import { AssessmentDataTable } from "@/components/assessmentsTable/data-table";
 import { oneClassAssessmentColumns } from "@/components/assessmentsTable/oneClassAssessmentColumns";
 import CreateAssessmentDialog from "@/components/CreateAssessmentDialog";
+import DeleteClassDialog from "@/components/DeleteClassDialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import UpdateClassDialog from "@/components/UpdateClassDialog";
@@ -33,7 +34,7 @@ async function ClassPage({ params }: { params: { id: string } }) {
         </h2>
         <div className="flex gap-x-4">
           <UpdateClassDialog classData={classData} />
-          <Button variant="destructive">Delete Class</Button>
+          <DeleteClassDialog classId={classData.id} classTitle={classData.title}/>
         </div>
       </div>
       <div className="grid grid-cols-6 gap-x-2 my-4">

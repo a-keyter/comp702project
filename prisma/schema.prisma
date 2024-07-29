@@ -52,7 +52,7 @@ model Assessment {
   updatedAt       DateTime         @updatedAt @map(name: "updated_at")
   createdBy       User             @relation("AssessmentCreator", fields: [createdById], references: [id])
   createdById     String
-  class           Class            @relation("ClassAssessments", fields: [classId], references: [id])
+  class           Class            @relation("ClassAssessments", fields: [classId], references: [id], onDelete: Cascade)
   classId         String
   assessmentItems AssessmentItem[]
   submissions     Submission[]

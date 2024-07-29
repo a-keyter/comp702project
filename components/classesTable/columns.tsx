@@ -16,6 +16,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Link from "next/link";
+import UpdateClassDialog from "../UpdateClassDialog";
+import DeleteClassDialog from "../DeleteClassDialog";
  
 
 
@@ -98,9 +100,6 @@ export const classColumns: ColumnDef<SafeClass>[] = [
             >
               Copy class ID
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit class</DropdownMenuItem>
-            <DropdownMenuItem>Delete class</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
