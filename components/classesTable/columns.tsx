@@ -16,10 +16,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Link from "next/link";
-import UpdateClassDialog from "../UpdateClassDialog";
-import DeleteClassDialog from "../DeleteClassDialog";
- 
-
 
 export const classColumns: ColumnDef<SafeClass>[] = [
   {
