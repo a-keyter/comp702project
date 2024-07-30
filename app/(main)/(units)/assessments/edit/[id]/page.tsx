@@ -1,9 +1,7 @@
 import AssessmentEditor from "@/components/assessmentEditor/AssessmentEditor";
-import { Button } from "@/components/ui/button";
 import { getAssessmentById } from "@/lib/assessmentUtils/getAssessmentDetails";
 import { loadAssessmentItems } from "@/lib/assessmentUtils/getAssessmentItems";
 import { getUserDetails } from "@/lib/userUtils/getUserDetails";
-import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
 async function EditAssessmentPage({ params }: { params: { id: string } }) {

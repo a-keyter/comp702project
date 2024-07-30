@@ -1,9 +1,16 @@
 import { Answer, AssessmentItem } from "@prisma/client";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
-import { Button } from "../ui/button";
-import { Trash } from "lucide-react";
-import { title } from "process";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Sparkle } from "lucide-react";
 
 interface ItemWrapperProps {
   item: AssessmentItem;
@@ -31,19 +38,28 @@ export default function ItemWrapper({
   } else if (item.type === "MCQ") {
     return (
       <>
-      <div className="flex gap-x-2 py-1 items-center">
-        <Input
-          value={item.content}
-          onChange={(e) => onUpdateItem({ content: e.target.value })}
-          placeholder="Enter multiple choice question..."
-          className="w-full my-1"
-        />
-        <Button title="Generate a question based on the assessment title and objectives">
-          GenQ
-        </Button>
-        <Button title="Generate answers to the MCQ" disabled={item.content === ""}>
-          GenAs
-        </Button>
+        <div className="flex gap-x-2 py-1 items-center">
+          <Input
+            value={item.content}
+            onChange={(e) => onUpdateItem({ content: e.target.value })}
+            placeholder="Enter multiple choice question..."
+            className="w-full my-1"
+          />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button>AI Magic</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>Generate AI MCQs</DropdownMenuLabel>
+              <DropdownMenuItem title="Generate a question based on the assessment title and objectives">
+                Generate Question & Answer
+              </DropdownMenuItem>
+              <DropdownMenuItem title="Generate answers to the MCQ">
+                Generate All Answers
+              </DropdownMenuItem>
+              <DropdownMenuItem>Generate Incorrect Answers</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
         {answers &&
           answers.map((answer) => (
@@ -74,7 +90,17 @@ export default function ItemWrapper({
                 }
                 className="w-full bg-inherit mr-4"
               />
-              <Button variant={'ghost'} className="mr-2 p-1 h-8" title={answer.isCorrect ? "AI Generated answer may be incorrect." : ""}>AI</Button>
+              <Button
+                variant={"ghost"}
+                className="mr-2 p-1 h-8"
+                title={
+                  answer.isCorrect
+                    ? "AI Generated answer may be incorrect."
+                    : ""
+                }
+              >
+                <Sparkle/>
+              </Button>
             </div>
           ))}
       </>

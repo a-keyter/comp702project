@@ -9,6 +9,7 @@ import { saveAssessmentItems } from "@/lib/assessmentUtils/saveAssessmentItems";
 import { useRouter } from "next/navigation";
 import LoadingSpinner from "../LoadingSpinner";
 import Link from "next/link";
+import { Trash } from "lucide-react";
 
 interface AssessmentEditorProps {
   assessmentId: string;
@@ -244,7 +245,7 @@ function AssessmentEditor({
                 onClick={() => deleteItem(index)}
                 className="bg-red-500 hover:bg-red-700"
               >
-                Delete
+                <Trash/>
               </Button>
             </div>
           </div>
