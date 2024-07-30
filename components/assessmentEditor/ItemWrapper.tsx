@@ -2,10 +2,11 @@ import { Answer, AssessmentItem } from "@prisma/client";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
+import { Trash } from "lucide-react";
+import { title } from "process";
 
 interface ItemWrapperProps {
   item: AssessmentItem;
-  index: number;
   answers?: Answer[];
   onUpdateItem: (updates: Partial<AssessmentItem>) => void;
   onUpdateAnswer: (answerId: string, updates: Partial<Answer>) => void;
@@ -13,7 +14,6 @@ interface ItemWrapperProps {
 
 export default function ItemWrapper({
   item,
-  index,
   answers,
   onUpdateItem,
   onUpdateAnswer,
@@ -21,59 +21,63 @@ export default function ItemWrapper({
   if (item.type === "CONTEXT") {
     return (
       <>
-      <div className="flex justify-between items-center my-2">
-        <p className="text-sm">Context Block</p>
-        <div className="flex gap-x-2">
-        <Button className="py-1" disabled={index === 0}>Up</Button>
-        <Button>Down</Button>
-        </div>
-      </div>
-      <Textarea
-        value={item.content}
-        onChange={(e) => onUpdateItem({ content: e.target.value })}
-        placeholder="Enter contextual information..."
-      />
+        <Textarea
+          value={item.content}
+          onChange={(e) => onUpdateItem({ content: e.target.value })}
+          placeholder="Enter contextual information..."
+        />
       </>
     );
   } else if (item.type === "MCQ") {
     return (
-        <>
-        
-      <div className="flex justify-between items-center my-2">
-        <p className="text-sm">MCQ Block</p>
-        <div className="flex gap-x-2">
-          <Button className="py-1" disabled={index === 0}>Up</Button>
-          <Button>Down</Button>
-        </div>
-      </div>
+      <>
+      <div className="flex gap-x-2 py-1 items-center">
         <Input
           value={item.content}
           onChange={(e) => onUpdateItem({ content: e.target.value })}
           placeholder="Enter multiple choice question..."
-          className="w-full"
+          className="w-full my-1"
         />
+        <Button title="Generate a question based on the assessment title and objectives">
+          GenQ
+        </Button>
+        <Button title="Generate answers to the MCQ" disabled={item.content === ""}>
+          GenAs
+        </Button>
+        </div>
         {answers &&
           answers.map((answer) => (
-              <div key={answer.id} className={answer.isCorrect ? "bg-green-100 w-full flex gap-x-2 items-center py-2 my-1": "bg-inherit w-full flex gap-x-2 items-center py-1 my-1"}>
+            <div
+              key={answer.id}
+              className={
+                answer.isCorrect
+                  ? "bg-green-100 w-full flex gap-x-2 items-center py-2 my-1 rounded-lg"
+                  : "bg-red-200 w-full flex gap-x-2 items-center py-2 my-1 rounded-lg"
+              }
+            >
               <input
                 type="checkbox"
                 checked={answer.isCorrect}
                 className="ml-2"
+                readOnly
               />
-
               <input
                 type="text"
-                placeholder={answer.isCorrect ? "Write the correct answer for the question here..." : "Write an incorrect answer for the question here"}
+                placeholder={
+                  answer.isCorrect
+                    ? "Write the correct answer for the question here..."
+                    : "Write an incorrect answer for the question here"
+                }
                 value={answer.content}
                 onChange={(e) =>
                   onUpdateAnswer(answer.id, { content: e.target.value })
                 }
                 className="w-full bg-inherit mr-4"
               />
+              <Button variant={'ghost'} className="mr-2 p-1 h-8" title={answer.isCorrect ? "AI Generated answer may be incorrect." : ""}>AI</Button>
             </div>
           ))}
-                </>
-
+      </>
     );
   }
 

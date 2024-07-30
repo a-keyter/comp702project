@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -95,7 +95,7 @@ function CreateAssessmentDialog({
       setOpen(false);
 
       // Reload the page to show the new class
-      router.push(`/assessments/${assessCode}`);
+      router.push(`/assessments/edit/${assessCode}`);
     } catch (err) {
       setLoading(false);
       console.error("Error creating new assessment:", err);

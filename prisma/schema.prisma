@@ -63,21 +63,19 @@ model AssessmentItem {
   index          Int
   content        String
   type           AssessmentItemType
-  assessment     Assessment         @relation(fields: [assessmentId], references: [id])
+  assessment     Assessment         @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
   assessmentId   String
   responses      Response[]
-  answers        Answer[]
-
-  @@unique([assessmentId, index])
+  answers        Answer[]           @relation("AssessmentItemToAnswer")
 }
 
 model Answer {
   id               String         @id @default(uuid())
   content          String
   isCorrect        Boolean
-  assessmentItem   AssessmentItem @relation(fields: [assessmentItemId], references: [id])
+  assessmentItem   AssessmentItem @relation("AssessmentItemToAnswer", fields: [assessmentItemId], references: [id], onDelete: Cascade)
   assessmentItemId String
-  responses        Response[]
+  responses        Response[] 
 }
 
 model Submission {

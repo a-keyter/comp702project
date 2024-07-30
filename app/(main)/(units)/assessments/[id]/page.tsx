@@ -1,3 +1,4 @@
+import DeleteAssessmentDialog from "@/components/DeleteAssessmentDialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { getAssessmentById } from "@/lib/assessmentUtils/getAssessmentDetails";
@@ -41,7 +42,7 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
                   Edit
                 </Button>
               </Link>
-              <Button variant="destructive">Delete</Button>
+              <DeleteAssessmentDialog assessmentId={assessmentData.id} assessmentTitle={assessmentData.title}/>
             </div>
           )}
           {user.role === "STUDENT" && (
