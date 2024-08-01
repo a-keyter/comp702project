@@ -101,6 +101,7 @@ model Response {
   userId           String
   givenAnswer      Answer         @relation(fields: [givenAnswerId], references: [id])
   givenAnswerId    String
+  isCorrect        Boolean
 }
 
 model UserFeedback {

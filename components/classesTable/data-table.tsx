@@ -31,6 +31,7 @@ import { Card } from "../ui/card";
 import { Input } from "../ui/input";
 import CreateClassDialog from "../CreateClassDialog";
 import Link from "next/link";
+import JoinClassDialog from "../JoinClassDialog";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -82,7 +83,7 @@ export function ClassDataTable<TData, TValue>({
           }
           className="w-full"
         />
-            {role === "TEACHER" && <CreateClassDialog />}
+            {role === "TEACHER" ? <CreateClassDialog /> : <JoinClassDialog />}
           </div>
         </div>
 

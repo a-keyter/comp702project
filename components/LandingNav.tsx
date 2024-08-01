@@ -13,7 +13,7 @@ function LandingNav() {
           <Button variant={"ghost"}>About</Button>
         </Link>
         <SignedOut>
-          <Button variant={"ghost"}>
+          <Button variant={"default"}>
             <SignInButton forceRedirectUrl={"/dashboard"}/>
           </Button>
         </SignedOut>

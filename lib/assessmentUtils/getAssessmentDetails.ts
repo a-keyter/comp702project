@@ -45,7 +45,10 @@ export async function getUserAssessments() {
   try {
     const assessments = await prisma.assessment.findMany({
       where: {
-        createdById: userId
+        OR: [
+          { createdById: userId },
+          { class: { members: { some: { id: userId } } } }
+        ]
       },
       include: {
         submissions: {
