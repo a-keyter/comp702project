@@ -9,6 +9,24 @@ import { ResponseWithUser } from "./columns";
 
 
 export const studentColumns: ColumnDef<ResponseWithUser>[] = [
+    {
+        accessorKey: "attemptCount",
+        header: ({ column }) => {
+          return (
+            <Button
+              className="w-full flex justify-start"
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            >
+              Attempt #
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+          );
+        },
+        cell: ({ row }) => {
+          return <div className="text-left ml-4">{row.original.attemptCount}</div>;
+        },
+      },
   {
     accessorKey: "createdAt",
     header: ({ column }) => {

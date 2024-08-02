@@ -1,4 +1,3 @@
-// responseColumns.tsx
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
@@ -21,6 +20,7 @@ export type ResponseWithUser = {
     name: string;
     nickname: string;
   };
+  attemptCount: number;
 };
 
 export const responseColumns: ColumnDef<ResponseWithUser>[] = [
@@ -41,13 +41,32 @@ export const responseColumns: ColumnDef<ResponseWithUser>[] = [
     cell: ({ row }) => {
       const userNickname = row.original.user.nickname;
       return (
-        <Link href={`/students/${userNickname}`} className="pl-4">
-          {row.original.user.name}
-        </Link>
+        <div className="flex items-center space-x-2">
+          <Link href={`/students/${userNickname}`} className="pl-4">
+            {row.original.user.name}
+          </Link>
+        </div>
       );
     },
   },
-
+  {
+    accessorKey: "attemptCount",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="w-full flex justify-start"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Attempts
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <div className="text-center">{row.original.attemptCount}</div>;
+    },
+  },
   {
     accessorKey: "score",
     header: ({ column }) => {
@@ -57,7 +76,7 @@ export const responseColumns: ColumnDef<ResponseWithUser>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Score
+          Best Score
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );

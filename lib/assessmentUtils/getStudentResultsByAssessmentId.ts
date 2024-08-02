@@ -18,28 +18,30 @@ export async function getStudentResultsByAssessmentId(assessmentId: string): Pro
       return null;
     }
 
+    // Get all submissions for this user and assessment
     const submissions = await prisma.submission.findMany({
       where: {
         assessmentId: assessmentId,
         userId: userId,
       },
-      select: {
-        id: true,
-        createdAt: true,
-        score: true,
-      },
       orderBy: {
-        createdAt: "desc",
+        createdAt: 'desc',
       },
     });
 
-    // Transform the submissions to include user information
-    const submissionsWithUser: ResponseWithUser[] = submissions.map(submission => ({
-      ...submission,
+    // Get the total attempt count
+    const totalAttempts = submissions.length;
+
+    // Transform the submissions to include user information and attempt count
+    const submissionsWithUser: ResponseWithUser[] = submissions.map((submission, index) => ({
+      id: submission.id,
+      createdAt: submission.createdAt,
+      score: submission.score,
       user: {
         name: user.name,
         nickname: user.nickname,
-      }
+      },
+      attemptCount: totalAttempts - index, // This gives the attempt number in descending order
     }));
 
     return submissionsWithUser;

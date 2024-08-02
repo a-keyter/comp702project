@@ -19,7 +19,18 @@ export async function saveAssessmentItems(
         ).map((item) => item.id)
       );
 
-      // Delete answers for items that are no longer present
+      // Delete related responses first
+      await tx.response.deleteMany({
+        where: {
+          givenAnswer: {
+            assessmentItemId: {
+              notIn: assessmentItems.map((i) => i.id),
+            },
+          },
+        },
+      });
+
+      // Then delete answers
       await tx.answer.deleteMany({
         where: {
           assessmentItemId: {
@@ -27,15 +38,7 @@ export async function saveAssessmentItems(
           },
         },
       });
-
-      // Delete items that are no longer present
-      await tx.assessmentItem.deleteMany({
-        where: {
-          assessmentId: assessmentItems[0].assessmentId,
-          id: { notIn: assessmentItems.map((i) => i.id) },
-        },
-      });
-
+      
       for (const item of assessmentItems) {
         if (existingItemIds.has(item.id)) {
           // Update existing item
