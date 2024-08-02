@@ -1,8 +1,8 @@
 import ResultsDisplay from "@/components/assessmentAttempt/ResultsDisplay";
-import { getAssessmentResults } from "@/lib/assessmentUtils/getAssessmentResults";
+import { getSubmissionResults } from "@/lib/assessmentUtils/getSubmissionResults";
 
 async function AssessmentResultsPage({ params }: { params: { id: string } }) {
-  const results = await getAssessmentResults(params.id);
+  const results = await getSubmissionResults(params.id);
 
   return (
     <div className="w-full max-w-4xl">
@@ -10,12 +10,14 @@ async function AssessmentResultsPage({ params }: { params: { id: string } }) {
 
       {results && (
         <ResultsDisplay
+          assessmentId={results.assessmentId}
           assessmentTitle={results.assessmentTitle}
           classTitle={results.classTitle}
           score={results.score}
           totalQuestions={results.totalQuestions}
           correctAnswers={results.correctAnswers}
           responses={results.responses}
+          submitterName={results.submitterName}
         />
       )}
     </div>

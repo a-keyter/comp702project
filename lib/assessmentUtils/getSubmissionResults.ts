@@ -1,9 +1,9 @@
-// @/lib/assessmentUtils/getAssessmentResults.ts
 "use server"
-import { prisma } from '@/lib/initPrisma'; // Adjust this import based on your Prisma client setup
+
+import { prisma } from '@/lib/initPrisma';
 import { auth } from '@clerk/nextjs/server';
 
-export interface ResultResponse {
+export interface SubmittedResponse {
   id: string;
   question: string;
   givenAnswer: string;
@@ -11,28 +11,41 @@ export interface ResultResponse {
   isCorrect: boolean;
 }
 
-export interface AssessmentResult {
+export interface SubmissionResult {
+  assessmentId: string;
   assessmentTitle: string;
   classTitle: string;
   score: number;
   totalQuestions: number;
   correctAnswers: number;
-  responses: ResultResponse[];
+  responses: SubmittedResponse[];
+  submitterName: string;
 }
 
-export async function getAssessmentResults(submissionId: string): Promise<AssessmentResult | null> {
+export async function getSubmissionResults(submissionId: string): Promise<SubmissionResult | null> {
+  const { userId } = auth()
+  
+  if (!userId) {
+    return null
+  }
 
   try {
     const submission = await prisma.submission.findUnique({
       where: { id: submissionId },
       include: {
-        assessment: { include: { class: true } },
+        assessment: { 
+          include: { 
+            class: true,
+            createdBy: true
+          } 
+        },
         responses: {
           include: {
             assessmentItem: true,
             givenAnswer: true,
           },
         },
+        user: true,
       },
     });
 
@@ -40,13 +53,29 @@ export async function getAssessmentResults(submissionId: string): Promise<Assess
       return null;
     }
 
-    const result: AssessmentResult = {
+    // Check if the current user is the creator of the class or a member of the class
+    const classMembers = await prisma.class.findUnique({
+      where: { id: submission.assessment.classId },
+      include: { members: true }
+    });
+
+    const isCreator = submission.assessment.createdById === userId;
+    const isMember = classMembers?.members.some(member => member.id === userId) || false;
+
+    if (!isCreator && !isMember) {
+      console.error('User is not authorized to view these results');
+      return null;
+    }
+
+    const result: SubmissionResult = {
+      assessmentId: submission.assessment.id,
       assessmentTitle: submission.assessment.title,
       classTitle: submission.assessment.class.title,
       score: submission.score || 0,
       totalQuestions: submission.responses.length,
       correctAnswers: 0,
       responses: [],
+      submitterName: submission.user.name,
     };
 
     for (const response of submission.responses) {
@@ -61,7 +90,7 @@ export async function getAssessmentResults(submissionId: string): Promise<Assess
         throw new Error(`No correct answer found for assessment item ${response.assessmentItemId}`);
       }
 
-      const resultResponse: ResultResponse = {
+      const resultResponse: SubmittedResponse = {
         id: response.id,
         question: response.assessmentItem.content,
         givenAnswer: response.givenAnswer.content,

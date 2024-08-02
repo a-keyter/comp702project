@@ -9,9 +9,6 @@ function LandingNav() {
         <Link href={"/"}>Ambi-Learn</Link>
       </div>
       <div title="nav buttons" className="flex gap-x-8">
-        <Link href={"/about"}>
-          <Button variant={"ghost"}>About</Button>
-        </Link>
         <SignedOut>
           <Button variant={"default"}>
             <SignInButton forceRedirectUrl={"/dashboard"}/>

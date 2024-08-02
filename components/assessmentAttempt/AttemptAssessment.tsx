@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import AttemptItemWrapper from "./AttemptItemWrapper";
 import { useRouter } from "next/navigation";
 import { submitResponses } from "@/lib/assessmentUtils/submitResponses";
+import LoadingSpinner from "../LoadingSpinner";
 
 interface AttemptAssessmentProps {
   assessmentId: string;
@@ -26,6 +27,7 @@ function AttemptAssessment({
   items,
   mcqAnswers,
 }: AttemptAssessmentProps) {
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
   const [responses, setResponses] = useState<Record<string, string>>({});
 
@@ -34,6 +36,7 @@ function AttemptAssessment({
   };
 
   const handleSubmit = async () => {
+    setLoading(true)
     try {
       const result = await submitResponses({
         assessmentId,
@@ -41,11 +44,13 @@ function AttemptAssessment({
       });
   
       if (result.success) {
-        router.push(`/assessments/result/${result.submissionId}`);
+        setLoading(false)
+        router.push(`/assessments/results/${result.submissionId}`);
       } else {
         throw new Error(result.error);
       }
     } catch (error) {
+      setLoading(false);
       console.error("Error submitting assessment:", error);
       alert("Failed to submit assessment. Please try again.");
     }
@@ -81,9 +86,12 @@ function AttemptAssessment({
           />
         </div>
       ))}
+      <div className="flex justify-end">
       <Button onClick={handleSubmit} className="mt-4">
         Submit Assessment
+        {loading && <div className="ml-2"><LoadingSpinner/></div>}
       </Button>
+      </div>
     </div>
   );
 }

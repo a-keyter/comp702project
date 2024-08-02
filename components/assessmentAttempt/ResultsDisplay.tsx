@@ -1,40 +1,55 @@
-import { Response } from "@prisma/client";
 import ResultItemWrapper from "./ResultItemWrapper";
-
-type ResultResponse = {
-    id: string
-    question: string
-    givenAnswer: string
-    correctAnswer: string
-    isCorrect: boolean
-}
+import Link from "next/link";
+import { ArrowLeftSquare, SkipBack } from "lucide-react";
+import { Button } from "../ui/button";
+import { SubmittedResponse } from "@/lib/assessmentUtils/getSubmissionResults";
 
 interface ResultsDisplayProps {
+  assessmentId: string;
   assessmentTitle: string;
   classTitle: string;
   score: number;
   totalQuestions: number;
   correctAnswers: number;
-  responses: ResultResponse[];
+  responses: SubmittedResponse[];
+  submitterName: string;
 }
 
 function ResultsDisplay({
+  assessmentId,
   assessmentTitle,
   classTitle,
   score,
   totalQuestions,
   correctAnswers,
   responses,
+  submitterName,
 }: ResultsDisplayProps) {
   return (
     <div className="flex flex-col gap-y-4 w-full py-4">
-      <h1 className="text-2xl font-bold">{assessmentTitle} Results</h1>
-      <p>Class: {classTitle}</p>
+      <div className="flex justify-between items-center">
+        <div>
+        <Link href={`/assessments/${assessmentId}`}>
+        <h2 className=""> Assessment Results</h2>
+        <h2 className="text-2xl font-bold">{assessmentTitle}</h2>
+        </Link>
+        <p><strong>Submitted by:</strong> {submitterName}</p>
+        </div>
+        <div className="flex flex-col gap-y-2">
+        <Link href={`/assessments/${assessmentId}`}>
+          <Button><ArrowLeftSquare className="mr-2"/>Assesment Overview</Button>
+        </Link>
+        <p className="text-right"><strong>Class:</strong> {classTitle}</p>
+        </div>
+
+      </div>
       <div className="bg-gray-100 p-4 rounded-md">
         <p className="text-xl font-semibold">Score: {score.toFixed(2)}%</p>
         <p>
           Correct Answers: {correctAnswers} out of {totalQuestions}
         </p>
+        <p className="mt-4"><strong>Feedback:</strong></p>
+        <p>PLACEHOLDER FEEDBACK</p>
       </div>
       <div className="space-y-4">
         {responses.map((response, index) => (
@@ -45,4 +60,4 @@ function ResultsDisplay({
   );
 }
 
-export default ResultsDisplay;
+export default ResultsDisplay
