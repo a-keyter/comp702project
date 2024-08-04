@@ -316,7 +316,7 @@ function AssessmentEditor({
     <div className="flex flex-col gap-y-2 w-full py-1">
       <div className="flex justify-between items-center py-2">
         <div className="flex flex-col gap-y-2">
-          <h2 className="text-2xl font-bold w-[25rem] bg-yellow-200">{assessmentTitle}</h2>
+          <h2 className="text-2xl font-bold w-[25rem]">{assessmentTitle}</h2>
           <p>
             Class: {classId.toUpperCase()} - {classTitle}
           </p>
