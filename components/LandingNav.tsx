@@ -4,7 +4,7 @@ import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 
 function LandingNav() {
   return (
-    <nav className="flex justify-between w-full max-w-4xl items-center py-4 border-b-slate-300 border-b-2">
+    <nav className="flex justify-between w-full max-w-4xl items-center py-4">
       <div title="logo" className="font-bold text-2xl">
         <Link href={"/"}>Ambi-Learn</Link>
       </div>

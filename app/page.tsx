@@ -3,7 +3,7 @@ import LandingNav from "@/components/LandingNav";
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col items-center w-full gap-y-16">
+    <main className="min-h-screen flex flex-col items-center w-full gap-y-16 ">
       <LandingNav />
       <div className="w-full max-w-4xl flex gap-x-8">
         <div className="w-full flex flex-col gap-y-8">
