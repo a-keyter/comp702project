@@ -17,6 +17,7 @@ interface ItemWrapperProps {
   answers?: Answer[];
   onUpdateItem: (updates: Partial<AssessmentItem>) => void;
   onUpdateAnswer: (answerId: string, updates: Partial<Answer>) => void;
+  onGenerateFullMcq: () => void;
 }
 
 export default function ItemWrapper({
@@ -24,6 +25,7 @@ export default function ItemWrapper({
   answers,
   onUpdateItem,
   onUpdateAnswer,
+  onGenerateFullMcq,
 }: ItemWrapperProps) {
   if (item.type === "CONTEXT") {
     return (
@@ -51,7 +53,9 @@ export default function ItemWrapper({
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuLabel>Generate AI MCQs</DropdownMenuLabel>
-              <DropdownMenuItem title="Generate a question based on the assessment title and objectives">
+              <DropdownMenuItem title="Generate a question based on the assessment title and objectives"
+                onSelect={onGenerateFullMcq}
+              >
                 Generate Question & Answer
               </DropdownMenuItem>
               <DropdownMenuItem title="Generate answers to the MCQ">

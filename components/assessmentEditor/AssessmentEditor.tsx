@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import LoadingSpinner from "../LoadingSpinner";
 import Link from "next/link";
 import { Trash } from "lucide-react";
+import { generateFullMcq } from "@/lib/langchainGenerations/generateMCQ";
 
 interface AssessmentEditorProps {
   assessmentId: string;
@@ -194,6 +195,38 @@ function AssessmentEditor({
     }
   };
 
+  const handleGenerateFullMcq = async (itemId: string) => {
+    try {
+      const result = await generateFullMcq({
+        assessmentDetails: {
+          assessmentTitle,
+          assessmentObjectives
+        }
+      });
+      
+      // Update the question
+      updateAssessmentItem(itemId, { content: result.question });
+      
+      // Update the answers
+      if (mcqAnswers[itemId]) {
+        const newAnswers = [
+          { id: mcqAnswers[itemId][0].id, content: result.correctAnswer, isCorrect: true },
+          { id: mcqAnswers[itemId][1].id, content: result.falseAnswer1, isCorrect: false },
+          { id: mcqAnswers[itemId][2].id, content: result.falseAnswer2, isCorrect: false },
+          { id: mcqAnswers[itemId][3].id, content: result.falseAnswer3, isCorrect: false },
+          { id: mcqAnswers[itemId][4].id, content: result.falseAnswer4, isCorrect: false },
+        ];
+        
+        newAnswers.forEach(answer => {
+          updateMcqAnswer(itemId, answer.id, { content: answer.content, isCorrect: answer.isCorrect });
+        });
+      }
+    } catch (error) {
+      console.error("Error generating MCQ:", error);
+      // You might want to show an error message to the user here
+    }
+  };
+
   return (
     <div className="flex flex-col gap-y-2 w-full py-1">
       <div className="flex justify-between items-center py-2">
@@ -256,6 +289,7 @@ function AssessmentEditor({
             onUpdateAnswer={(answerId, updates) =>
               updateMcqAnswer(item.id, answerId, updates)
             }
+            onGenerateFullMcq={() => handleGenerateFullMcq(item.id)}
           />
         </div>
       ))}
