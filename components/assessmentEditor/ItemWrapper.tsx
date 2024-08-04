@@ -18,6 +18,8 @@ interface ItemWrapperProps {
   onUpdateItem: (updates: Partial<AssessmentItem>) => void;
   onUpdateAnswer: (answerId: string, updates: Partial<Answer>) => void;
   onGenerateFullMcq: () => void;
+  onGenerateAnswers: () => void;
+  onGenerateFalseAnswers: () => void;
 }
 
 export default function ItemWrapper({
@@ -26,6 +28,8 @@ export default function ItemWrapper({
   onUpdateItem,
   onUpdateAnswer,
   onGenerateFullMcq,
+  onGenerateAnswers,
+  onGenerateFalseAnswers,
 }: ItemWrapperProps) {
   if (item.type === "CONTEXT") {
     return (
@@ -38,6 +42,7 @@ export default function ItemWrapper({
       </>
     );
   } else if (item.type === "MCQ") {
+    const hasCorrectAnswer = answers?.some(answer => answer.isCorrect && answer.content.trim() !== '');
     return (
       <>
         <div className="flex gap-x-2 py-1 items-center">
@@ -58,10 +63,22 @@ export default function ItemWrapper({
               >
                 Generate Question & Answer
               </DropdownMenuItem>
-              <DropdownMenuItem title="Generate answers to the MCQ">
+              <DropdownMenuItem 
+                onClick={onGenerateAnswers}
+                disabled={!item.content.trim()}
+                title={!item.content.trim() ? "Please enter a question first" : "Generate answers for the current question"}
+              >
                 Generate All Answers
               </DropdownMenuItem>
-              <DropdownMenuItem>Generate Incorrect Answers</DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={onGenerateFalseAnswers}
+                disabled={!item.content.trim() || !hasCorrectAnswer}
+                title={!item.content.trim() ? "Please enter a question first" : 
+                       !hasCorrectAnswer ? "Please set a correct answer first" : 
+                       "Generate false answers for the current question"}
+              >
+                Generate False Answers
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

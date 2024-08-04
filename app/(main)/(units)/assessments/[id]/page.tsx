@@ -40,7 +40,7 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
     <div className="w-full max-w-4xl py-1">
       <div className="flex justify-between items-center ">
         <div className="flex flex-col gap-y-2">
-          <h2 className="text-2xl font-bold">{assessmentData.title}</h2>
+          <h2 className="text-2xl font-bold w-[25rem]">{assessmentData.title}</h2>
           <p>
             Class:{" "}
             <Link href={`/classes/${assessmentData.class.id}`}>

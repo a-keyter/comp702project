@@ -11,6 +11,8 @@ import LoadingSpinner from "../LoadingSpinner";
 import Link from "next/link";
 import { Trash } from "lucide-react";
 import { generateFullMcq } from "@/lib/langchainGenerations/generateMCQ";
+import { generateAnswers } from "@/lib/langchainGenerations/generateAnswers";
+import { generateFalseAnswers } from "@/lib/langchainGenerations/generateFalseAnswers";
 
 interface AssessmentEditorProps {
   assessmentId: string;
@@ -197,12 +199,18 @@ function AssessmentEditor({
 
   const handleGenerateFullMcq = async (itemId: string) => {
     try {
-      const result = await generateFullMcq({
-        assessmentDetails: {
-          assessmentTitle,
-          assessmentObjectives
-        }
-      });
+      // Extract existing questions
+    const existingQuestions = assessmentItems
+    .filter(item => item.type === "MCQ" && item.content.trim() !== "")
+    .map(item => item.content);
+
+  const result = await generateFullMcq({
+    assessmentDetails: {
+      assessmentTitle,
+      assessmentObjectives,
+      existingQuestions,
+    }
+  });
       
       // Update the question
       updateAssessmentItem(itemId, { content: result.question });
@@ -223,7 +231,84 @@ function AssessmentEditor({
       }
     } catch (error) {
       console.error("Error generating MCQ:", error);
-      // You might want to show an error message to the user here
+    }
+  };
+
+  const handleGenerateAnswers = async (itemId: string) => {
+    console.log("Generating Answers.")
+    
+    const item = assessmentItems.find((item) => item.id === itemId);
+    
+    if (!item || item.type !== "MCQ" || !item.content.trim()) {
+      console.error("Cannot generate answers: Invalid item or empty question");
+      return;
+    }
+  
+    try {
+      const result = await generateAnswers({
+        props: {
+          question: item.content,
+          assessmentTitle,
+        }
+      });
+      
+      if (mcqAnswers[itemId]) {
+        const newAnswers = [
+          { id: mcqAnswers[itemId][0].id, content: result.correctAnswer, isCorrect: true },
+          { id: mcqAnswers[itemId][1].id, content: result.falseAnswer1, isCorrect: false },
+          { id: mcqAnswers[itemId][2].id, content: result.falseAnswer2, isCorrect: false },
+          { id: mcqAnswers[itemId][3].id, content: result.falseAnswer3, isCorrect: false },
+          { id: mcqAnswers[itemId][4].id, content: result.falseAnswer4, isCorrect: false },
+        ];
+        
+        newAnswers.forEach(answer => {
+          updateMcqAnswer(itemId, answer.id, { content: answer.content, isCorrect: answer.isCorrect });
+        });
+      }
+    } catch (error) {
+      console.error("Error generating answers:", error);
+    }
+  };
+
+  const handleGenerateFalseAnswers = async (itemId: string) => {
+    const item = assessmentItems.find((item) => item.id === itemId);
+    
+    if (!item || item.type !== "MCQ" || !item.content.trim()) {
+      console.error("Cannot generate false answers: Invalid item or empty question");
+      return;
+    }
+  
+    const correctAnswer = mcqAnswers[itemId]?.find(answer => answer.isCorrect)?.content;
+  
+    if (!correctAnswer) {
+      console.error("Cannot generate false answers: No correct answer set");
+      return;
+    }
+  
+    try {
+      const result = await generateFalseAnswers({
+        props: {
+          question: item.content,
+          correctAnswer: correctAnswer,
+          assessmentTitle,
+        }
+      });
+      
+      if (mcqAnswers[itemId]) {
+        const newAnswers = [
+          ...mcqAnswers[itemId].filter(answer => answer.isCorrect),
+          { id: mcqAnswers[itemId][1].id, content: result.falseAnswer1, isCorrect: false },
+          { id: mcqAnswers[itemId][2].id, content: result.falseAnswer2, isCorrect: false },
+          { id: mcqAnswers[itemId][3].id, content: result.falseAnswer3, isCorrect: false },
+          { id: mcqAnswers[itemId][4].id, content: result.falseAnswer4, isCorrect: false },
+        ];
+        
+        newAnswers.forEach(answer => {
+          updateMcqAnswer(itemId, answer.id, { content: answer.content, isCorrect: answer.isCorrect });
+        });
+      }
+    } catch (error) {
+      console.error("Error generating false answers:", error);
     }
   };
 
@@ -231,7 +316,7 @@ function AssessmentEditor({
     <div className="flex flex-col gap-y-2 w-full py-1">
       <div className="flex justify-between items-center py-2">
         <div className="flex flex-col gap-y-2">
-          <h2 className="text-2xl font-bold">{assessmentTitle}</h2>
+          <h2 className="text-2xl font-bold w-[25rem] bg-yellow-200">{assessmentTitle}</h2>
           <p>
             Class: {classId.toUpperCase()} - {classTitle}
           </p>
@@ -290,6 +375,8 @@ function AssessmentEditor({
               updateMcqAnswer(item.id, answerId, updates)
             }
             onGenerateFullMcq={() => handleGenerateFullMcq(item.id)}
+            onGenerateAnswers={() => handleGenerateAnswers(item.id)}
+            onGenerateFalseAnswers={() => handleGenerateFalseAnswers(item.id)}
           />
         </div>
       ))}
