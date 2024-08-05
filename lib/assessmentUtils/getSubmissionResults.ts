@@ -47,7 +47,6 @@ export async function getSubmissionResults(submissionId: string): Promise<Submis
           },
         },
         user: true,
-        feedback: true,
       },
     });
 
@@ -78,7 +77,7 @@ export async function getSubmissionResults(submissionId: string): Promise<Submis
       correctAnswers: 0,
       responses: [],
       submitterName: submission.user.name,
-      feedback: submission.feedback?.content || null,
+      feedback: submission.feedback || null,
     };
 
     for (const response of submission.responses) {

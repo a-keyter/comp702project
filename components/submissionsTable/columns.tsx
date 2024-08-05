@@ -16,6 +16,7 @@ export type ResponseWithUser = {
   id: string;
   createdAt: Date;
   score: number | null;
+  feedback: string | null;
   user: {
     name: string;
     nickname: string;

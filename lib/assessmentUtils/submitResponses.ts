@@ -38,6 +38,7 @@ export async function submitResponses({
   try {
     // Initialise an array of incorrect responses
     const incorrectResponses: IncorrectResponse[] = [];
+    let submissionId: string;
 
     // Start a transaction
     const result = await prisma.$transaction(async (prisma) => {
@@ -48,6 +49,9 @@ export async function submitResponses({
           userId,
         },
       });
+
+      // Save the submission ID
+      submissionId = submission.id;  
 
       // Process each response
       const responsePromises = Object.entries(responses).map(
@@ -119,16 +123,15 @@ export async function submitResponses({
       incorrectResponses,
     });
 
-    // Create feedback separately
-    await prisma.userFeedback.create({
+    // Update Submission with feedback
+    await prisma.submission.update({
+      where: {
+        id: result.submissionId, 
+      },
       data: {
-        content: feedbackContent,
-        submissionId: result.submissionId,
+        feedback: feedbackContent,
       },
     });
-
-    // Revalidate the assessment page
-    revalidatePath(`/assessments/${assessmentId}`);
 
     return { success: true, ...result };
   } catch (error) {

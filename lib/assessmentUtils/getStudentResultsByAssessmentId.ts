@@ -37,6 +37,7 @@ export async function getStudentResultsByAssessmentId(assessmentId: string): Pro
       id: submission.id,
       createdAt: submission.createdAt,
       score: submission.score,
+      feedback: submission.feedback,
       user: {
         name: user.name,
         nickname: user.nickname,

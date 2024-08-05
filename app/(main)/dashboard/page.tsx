@@ -19,14 +19,14 @@ export default async function Dashboard() {
   const assessments = await getUserAssessments();
   
   return (
-    <div className="w-full max-w-4xl flex flex-col flex-grow space-y-1">
+    <div className="w-full max-w-4xl flex flex-col flex-grow space-y-4">
       {classes && (
         <ClassDataTable
           columns={classColumns}
           data={classes}
           role={user.role}
           tableSize="small"
-        ></ClassDataTable>
+        />
       )}
       {assessments && (
         <AssessmentDataTable

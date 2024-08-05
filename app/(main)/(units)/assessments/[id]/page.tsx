@@ -31,16 +31,23 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
       : await getStudentResultsByAssessmentId(params.id);
 
   const submissionCount = results ? results.length : 0;
-  const averageScore = results
-    ? results.reduce((sum, submission) => sum + (submission.score || 0), 0) /
-      submissionCount
-    : 0;
+  let averageScore = 0;
+  let bestScore = 0;
+
+  if (results && submissionCount > 0) {
+    const scores = results.map((submission) => submission.score || 0);
+    const totalScore = scores.reduce((sum, score) => sum + score, 0);
+    averageScore = totalScore / submissionCount;
+    bestScore = Math.max(...scores);
+  }
 
   return (
     <div className="w-full max-w-4xl py-1">
       <div className="flex justify-between items-center ">
         <div className="flex flex-col gap-y-2">
-          <h2 className="text-2xl font-bold w-[25rem]">{assessmentData.title}</h2>
+          <h2 className="text-2xl font-bold w-[25rem]">
+            {assessmentData.title}
+          </h2>
           <p>
             Class:{" "}
             <Link href={`/classes/${assessmentData.class.id}`}>
@@ -81,20 +88,28 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
       </div>
       <div className="grid grid-cols-6 gap-x-2 my-2">
         <Card className="col-span-4 p-2 px-2">
-          <h3 className="font-semibold text-lg">Assessment Objectives</h3>
+          <h3 className="font-semibold text-md">Assessment Objectives</h3>
           <p>{assessmentData.objectives}</p>
         </Card>
         <Card className="col-span-1 p-2">
           <h3>Submissions</h3>
           <p className="font-bold text-2xl">{submissionCount}</p>
         </Card>
-        <Card className="col-span-1 p-2">
-          <h3>Average Score</h3>
-          <p className="font-bold text-2xl">{averageScore.toFixed(2)}%</p>
-        </Card>
+        {user.role === "TEACHER" ? (
+          <Card className="col-span-1 p-2">
+            <h3>Average Score</h3>
+            <p className="font-bold text-2xl">{averageScore.toFixed(2)}%</p>
+          </Card>
+        ) : (
+          <Card className="col-span-1 p-2">
+            <h3>Best Score</h3>
+            <p className="font-bold text-2xl">{bestScore.toFixed(2)}%</p>
+          </Card>
+        )}
       </div>
+
       {results && (
-        <div className="w-full mb-2">
+        <div className="w-full mt-2">
           {user.role === "TEACHER" ? (
             <AllResponsesDataTable
               columns={responseColumns}
@@ -110,7 +125,19 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
           )}
         </div>
       )}
-      <div className="w-full bg-slate-200 h-32">Placeholder AI Feedback</div>
+
+      {results && user.role === "STUDENT" ? (
+        <Card className="p-2 mt-2">
+          <h3 className="font-bold">Feedback</h3>
+          <p>
+            {assessmentData.submissions[0].feedback
+              ? assessmentData.submissions[0].feedback
+              : "No Feedback Available."}
+          </p>
+        </Card>
+      ) : (
+        <div className="w-full bg-slate-200 h-32">Placeholder AI Feedback</div>
+      )}
     </div>
   );
 }

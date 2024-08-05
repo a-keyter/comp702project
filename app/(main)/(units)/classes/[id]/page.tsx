@@ -27,7 +27,7 @@ async function ClassPage({ params }: { params: { id: string } }) {
   const assessments = await getClassAssessments(params.id);
 
   return (
-    <div className="w-full max-w-4xl mt-2">
+    <div className="w-full max-w-4xl mt-2 flex flex-col">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold pl-2">
           {classData.id.toUpperCase()} - {classData.title}

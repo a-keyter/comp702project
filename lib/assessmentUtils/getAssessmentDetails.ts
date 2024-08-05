@@ -14,6 +14,7 @@ export async function getAssessmentById(id: string) {
         submissions: {
             select: {
               score: true,
+              feedback: true,
             },
       },
     }
@@ -54,6 +55,7 @@ export async function getUserAssessments() {
         submissions: {
           select: {
             score: true,
+            feedback: true,
           },
         },
         class: {
