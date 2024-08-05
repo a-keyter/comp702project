@@ -32,7 +32,7 @@ async function ClassPage({ params }: { params: { id: string } }) {
         <h2 className="text-2xl font-bold pl-2">
           {classData.id.toUpperCase()} - {classData.title}
         </h2>
-        {user.role === "TEACHER" ? (
+        {user.role === "TEACHER" && (
           <div className="flex gap-x-4">
             <UpdateClassDialog classData={classData} />
             <DeleteClassDialog
@@ -40,9 +40,6 @@ async function ClassPage({ params }: { params: { id: string } }) {
               classTitle={classData.title}
             />
           </div>
-        ) : (
-          // TODO - Leave Class FUnctionality
-          <Button>Leave Class</Button>
         )}
       </div>
       <div className="grid grid-cols-6 gap-x-2 my-4">
@@ -56,11 +53,11 @@ async function ClassPage({ params }: { params: { id: string } }) {
         </Card>
         <Card className="col-span-1 p-2">
           <h3>Assessments</h3>
-          <p className="font-bold text-2xl">XX</p>
+          <p className="font-bold text-2xl">{assessments ? assessments.length : "00"}</p>
         </Card>
         <Card className="col-span-1 p-2">
           <h3>Students</h3>
-          <p className="font-bold text-2xl">XX</p>
+          <p className="font-bold text-2xl">{classData.memberCount}</p>
         </Card>
       </div>
       {assessments && (

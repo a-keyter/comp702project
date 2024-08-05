@@ -21,9 +21,9 @@ interface AttemptAssessmentProps {
 function AttemptAssessment({
   assessmentId,
   assessmentTitle,
+  assessmentObjectives,
   classId,
   classTitle,
-  assessmentObjectives,
   items,
   mcqAnswers,
 }: AttemptAssessmentProps) {
@@ -40,6 +40,8 @@ function AttemptAssessment({
     try {
       const result = await submitResponses({
         assessmentId,
+        assessmentTitle,
+        assessmentObjectives,
         responses,
       });
   

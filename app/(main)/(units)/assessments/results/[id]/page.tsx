@@ -18,6 +18,7 @@ async function AssessmentResultsPage({ params }: { params: { id: string } }) {
           correctAnswers={results.correctAnswers}
           responses={results.responses}
           submitterName={results.submitterName}
+          feedback={results.feedback}
         />
       )}
     </div>

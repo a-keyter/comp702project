@@ -20,6 +20,7 @@ export interface SubmissionResult {
   correctAnswers: number;
   responses: SubmittedResponse[];
   submitterName: string;
+  feedback: string | null; // New field for feedback
 }
 
 export async function getSubmissionResults(submissionId: string): Promise<SubmissionResult | null> {
@@ -46,6 +47,7 @@ export async function getSubmissionResults(submissionId: string): Promise<Submis
           },
         },
         user: true,
+        feedback: true,
       },
     });
 
@@ -76,6 +78,7 @@ export async function getSubmissionResults(submissionId: string): Promise<Submis
       correctAnswers: 0,
       responses: [],
       submitterName: submission.user.name,
+      feedback: submission.feedback?.content || null,
     };
 
     for (const response of submission.responses) {

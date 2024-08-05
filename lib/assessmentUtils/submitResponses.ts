@@ -1,18 +1,27 @@
 "use server";
 
-// @/lib/assessmentUtils/submitResponses.ts
-
 import { prisma } from "@/lib/initPrisma"; // Adjust this import based on your Prisma client setup
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { generateFeedback } from "../langchainGenerations/generateFeedback";
 
 interface SubmitResponsesParams {
   assessmentId: string;
+  assessmentTitle: string;
+  assessmentObjectives: string;
   responses: Record<string, string>; // { [assessmentItemId]: answerId }
+}
+
+interface IncorrectResponse {
+  question: string;
+  givenAnswer: string;
+  correctAnswer: string;
 }
 
 export async function submitResponses({
   assessmentId,
+  assessmentTitle,
+  assessmentObjectives,
   responses,
 }: SubmitResponsesParams) {
   const { userId } = auth();
@@ -27,6 +36,9 @@ export async function submitResponses({
   }
 
   try {
+    // Initialise an array of incorrect responses
+    const incorrectResponses: IncorrectResponse[] = [];
+
     // Start a transaction
     const result = await prisma.$transaction(async (prisma) => {
       // Create a new submission
@@ -40,16 +52,34 @@ export async function submitResponses({
       // Process each response
       const responsePromises = Object.entries(responses).map(
         async ([assessmentItemId, answerId]) => {
-          // Get the correct answer for this assessment item
-          const correctAnswer = await prisma.answer.findFirst({
-            where: {
-              assessmentItemId,
-              isCorrect: true,
-            },
-          });
+          const [assessmentItem, correctAnswer, givenAnswer] =
+            await Promise.all([
+              prisma.assessmentItem.findUnique({
+                where: { id: assessmentItemId },
+                include: { answers: true },
+              }),
+              prisma.answer.findFirst({
+                where: {
+                  assessmentItemId,
+                  isCorrect: true,
+                },
+              }),
+              prisma.answer.findUnique({
+                where: { id: answerId },
+              }),
+            ]);
 
           // Check if the given answer is correct
           const isCorrect = correctAnswer?.id === answerId;
+
+          // Add the incorrect response to a list for feedback writing.
+          if (!isCorrect && assessmentItem && correctAnswer && givenAnswer) {
+            incorrectResponses.push({
+              question: assessmentItem.content,
+              givenAnswer: givenAnswer.content,
+              correctAnswer: correctAnswer.content,
+            });
+          }
 
           // Create the response
           return prisma.response.create({
@@ -69,22 +99,32 @@ export async function submitResponses({
 
       // Calculate the score
       const totalResponses = Object.keys(responses).length;
-      const correctResponses = await prisma.response.count({
-        where: {
-          submissionId: submission.id,
-          isCorrect: true,
-        },
-      });
+      const correctResponses = totalResponses - incorrectResponses.length;
 
       const score = (correctResponses / totalResponses) * 100;
 
-      // Update the submission with the score
-      await prisma.submission.update({
+      /// Update the submission with the score
+      const updatedSubmission = await prisma.submission.update({
         where: { id: submission.id },
         data: { score },
       });
 
       return { submissionId: submission.id, score };
+    });
+
+    // Generate feedback based on the results (outside the transaction)
+    const feedbackContent = await generateFeedback({
+      assessmentTitle,
+      assessmentObjectives,
+      incorrectResponses,
+    });
+
+    // Create feedback separately
+    await prisma.userFeedback.create({
+      data: {
+        content: feedbackContent,
+        submissionId: result.submissionId,
+      },
     });
 
     // Revalidate the assessment page

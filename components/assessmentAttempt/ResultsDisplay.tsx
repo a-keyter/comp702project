@@ -13,6 +13,7 @@ interface ResultsDisplayProps {
   correctAnswers: number;
   responses: SubmittedResponse[];
   submitterName: string;
+  feedback: string | null;
 }
 
 function ResultsDisplay({
@@ -24,6 +25,7 @@ function ResultsDisplay({
   correctAnswers,
   responses,
   submitterName,
+  feedback,
 }: ResultsDisplayProps) {
   return (
     <div className="flex flex-col gap-y-4 w-full py-4">
@@ -35,9 +37,9 @@ function ResultsDisplay({
         </Link>
         <p><strong>Submitted by:</strong> {submitterName}</p>
         </div>
-        <div className="flex flex-col gap-y-2">
-        <Link href={`/assessments/${assessmentId}`}>
-          <Button><ArrowLeftSquare className="mr-2"/>Assesment Overview</Button>
+        <div className="flex flex-col gap-y-2 items-end">
+        <Link href={`/assessments/${assessmentId}`} className="w-full flex justify-end">
+          <Button className=""><ArrowLeftSquare className="mr-2"/>Assesment Overview</Button>
         </Link>
         <p className="text-right"><strong>Class:</strong> {classTitle}</p>
         </div>
@@ -49,7 +51,7 @@ function ResultsDisplay({
           Correct Answers: {correctAnswers} out of {totalQuestions}
         </p>
         <p className="mt-4"><strong>Feedback:</strong></p>
-        <p>PLACEHOLDER FEEDBACK</p>
+        <p>{feedback ? feedback : "No Feedback Available."}</p>
       </div>
       <div className="space-y-4">
         {responses.map((response, index) => (

@@ -48,6 +48,7 @@ export async function generateFullMcq({
     name: "Multiple-Choice-Question",
   });
 
+
   const response = await structuredLlm.invoke(
     `Generate a Multiple Choice Question for an assessment titled ${assessmentDetails.assessmentTitle}. The objectives of the asssessment are: ${assessmentDetails.assessmentObjectives}. The question must be semantically different from ${assessmentDetails.existingQuestions}`
   );

@@ -19,15 +19,28 @@ export type ClassWithCreator = {
 };
 
 // FETCH SPECIFIC CLASS
-export async function getClassById(classId: string): Promise<Class | null> {
+export async function getClassById(classId: string): Promise<(Class & { memberCount: number }) | null> {
   try {
     const classData = await prisma.class.findUnique({
       where: {
         id: classId.toLowerCase(), // Ensure we're using lowercase for consistency
       },
+      include: {
+        _count: {
+          select: { members: true }
+        }
+      }
     });
 
-    return classData;
+    if (!classData) {
+      return null;
+    }
+
+    return {
+      ...classData,
+      memberCount: classData._count.members
+    };
+
   } catch (error) {
     console.error("Error fetching class:", error);
     throw error;
