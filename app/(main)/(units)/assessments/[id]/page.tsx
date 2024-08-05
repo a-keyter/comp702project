@@ -130,9 +130,8 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
         <Card className="p-2 mt-2">
           <h3 className="font-bold">Feedback</h3>
           <p>
-            {assessmentData.submissions[0].feedback
-              ? assessmentData.submissions[0].feedback
-              : "No Feedback Available."}
+            {assessmentData.submissions?.[0]?.feedback ??
+              "No Feedback Available."}
           </p>
         </Card>
       ) : (
