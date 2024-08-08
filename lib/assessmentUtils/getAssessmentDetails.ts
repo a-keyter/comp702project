@@ -13,6 +13,7 @@ export async function getAssessmentById(id: string) {
         assessmentItems: true,
         submissions: {
             select: {
+              id: true,
               score: true,
               feedback: true,
             },

@@ -8,6 +8,7 @@ import UpdateClassDialog from "@/components/UpdateClassDialog";
 import { getClassAssessments } from "@/lib/assessmentUtils/getAssessmentDetails";
 import { getClassById } from "@/lib/classUtils/getClassDetails";
 import { getUserById, getUserDetails } from "@/lib/userUtils/getUserDetails";
+import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
 async function ClassPage({ params }: { params: { id: string } }) {
@@ -18,6 +19,7 @@ async function ClassPage({ params }: { params: { id: string } }) {
   }
 
   const user = await getUserDetails();
+  const userRole = user?.role;
 
   if (!user) {
     return redirect("/onboard");
@@ -52,12 +54,18 @@ async function ClassPage({ params }: { params: { id: string } }) {
           </p>
         </Card>
         <Card className="col-span-1 p-2">
-          <h3>Assessments</h3>
-          <p className="font-bold text-2xl">{assessments ? assessments.length : "00"}</p>
+          {userRole === "TEACHER" ? (
+            <Link href={`/classes/students/${params.id}`}>Students</Link>
+          ) : (
+            <h3>Students</h3>
+          )}
+          <p className="font-bold text-2xl">{classData.memberCount}</p>
         </Card>
         <Card className="col-span-1 p-2">
-          <h3>Students</h3>
-          <p className="font-bold text-2xl">{classData.memberCount}</p>
+          <h3>Assessments</h3>
+          <p className="font-bold text-2xl">
+            {assessments ? assessments.length : "00"}
+          </p>
         </Card>
       </div>
       {assessments && (
@@ -71,6 +79,11 @@ async function ClassPage({ params }: { params: { id: string } }) {
           classes={null}
         />
       )}
+      <div className="grid grid-cols-6 grid-rows-2 gap-x-2 gap-y-4 mt-4 ">
+        <Card className="col-span-4 row-span-2 p-2">Graph go here</Card>
+        <Card className="col-span-2 p-2">Lowest Performing Students</Card>
+        <Card className="col-span-2 p-2">Highest Performing Students</Card>
+      </div>
     </div>
   );
 }

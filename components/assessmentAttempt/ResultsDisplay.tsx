@@ -3,8 +3,10 @@ import Link from "next/link";
 import { ArrowLeftSquare, SkipBack } from "lucide-react";
 import { Button } from "../ui/button";
 import { SubmittedResponse } from "@/lib/assessmentUtils/getSubmissionResults";
+import ReportIssueDialog from "../ReportIssueDialog";
 
 interface ResultsDisplayProps {
+  submissionId: string;
   assessmentId: string;
   assessmentTitle: string;
   classTitle: string;
@@ -17,6 +19,7 @@ interface ResultsDisplayProps {
 }
 
 function ResultsDisplay({
+  submissionId,
   assessmentId,
   assessmentTitle,
   classTitle,
@@ -50,7 +53,10 @@ function ResultsDisplay({
         <p>
           Correct Answers: {correctAnswers} out of {totalQuestions}
         </p>
+        <div className="flex justify-between">
         <p className="mt-4"><strong>Feedback:</strong></p>
+        <ReportIssueDialog issueType="Feedback" issueItemId={submissionId} issueObject={feedback!}/>
+        </div>
         <p>{feedback ? feedback : "No Feedback Available."}</p>
       </div>
       <div className="space-y-4">

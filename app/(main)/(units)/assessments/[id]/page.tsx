@@ -1,4 +1,5 @@
 import DeleteAssessmentDialog from "@/components/DeleteAssessmentDialog";
+import ReportIssueDialog from "@/components/ReportIssueDialog";
 import { responseColumns } from "@/components/submissionsTable/columns";
 import { AllResponsesDataTable } from "@/components/submissionsTable/data-table";
 import { studentColumns } from "@/components/submissionsTable/student-columns";
@@ -128,14 +129,21 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
 
       {results && user.role === "STUDENT" ? (
         <Card className="p-2 mt-2">
-          <h3 className="font-bold">Feedback</h3>
+          <div className="flex justify-between items-end py-2">
+          <h3 className="font-bold text-xl ">Feedback</h3>
+          {/* Placeholder for Report Issue Button */}
+          {assessmentData.submissions.length > 0 && <ReportIssueDialog issueItemId={assessmentData.submissions?.[0].id ?? "n/a"} issueType="Feedback" issueObject={assessmentData.submissions?.[0]?.feedback}/>}
+          </div>
           <p>
             {assessmentData.submissions?.[0]?.feedback ??
               "No Feedback Available."}
           </p>
         </Card>
       ) : (
-        <div className="w-full bg-slate-200 h-32">Placeholder AI Feedback</div>
+        <div className="grid grid-cols-6 gap-x-2 mt-2">
+          <Card className="w-full h-32 p-2 col-span-3">Placeholder AI Feedback</Card>
+          <Card className="col-span-3 p-2">Most Challenging Questions</Card>
+        </div>
       )}
     </div>
   );

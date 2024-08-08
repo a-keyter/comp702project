@@ -35,12 +35,12 @@ function UserNav() {
             Assessments
           </Button>
         </Link>
-        <Link href={"/feedback"}>
+        <Link href={"/issues"}>
           <Button variant={"ghost"} className="flex flex-col px-2">
             <div>
               <StopCircle />
             </div>
-            Discuss
+            Issues
           </Button>
         </Link>
         <Link href={"/dashboard"}>
@@ -73,13 +73,11 @@ function UserNav() {
                 Dashboard
               </Link>
             </DropdownMenuItem>
-
             <DropdownMenuItem>
               <SignOutButton redirectUrl={"/"} />
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        
       </div>
     </nav>
   );
