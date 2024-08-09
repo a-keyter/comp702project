@@ -54,6 +54,11 @@ export async function getUserAssessments() {
       },
       include: {
         submissions: {
+          orderBy: {
+            createdAt: 'desc'
+          },
+          distinct: ['userId'],
+          take: 1,
           select: {
             score: true,
             feedback: true,
@@ -122,7 +127,7 @@ export async function getClassAssessments(classId: string) {
       return null;
     }
 
-    // If the user has access to the class, proceed with fetching assessments
+    // If the user has access to the class and is teacher, proceed with fetching assessments
     const assessments = await prisma.assessment.findMany({
       where: {
         classId: classId

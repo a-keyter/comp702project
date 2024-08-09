@@ -33,14 +33,14 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
 
   const submissionCount = results ? results.length : 0;
   let averageScore = 0;
-  let bestScore = 0;
 
   if (results && submissionCount > 0) {
     const scores = results.map((submission) => submission.score || 0);
     const totalScore = scores.reduce((sum, score) => sum + score, 0);
     averageScore = totalScore / submissionCount;
-    bestScore = Math.max(...scores);
   }
+
+  console.log(results);
 
   return (
     <div className="w-full max-w-4xl py-1">
@@ -103,8 +103,10 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
           </Card>
         ) : (
           <Card className="col-span-1 p-2">
-            <h3>Best Score</h3>
-            <p className="font-bold text-2xl">{bestScore.toFixed(2)}%</p>
+            <h3>Latest Score</h3>
+            <p className="font-bold text-2xl">
+              {results && results.length > 0 ? results[0].score + "%" : "N/A"}
+            </p>
           </Card>
         )}
       </div>
@@ -130,18 +132,27 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
       {results && user.role === "STUDENT" ? (
         <Card className="p-2 mt-2">
           <div className="flex justify-between items-end py-2 mb-2 border-b-2">
-          <h3 className="font-bold text-xl ">Feedback</h3>
-          {assessmentData.submissions.length > 0 && <ReportIssueDialog issueItemId={assessmentData.submissions?.[0].id ?? "n/a"} issueType="Feedback" issueObject={assessmentData.submissions?.[0]?.feedback}/>}
+            <h3 className="font-bold text-xl ">Feedback</h3>
+            {results.length > 0 && (
+              <ReportIssueDialog
+                issueItemId={results[0].id}
+                issueType="Feedback"
+                issueObject={results[0].feedback}
+              />
+            )}
           </div>
           <p>
-            {assessmentData.submissions?.[0]?.feedback ??
-              "No Feedback Available."}
+            {results.length > 0
+              ? results[0].feedback
+              : "No Feedback Available."}
           </p>
         </Card>
       ) : (
         <div className="grid grid-cols-6 gap-x-2 mt-2">
-          <Card className="w-full h-32 p-2 col-span-3">Placeholder AI Feedback</Card>
           <Card className="col-span-3 p-2">Most Challenging Questions</Card>
+          <Card className="w-full h-32 p-2 col-span-3">
+            Placeholder AI Feedback
+          </Card>
         </div>
       )}
     </div>

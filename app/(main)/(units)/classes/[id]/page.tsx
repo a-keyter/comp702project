@@ -80,9 +80,12 @@ async function ClassPage({ params }: { params: { id: string } }) {
         />
       )}
       <div className="grid grid-cols-6 grid-rows-2 gap-x-2 gap-y-4 mt-4 ">
-        <Card className="col-span-4 row-span-2 p-2">Graph go here</Card>
-        <Card className="col-span-2 p-2">Lowest Performing Students</Card>
-        <Card className="col-span-2 p-2">Highest Performing Students</Card>
+        {userRole === "STUDENT" && <Card className="col-span-3 row-span-2 p-2">Individual Performance Graph</Card>}
+        <Card className="col-span-3 row-span-2 p-2">Class Performance Graph Go Here</Card>
+
+        {userRole === "TEACHER" && <Card className="col-span-3 p-2">Lowest Performing Students</Card>}
+        {userRole === "TEACHER" && <Card className="col-span-3 p-2">Highest Performing Students</Card>}
+
       </div>
     </div>
   );

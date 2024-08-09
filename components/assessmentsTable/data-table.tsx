@@ -79,6 +79,7 @@ export function AssessmentDataTable<TData, TValue>({
           <Link href="/assessments"className="font-semibold text-xl pl-2">Assessments</Link>
           <div className="flex gap-x-4 py-1 w-full max-w-md justify-end">
           <Input
+          name="Assessment Search Bar"
           placeholder="Search assessments..."
           value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>

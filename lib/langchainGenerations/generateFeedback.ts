@@ -25,9 +25,9 @@ export async function generateFeedback({
       Incorrect Responses: ${incorrectResponses.length}
 
       ${incorrectResponses.map((response) => 
-        `Q: ${response.question.slice(0, 50)}... 
-         Given: ${response.givenAnswer.slice(0, 20)}... 
-         Correct: ${response.correctAnswer.slice(0, 20)}...`
+        `Q: ${response.question} 
+         Given: ${response.givenAnswer} 
+         Correct: ${response.correctAnswer}`
       ).join('\n')}
 
       Provide feedback in this format:

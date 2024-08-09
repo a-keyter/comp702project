@@ -5,7 +5,7 @@ export async function getResultsByAssessmentId(
   assessmentId: string
 ): Promise<ResponseWithUser[] | null> {
   try {
-    // First, get the most recent submission for each user
+    // Get the most recent submission for each user
     const latestSubmissions = await prisma.submission.findMany({
       where: {
         assessmentId: assessmentId,
@@ -24,7 +24,7 @@ export async function getResultsByAssessmentId(
       },
     });
 
-    // Then, get the attempt count and highest score for each user
+    // Get the attempt count for each user
     const userStats = await prisma.submission.groupBy({
       by: ["userId"],
       where: {
@@ -33,12 +33,9 @@ export async function getResultsByAssessmentId(
       _count: {
         id: true,
       },
-      _max: {
-        score: true,
-      },
     });
 
-    // Combine the latest submissions with the attempt counts and highest scores
+    // Combine the latest submissions with the attempt counts
     const submissionsWithStats: ResponseWithUser[] = latestSubmissions.map(
       (submission) => {
         const stats = userStats.find(
@@ -47,7 +44,8 @@ export async function getResultsByAssessmentId(
         return {
           id: submission.id,
           createdAt: submission.createdAt,
-          score: stats ? stats._max.score : submission.score,
+          score: submission.score, // Use the score from the latest submission
+          feedback: submission.feedback,
           user: submission.user,
           attemptCount: stats ? stats._count.id : 1,
         };

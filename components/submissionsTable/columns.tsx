@@ -16,6 +16,7 @@ export type ResponseWithUser = {
   id: string;
   createdAt: Date;
   score: number | null;
+  feedback: string | null;
   user: {
     name: string;
     nickname: string;
@@ -76,7 +77,7 @@ export const responseColumns: ColumnDef<ResponseWithUser>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Best Score
+          Latest Score
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );

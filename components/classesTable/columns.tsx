@@ -34,9 +34,13 @@ export const classColumns: ColumnDef<SafeClass>[] = [
       },
     cell: ({ row }) => {
         const thisClass = row.original;
+        const truncatedTitle =
+        thisClass.title.length > 25
+          ? `${thisClass.title.substring(0, 25)}...`
+          : thisClass.title;
         return (
           <Link href={`/classes/${thisClass.id}`}>
-            <p className="pl-4">{thisClass.title}</p>
+            <p title={thisClass.title} className="pl-4">{truncatedTitle}</p>
           </Link>
         );
       },

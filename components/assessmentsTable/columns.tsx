@@ -2,19 +2,18 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
- 
-import { Button } from "@/components/ui/button"
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { Assessment } from "@prisma/client";
- 
 
 type AssessmentWithStats = Assessment & {
   submissionCount: number;
@@ -29,25 +28,29 @@ export const assessmentColumns: ColumnDef<AssessmentWithStats>[] = [
   {
     accessorKey: "title",
     header: ({ column }) => {
-        return (
-          <Button
+      return (
+        <Button
           className="w-full flex justify-start"
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Title
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        )
-      },
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Title
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => {
-        const thisAssessment = row.original;
-        return (
-          <Link href={`/assessments/${thisAssessment.id}`}>
-            <p className="pl-4">{thisAssessment.title}</p>
-          </Link>
-        );
-      },
+      const thisAssessment = row.original;
+      const truncatedTitle =
+        thisAssessment.title.length > 25
+          ? `${thisAssessment.title.substring(0, 25)}...`
+          : thisAssessment.title;
+      return (
+        <Link href={`/assessments/${thisAssessment.id}`}>
+          <p title={thisAssessment.title} className="pl-4">{truncatedTitle}</p>
+        </Link>
+      );
+    },
   },
   {
     accessorKey: "class.title",
@@ -61,54 +64,56 @@ export const assessmentColumns: ColumnDef<AssessmentWithStats>[] = [
           Class
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      return <Link href={`/classes/${row.original.class.id}`}className="pl-4">{row.original.class.title}</Link>;
+      return (
+        <Link href={`/classes/${row.original.class.id}`} className="pl-4">
+          {row.original.class.title}
+        </Link>
+      );
     },
   },
   {
     accessorKey: "submissionCount",
-    header: "Submissions"
+    header: "Submissions",
   },
   {
     accessorKey: "averageScore",
-    header: "Average Score"
+    header: "Average Score",
   },
   {
     accessorKey: "updatedAt",
     header: ({ column }) => {
-        return (
-          <Button
+      return (
+        <Button
           className="w-full flex justify-start"
-
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Last Updated
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        )
-      },
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Last Updated
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => {
       const date = new Date(row.getValue("updatedAt"));
-      const formatted = date
-        .toLocaleString("en-GB", {
-          hour: "2-digit",
-          minute: "2-digit",
-          day: "2-digit",
-          month: "2-digit",
-          year: "2-digit",
-          hour12: false,
-        })
+      const formatted = date.toLocaleString("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit",
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+        hour12: false,
+      });
       return <div className="pl-4">{formatted}</div>;
     },
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      const thisAssessment = row.original
- 
+      const thisAssessment = row.original;
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -123,7 +128,7 @@ export const assessmentColumns: ColumnDef<AssessmentWithStats>[] = [
             <DropdownMenuItem>Delete class</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
 ];
