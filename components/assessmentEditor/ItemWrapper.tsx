@@ -2,6 +2,7 @@ import { Answer, AssessmentItem } from "@prisma/client";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { useState, useEffect, useRef, ChangeEvent } from "react";
 
 import {
   DropdownMenu,
@@ -22,6 +23,36 @@ interface ItemWrapperProps {
   onGenerateFalseAnswers: () => void;
 }
 
+interface AutoResizeInputProps {
+  value: string;
+  onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+  placeholder: string;
+  className?: string;
+  rows?: number;
+}
+
+function AutoResizeInput({ value, onChange, placeholder, className, rows}: AutoResizeInputProps) {
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.style.height = 'auto';
+      inputRef.current.style.height = inputRef.current.scrollHeight + 'px';
+    }
+  }, [value]);
+
+  return (
+    <textarea
+      ref={inputRef}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      className={`resize-none overflow-hidden ${className}`}
+      rows={rows? rows : 1}
+    />
+  );
+}
+
 export default function ItemWrapper({
   item,
   answers,
@@ -34,10 +65,12 @@ export default function ItemWrapper({
   if (item.type === "CONTEXT") {
     return (
       <>
-        <Textarea
+        <AutoResizeInput
           value={item.content}
           onChange={(e) => onUpdateItem({ content: e.target.value })}
           placeholder="Enter contextual information..."
+          className="w-full my-1 p-2 border rounded"
+          rows={3}
         />
       </>
     );
@@ -46,11 +79,11 @@ export default function ItemWrapper({
     return (
       <>
         <div className="flex gap-x-2 py-1 items-center">
-          <Input
+          <AutoResizeInput
             value={item.content}
             onChange={(e) => onUpdateItem({ content: e.target.value })}
             placeholder="Enter multiple choice question..."
-            className="w-full my-1"
+            className="w-full my-1 p-2 border rounded"
           />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -98,30 +131,18 @@ export default function ItemWrapper({
                 className="ml-2"
                 readOnly
               />
-              <input
-                type="text"
+              <AutoResizeInput
+                value={answer.content}
+                onChange={(e) =>
+                  onUpdateAnswer(answer.id, { content: e.target.value })
+                }
                 placeholder={
                   answer.isCorrect
                     ? "Write the correct answer for the question here..."
                     : "Write an incorrect answer for the question here"
                 }
-                value={answer.content}
-                onChange={(e) =>
-                  onUpdateAnswer(answer.id, { content: e.target.value })
-                }
-                className="w-full bg-inherit mr-4"
+                className="w-full bg-inherit mr-4 p-2"
               />
-              <Button
-                variant={"ghost"}
-                className="mr-2 p-1 h-8"
-                title={
-                  answer.isCorrect
-                    ? "AI Generated answer may be incorrect."
-                    : ""
-                }
-              >
-                <Sparkle/>
-              </Button>
             </div>
           ))}
       </>
