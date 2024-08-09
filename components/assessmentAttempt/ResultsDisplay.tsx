@@ -53,8 +53,8 @@ function ResultsDisplay({
         <p>
           Correct Answers: {correctAnswers} out of {totalQuestions}
         </p>
-        <div className="flex justify-between">
-        <p className="mt-4"><strong>Feedback:</strong></p>
+        <div className="flex justify-between items-end mb-2 pb-2 border-b-2">
+        <p><strong>Feedback:</strong></p>
         <ReportIssueDialog issueType="Feedback" issueItemId={submissionId} issueObject={feedback!}/>
         </div>
         <p>{feedback ? feedback : "No Feedback Available."}</p>

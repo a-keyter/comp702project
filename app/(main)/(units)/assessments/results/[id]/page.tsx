@@ -4,8 +4,6 @@ import { getSubmissionResults } from "@/lib/assessmentUtils/getSubmissionResults
 async function AssessmentResultsPage({ params }: { params: { id: string } }) {
   const results = await getSubmissionResults(params.id);
 
-  console.log(results)
-
   return (
     <div className="w-full max-w-4xl">
       {!results && <div>no results found</div>}

@@ -129,9 +129,8 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
 
       {results && user.role === "STUDENT" ? (
         <Card className="p-2 mt-2">
-          <div className="flex justify-between items-end py-2">
+          <div className="flex justify-between items-end py-2 mb-2 border-b-2">
           <h3 className="font-bold text-xl ">Feedback</h3>
-          {/* Placeholder for Report Issue Button */}
           {assessmentData.submissions.length > 0 && <ReportIssueDialog issueItemId={assessmentData.submissions?.[0].id ?? "n/a"} issueType="Feedback" issueObject={assessmentData.submissions?.[0]?.feedback}/>}
           </div>
           <p>

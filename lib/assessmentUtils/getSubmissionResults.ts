@@ -5,6 +5,7 @@ import { auth } from '@clerk/nextjs/server';
 
 export interface SubmittedResponse {
   id: string;
+  assessmentItemId: string;
   question: string;
   givenAnswer: string;
   correctAnswer: string;
@@ -94,6 +95,7 @@ export async function getSubmissionResults(submissionId: string): Promise<Submis
 
       const resultResponse: SubmittedResponse = {
         id: response.id,
+        assessmentItemId: response.assessmentItem.id,
         question: response.assessmentItem.content,
         givenAnswer: response.givenAnswer.content,
         correctAnswer: correctAnswer.content,
