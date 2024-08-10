@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "../initPrisma";
@@ -12,14 +12,14 @@ export async function getAssessmentById(id: string) {
         class: true,
         assessmentItems: true,
         submissions: {
-            select: {
-              id: true,
-              score: true,
-              feedback: true,
-            },
+          select: {
+            id: true,
+            score: true,
+            feedback: true,
+          },
+        },
       },
-    }
-  });
+    });
 
     if (!assessment) {
       return null;
@@ -36,10 +36,9 @@ export async function getAssessmentById(id: string) {
   }
 }
 
-
-export async function getUserAssessments() {
+export async function getTeacherAssessmentData() {
   const { userId } = auth();
-  
+
   if (!userId) {
     return null;
   }
@@ -47,21 +46,17 @@ export async function getUserAssessments() {
   try {
     const assessments = await prisma.assessment.findMany({
       where: {
-        OR: [
-          { createdById: userId },
-          { class: { members: { some: { id: userId } } } }
-        ]
+        createdById: userId,
       },
       include: {
         submissions: {
           orderBy: {
-            createdAt: 'desc'
+            createdAt: "desc",
           },
-          distinct: ['userId'],
+          distinct: ["userId"],
           take: 1,
           select: {
             score: true,
-            feedback: true,
           },
         },
         class: {
@@ -70,21 +65,22 @@ export async function getUserAssessments() {
             title: true,
           },
         },
-        assessmentItems: true,
       },
       orderBy: {
-        updatedAt: 'desc',
+        updatedAt: "desc",
       },
     });
 
-    const assessmentsWithStats = assessments.map(assessment => {
+    const assessmentsWithStats = assessments.map((assessment) => {
       const submissionCount = assessment.submissions.length;
-      let averageScore: number | string = 'N/A';
+      let averageScore: number | string = "N/A";
       if (submissionCount > 0) {
-        const totalScore = assessment.submissions.reduce((sum, sub) => sum + (sub.score || 0), 0);
+        const totalScore = assessment.submissions.reduce(
+          (sum, sub) => sum + (sub.score || 0),
+          0
+        );
         averageScore = (totalScore / submissionCount).toFixed(2);
       }
-
       return {
         ...assessment,
         submissionCount,
@@ -95,17 +91,67 @@ export async function getUserAssessments() {
     });
 
     return assessmentsWithStats;
-
   } catch (error) {
-    console.error("Error fetching user assessments:", error);
+    console.error("Error fetching teacher assessments:", error);
     return null;
   }
 }
 
+export async function getStudentAssessmentData() {
+  const { userId } = auth();
+  if (!userId) {
+    return null;
+  }
+  try {
+    const assessments = await prisma.assessment.findMany({
+      where: {
+        class: { members: { some: { id: userId } } },
+      },
+      include: {
+        submissions: {
+          where: {
+            userId: userId,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          select: {
+            id: true,
+            score: true,
+            createdAt: true,
+          },
+        },
+        class: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
+        _count: {
+          select: { submissions: { where: { userId: userId } } },
+        },
+      },
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
+
+    const assessmentsWithAttempts = assessments.map((assessment) => ({
+      ...assessment,
+      attempts: assessment._count.submissions,
+      _count: undefined,
+    }));
+
+    return assessmentsWithAttempts;
+  } catch (error) {
+    console.error("Error fetching student assessments:", error);
+    return null;
+  }
+}
 
 export async function getClassAssessments(classId: string) {
   const { userId } = auth();
-  
+
   if (!userId) {
     return null;
   }
@@ -115,11 +161,8 @@ export async function getClassAssessments(classId: string) {
     const userClass = await prisma.class.findFirst({
       where: {
         id: classId,
-        OR: [
-          { createdById: userId },
-          { members: { some: { id: userId } } }
-        ]
-      }
+        OR: [{ createdById: userId }, { members: { some: { id: userId } } }],
+      },
     });
 
     if (!userClass) {
@@ -130,7 +173,7 @@ export async function getClassAssessments(classId: string) {
     // If the user has access to the class and is teacher, proceed with fetching assessments
     const assessments = await prisma.assessment.findMany({
       where: {
-        classId: classId
+        classId: classId,
       },
       include: {
         submissions: {
@@ -147,15 +190,18 @@ export async function getClassAssessments(classId: string) {
         assessmentItems: true,
       },
       orderBy: {
-        updatedAt: 'desc',
+        updatedAt: "desc",
       },
     });
 
-    const assessmentsWithStats = assessments.map(assessment => {
+    const assessmentsWithStats = assessments.map((assessment) => {
       const submissionCount = assessment.submissions.length;
-      let averageScore: number | string = 'N/A';
+      let averageScore: number | string = "N/A";
       if (submissionCount > 0) {
-        const totalScore = assessment.submissions.reduce((sum, sub) => sum + (sub.score || 0), 0);
+        const totalScore = assessment.submissions.reduce(
+          (sum, sub) => sum + (sub.score || 0),
+          0
+        );
         averageScore = (totalScore / submissionCount).toFixed(2);
       }
 
@@ -168,7 +214,6 @@ export async function getClassAssessments(classId: string) {
     });
 
     return assessmentsWithStats;
-
   } catch (error) {
     console.error("Error fetching user assessments:", error);
     return null;

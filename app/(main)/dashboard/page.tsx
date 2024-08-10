@@ -7,7 +7,8 @@ import { redirect } from "next/navigation";
 import { AssessmentDataTable } from "@/components/assessmentsTable/data-table";
 import CreateAssessmentDialog from "@/components/CreateAssessmentDialog";
 import { assessmentColumns } from "@/components/assessmentsTable/columns";
-import { getUserAssessments } from "@/lib/assessmentUtils/getAssessmentDetails";
+import { getStudentAssessmentData, getTeacherAssessmentData } from "@/lib/assessmentUtils/getAssessmentDetails";
+import { studentAssessmentColumns } from "@/components/assessmentsTableStudent/columns";
 
 export default async function Dashboard() {
   const user = await getUserDetails();
@@ -16,8 +17,9 @@ export default async function Dashboard() {
   }
 
   const classes = await getUserClasses();
-  const assessments = await getUserAssessments();
-  
+  const teacherAssessments = await getTeacherAssessmentData()
+  const studentAssessments = await getStudentAssessmentData()
+
   return (
     <div className="w-full max-w-4xl flex flex-col flex-grow space-y-4">
       {classes && (
@@ -28,15 +30,27 @@ export default async function Dashboard() {
           tableSize="small"
         />
       )}
-      {assessments && (
+      {teacherAssessments && user.role === "TEACHER" && (
         <AssessmentDataTable
           columns={assessmentColumns}
-          data={assessments}
+          data={teacherAssessments}
           role={user.role}
           tableSize="small"
           classCode={null}
           classTitle={null}
           classes={classes}
+        />
+      )}
+
+      {studentAssessments && user.role === "STUDENT" && (
+        <AssessmentDataTable
+        columns={studentAssessmentColumns}
+        data={studentAssessments}
+        role={user.role}
+        tableSize="small"
+        classCode={null}
+        classTitle={null}
+        classes={classes}
         />
       )}
 
