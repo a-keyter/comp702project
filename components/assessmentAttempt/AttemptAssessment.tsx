@@ -5,8 +5,10 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import AttemptItemWrapper from "./AttemptItemWrapper";
 import { useRouter } from "next/navigation";
-import { submitResponses } from "@/lib/assessmentUtils/submitResponses";
 import LoadingSpinner from "../LoadingSpinner";
+import { initialiseSubmission } from "@/lib/submissionUtils/initialiseSubmission";
+import { submitResponses } from "@/lib/submissionUtils/submitResponses";
+import { finaliseSubmission } from "@/lib/submissionUtils/finaliseSubmission";
 
 interface AttemptAssessmentProps {
   assessmentId: string;
@@ -36,21 +38,46 @@ function AttemptAssessment({
   };
 
   const handleSubmit = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const result = await submitResponses({
-        assessmentId,
-        assessmentTitle,
-        assessmentObjectives,
-        responses,
-      });
-  
-      if (result.success) {
-        setLoading(false)
-        router.push(`/assessments/results/${result.submissionId}`);
-      } else {
-        throw new Error(result.error);
+      // Step 1: Initialise submission
+      const initResult = await initialiseSubmission(assessmentId);
+      if (!initResult.success || !initResult.submissionId) {
+        throw new Error(initResult.error || "Failed to initialize submission");
       }
+  
+      const submissionId = initResult.submissionId;
+  
+      // Step 2: Submit all responses at once
+      const responsesResult = await submitResponses(submissionId, responses);
+      if (!responsesResult.success) {
+        throw new Error(responsesResult.error || "Failed to submit responses");
+      }
+  
+      // Ensure all required properties are present
+      if (
+        typeof responsesResult.totalResponses !== 'number' ||
+        typeof responsesResult.correctResponses !== 'number' ||
+        !Array.isArray(responsesResult.incorrectResponses)
+      ) {
+        throw new Error("Invalid response data received");
+      }
+  
+      // Step 3: Finalize submission
+      const finalResult = await finaliseSubmission(
+        submissionId, 
+        assessmentTitle, 
+        assessmentObjectives, 
+        responsesResult.totalResponses, 
+        responsesResult.correctResponses,
+        responsesResult.incorrectResponses
+      );
+      if (!finalResult.success) {
+        throw new Error(finalResult.error || "Failed to finalize submission");
+      }
+  
+      setLoading(false);
+      router.push(`/assessments/results/${submissionId}`);
     } catch (error) {
       setLoading(false);
       console.error("Error submitting assessment:", error);
