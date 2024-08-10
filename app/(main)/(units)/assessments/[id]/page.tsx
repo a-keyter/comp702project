@@ -6,6 +6,7 @@ import { studentColumns } from "@/components/submissionsTable/student-columns";
 import { StudentDataTable } from "@/components/submissionsTable/student-data-table";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { fetchSubmissionsAndQuestionStats } from "@/lib/analysisUtils/assessmentPerformance";
 import { getAssessmentById } from "@/lib/assessmentUtils/getAssessmentDetails";
 import { getResultsByAssessmentId } from "@/lib/assessmentUtils/getAssessmentSubmissions";
 import { getStudentResultsByAssessmentId } from "@/lib/assessmentUtils/getStudentResultsByAssessmentId";
@@ -15,6 +16,7 @@ import { notFound, redirect } from "next/navigation";
 
 async function AssessmentPage({ params }: { params: { id: string } }) {
   const assessmentData = await getAssessmentById(params.id);
+  const { questionStats } = await fetchSubmissionsAndQuestionStats(params.id);
 
   if (!assessmentData) {
     notFound();
@@ -150,10 +152,10 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
         </Card>
       ) : (
         <div className="grid grid-cols-6 gap-x-2 mt-2">
-          <Card className="col-span-3 p-2">Most Challenging Questions</Card>
-          <Card className="w-full h-32 p-2 col-span-3">
+          <div className="w-full h-32 p-2 col-span-3">
             Placeholder AI Feedback
-          </Card>
+          </div>
+          <Card className="col-span-3 p-2">Most Challenging Questions</Card>
         </div>
       )}
     </div>

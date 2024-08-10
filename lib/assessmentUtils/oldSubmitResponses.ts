@@ -1,5 +1,7 @@
 "use server";
 
+// This was made obsolete on 10/08/2024 due to server timeout issues with vercel.
+
 import { prisma } from "@/lib/initPrisma";
 import { auth } from "@clerk/nextjs/server";
 import { generateFeedback } from "../langchainGenerations/generateFeedback";
@@ -17,7 +19,7 @@ interface IncorrectResponse {
   correctAnswer: string;
 }
 
-export async function submitResponses({
+export async function oldSubmitResponses({
   assessmentId,
   assessmentTitle,
   assessmentObjectives,
