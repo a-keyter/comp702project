@@ -69,14 +69,9 @@ export const assessmentColumns: ColumnDef<AssessmentWithStats>[] = [
     },
     cell: ({ row }) => {
       const classTitle = row.original.class.title
-      const truncatedTitle =
-      classTitle.length > 25
-          ? `${classTitle.substring(0, 25)}...`
-          : classTitle;
-        
       return (
         <Link title={classTitle} href={`/classes/${row.original.class.id}`} className="pl-4">
-          {truncatedTitle}
+          {row.original.class.id}
         </Link>
       );
     },

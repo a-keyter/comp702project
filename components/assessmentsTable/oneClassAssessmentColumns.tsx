@@ -42,9 +42,13 @@ export const oneClassAssessmentColumns: ColumnDef<AssessmentWithStats>[] = [
     },
     cell: ({ row }) => {
       const thisAssessment = row.original;
+      const truncatedTitle =
+        thisAssessment.title.length > 30
+          ? `${thisAssessment.title.substring(0, 30)}...`
+          : thisAssessment.title;
       return (
         <Link href={`/assessments/${thisAssessment.id}`}>
-          <p className="pl-4">{thisAssessment.title}</p>
+          <p title={thisAssessment.title} className="pl-4">{truncatedTitle}</p>
         </Link>
       );
     },

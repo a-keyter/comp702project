@@ -43,8 +43,8 @@ export const studentAssessmentColumns: ColumnDef<AssessmentWithAttempts>[] = [
     cell: ({ row }) => {
       const thisAssessment = row.original;
       const truncatedTitle =
-        thisAssessment.title.length > 25
-          ? `${thisAssessment.title.substring(0, 25)}...`
+        thisAssessment.title.length > 30
+          ? `${thisAssessment.title.substring(0, 30)}...`
           : thisAssessment.title;
       return (
         <Link href={`/assessments/${thisAssessment.id}`}>
@@ -68,9 +68,11 @@ export const studentAssessmentColumns: ColumnDef<AssessmentWithAttempts>[] = [
       );
     },
     cell: ({ row }) => {
+      const classTitle = row.original.class.title
+        
       return (
-        <Link href={`/classes/${row.original.class.id}`} className="pl-4">
-          {row.original.class.title}
+        <Link title={classTitle} href={`/classes/${row.original.class.id}`} className="pl-4">
+          {row.original.class.id}
         </Link>
       );
     },

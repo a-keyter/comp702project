@@ -43,8 +43,8 @@ export const oneClassStudentAssessmentColumns: ColumnDef<AssessmentWithAttempts>
     cell: ({ row }) => {
       const thisAssessment = row.original;
       const truncatedTitle =
-        thisAssessment.title.length > 25
-          ? `${thisAssessment.title.substring(0, 25)}...`
+        thisAssessment.title.length > 30
+          ? `${thisAssessment.title.substring(0, 30)}...`
           : thisAssessment.title;
       return (
         <Link href={`/assessments/${thisAssessment.id}`}>
