@@ -25,7 +25,7 @@ export async function loadAssessmentItems(assessmentId: string) {
       }
     })
 
-   console.log('Raw assessment items from database:', JSON.stringify(assessmentItems, null, 2));
+  //  console.log('Raw assessment items from database:', JSON.stringify(assessmentItems, null, 2));
 
     // Restructure the data to match the expected format
     const mcqAnswers: Record<string, Answer[]> = {}

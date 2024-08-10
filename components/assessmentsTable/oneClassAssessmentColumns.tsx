@@ -60,6 +60,15 @@ export const oneClassAssessmentColumns: ColumnDef<AssessmentWithStats>[] = [
   {
     accessorKey: "averageScore",
     header: "Average Score",
+    cell: ({row}) => {
+      const average = row.original.averageScore
+      return(<div>
+        {typeof average === 'number' 
+          ? average.toFixed(2) 
+          : average}
+      </div>
+  )
+    }
   },
   {
     accessorKey: "updatedAt",

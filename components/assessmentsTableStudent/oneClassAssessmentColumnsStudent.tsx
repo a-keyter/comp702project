@@ -62,7 +62,7 @@ export const oneClassStudentAssessmentColumns: ColumnDef<AssessmentWithAttempts>
     header: "Latest Score",
     cell: ({ row }) => {
       const latestSubmission = row.original.submissions[0];
-      const latestScore = latestSubmission ? (latestSubmission.score + "%" ?? "Not graded") : "Not attempted";
+      const latestScore = latestSubmission ? (latestSubmission.score?.toFixed(2) + "%" ?? "Not graded") : "Not attempted";
       return <div className="">{latestScore}</div>;
     },
   },
