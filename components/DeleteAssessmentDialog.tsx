@@ -28,9 +28,15 @@ import LoadingSpinner from "./LoadingSpinner";
 import { deleteAssessment } from "@/lib/assessmentUtils/deleteAssessment";
 
 function DeleteAssessmentDialog({
+  className,
+  content,
+  classId,
   assessmentId,
   assessmentTitle,
 }: {
+  className: string;
+  content: string;
+  classId: string;
   assessmentId: string;
   assessmentTitle: string;
 }) {
@@ -62,14 +68,14 @@ function DeleteAssessmentDialog({
       setError(null);
       setLoading(true);
 
-      // Call the deleteAssessment function (you'll need to implement this)
+      // Call the deleteAssessment function
       await deleteAssessment(assessmentId);
 
       setLoading(false);
       setOpen(false);
 
-      // Redirect to a different page after deletion
-      router.push("/assessments");
+      // Redirect to that assessment's class page after deletion
+      router.push(`/classes/${classId}`);
     } catch (err) {
       setLoading(false);
       console.error("Error deleting assessment:", err);
@@ -80,7 +86,7 @@ function DeleteAssessmentDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="destructive">Delete</Button>
+        <Button variant="destructive" className={className}>{content}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

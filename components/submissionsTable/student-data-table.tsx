@@ -50,7 +50,7 @@ export function StudentDataTable<TData, TValue>({
   return (
     <Card className="rounded-md border flex flex-col gap-y-1 pt-1 h-full">
       <div className="flex justify-between items-center">
-        <h2 className="font-semibold text-md pl-2">
+        <h2 className="font-semibold text-xl pl-2">
          Attempts
         </h2>
       </div>

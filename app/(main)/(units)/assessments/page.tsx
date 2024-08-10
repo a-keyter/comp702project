@@ -18,7 +18,6 @@ async function page() {
   const studentAssessments = await getStudentAssessmentData()
 
 
-
   return (<div className="w-full h-full max-w-4xl">
   {teacherAssessments && user.role === "TEACHER" && (
     <AssessmentDataTable

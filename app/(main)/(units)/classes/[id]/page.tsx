@@ -1,18 +1,10 @@
-import { assessmentColumns } from "@/components/assessmentsTable/columns";
 import { AssessmentDataTable } from "@/components/assessmentsTable/data-table";
 import { oneClassAssessmentColumns } from "@/components/assessmentsTable/oneClassAssessmentColumns";
-import { studentAssessmentColumns } from "@/components/assessmentsTableStudent/columns";
 import { oneClassStudentAssessmentColumns } from "@/components/assessmentsTableStudent/oneClassAssessmentColumnsStudent";
-import CreateAssessmentDialog from "@/components/CreateAssessmentDialog";
 import DeleteClassDialog from "@/components/DeleteClassDialog";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import UpdateClassDialog from "@/components/UpdateClassDialog";
-import {
-  getClassAssessments,
-  getStudentAssessmentData,
-  getTeacherAssessmentData,
-} from "@/lib/assessmentUtils/getAssessmentDetails";
+import { getClassAssessmentsStudent, getClassAssessmentsTeacher } from "@/lib/assessmentUtils/getAssessmentDetails";
 import { getClassById } from "@/lib/classUtils/getClassDetails";
 import { getUserById, getUserDetails } from "@/lib/userUtils/getUserDetails";
 import Link from "next/link";
@@ -34,8 +26,8 @@ async function ClassPage({ params }: { params: { id: string } }) {
 
   const creator = await getUserById(classData.createdById);
 
-  const teacherAssessments = await getTeacherAssessmentData();
-  const studentAssessments = await getStudentAssessmentData();
+  const teacherAssessments = await getClassAssessmentsTeacher(params.id);
+  const studentAssessments = await getClassAssessmentsStudent(params.id);
 
   let numberOfAssessments;
 

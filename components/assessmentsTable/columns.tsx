@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { Assessment } from "@prisma/client";
+import DeleteAssessmentDialog from "../DeleteAssessmentDialog";
 
 type AssessmentWithStats = Assessment & {
   submissionCount: number;
@@ -67,9 +68,15 @@ export const assessmentColumns: ColumnDef<AssessmentWithStats>[] = [
       );
     },
     cell: ({ row }) => {
+      const classTitle = row.original.class.title
+      const truncatedTitle =
+      classTitle.length > 25
+          ? `${classTitle.substring(0, 25)}...`
+          : classTitle;
+        
       return (
-        <Link href={`/classes/${row.original.class.id}`} className="pl-4">
-          {row.original.class.title}
+        <Link title={classTitle} href={`/classes/${row.original.class.id}`} className="pl-4">
+          {truncatedTitle}
         </Link>
       );
     },
@@ -124,8 +131,13 @@ export const assessmentColumns: ColumnDef<AssessmentWithStats>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <Link href={`/assessments/${thisAssessment.id}`}>
+            <DropdownMenuItem>Overview</DropdownMenuItem>
+            </Link>
+            <Link href={`/assessments/edit/${thisAssessment.id}`}>
             <DropdownMenuItem>Edit Assessment</DropdownMenuItem>
-            <DropdownMenuItem>Delete class</DropdownMenuItem>
+            </Link>
+            <DeleteAssessmentDialog className="w-full text-left pl-2 bg-white text-black font-normal" content="Delete Assessment" classId={thisAssessment.classId} assessmentId={thisAssessment.id} assessmentTitle={thisAssessment.title} />
           </DropdownMenuContent>
         </DropdownMenu>
       );

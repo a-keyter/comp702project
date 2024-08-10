@@ -12,6 +12,8 @@ async function AttemptAssessmentPage({ params }: { params: { id: string } }) {
   }
   const assessmentItems = await loadAssessmentItems(params.id);
 
+  console.log(assessmentItems)
+
   const user = await getUserDetails();
 
   if (!user) {

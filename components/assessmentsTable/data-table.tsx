@@ -60,7 +60,7 @@ export function AssessmentDataTable<TData, TValue>({
     initialState: {
       pagination: {
         pageIndex: 0,
-        pageSize: tableSize === "small" ? 3 : 8, //custom default page size
+        pageSize: tableSize === "small" ? 3 : 12, //custom default page size
       },
     },
     onSortingChange: setSorting,

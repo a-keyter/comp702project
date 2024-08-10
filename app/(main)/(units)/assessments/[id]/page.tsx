@@ -40,7 +40,6 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
     averageScore = totalScore / submissionCount;
   }
 
-
   return (
     <div className="w-full max-w-4xl py-1">
       <div className="flex justify-between items-center ">
@@ -68,6 +67,9 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
                 </Button>
               </Link>
               <DeleteAssessmentDialog
+                className=""
+                content="Delete"
+                classId={assessmentData.classId}
                 assessmentId={assessmentData.id}
                 assessmentTitle={assessmentData.title}
               />

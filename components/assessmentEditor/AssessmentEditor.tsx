@@ -175,7 +175,7 @@ function AssessmentEditor({
 
   const handleSubmit = async () => {
     setLoading(true);
-    const result = await saveAssessmentItems(assessmentItems, mcqAnswers);
+    const result = await saveAssessmentItems(assessmentId, assessmentItems, mcqAnswers);
     if (result.success) {
       setLoading(false);
       router.push(`/assessments/${assessmentId}`);
@@ -187,7 +187,7 @@ function AssessmentEditor({
 
   const handlePreview = async () => {
     setLoading(true);
-    const result = await saveAssessmentItems(assessmentItems, mcqAnswers);
+    const result = await saveAssessmentItems(assessmentId, assessmentItems, mcqAnswers);
     if (result.success) {
       setLoading(false);
       router.push(`/assessments/preview/${assessmentId}`);
