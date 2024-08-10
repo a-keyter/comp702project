@@ -40,7 +40,6 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
     averageScore = totalScore / submissionCount;
   }
 
-  console.log(results);
 
   return (
     <div className="w-full max-w-4xl py-1">

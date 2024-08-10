@@ -101,8 +101,15 @@ export const oneClassAssessmentColumns: ColumnDef<AssessmentWithStats>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <Link href={`/assessments/${thisAssessment.id}`}>
+            <DropdownMenuItem>Assessment Overview</DropdownMenuItem>
+            </Link>
+            <Link href={`/assessments/edit/${thisAssessment.id}`}>
             <DropdownMenuItem>Edit Assessment</DropdownMenuItem>
-            <DropdownMenuItem>Delete class</DropdownMenuItem>
+            </Link>
+            <Link href={`/assessments/preview/${thisAssessment.id}`}>
+            <DropdownMenuItem>Preview Assessment</DropdownMenuItem>
+            </Link>
           </DropdownMenuContent>
         </DropdownMenu>
       )

@@ -1,11 +1,18 @@
+import { assessmentColumns } from "@/components/assessmentsTable/columns";
 import { AssessmentDataTable } from "@/components/assessmentsTable/data-table";
 import { oneClassAssessmentColumns } from "@/components/assessmentsTable/oneClassAssessmentColumns";
+import { studentAssessmentColumns } from "@/components/assessmentsTableStudent/columns";
+import { oneClassStudentAssessmentColumns } from "@/components/assessmentsTableStudent/oneClassAssessmentColumnsStudent";
 import CreateAssessmentDialog from "@/components/CreateAssessmentDialog";
 import DeleteClassDialog from "@/components/DeleteClassDialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import UpdateClassDialog from "@/components/UpdateClassDialog";
-import { getClassAssessments } from "@/lib/assessmentUtils/getAssessmentDetails";
+import {
+  getClassAssessments,
+  getStudentAssessmentData,
+  getTeacherAssessmentData,
+} from "@/lib/assessmentUtils/getAssessmentDetails";
 import { getClassById } from "@/lib/classUtils/getClassDetails";
 import { getUserById, getUserDetails } from "@/lib/userUtils/getUserDetails";
 import Link from "next/link";
@@ -26,7 +33,17 @@ async function ClassPage({ params }: { params: { id: string } }) {
   }
 
   const creator = await getUserById(classData.createdById);
-  const assessments = await getClassAssessments(params.id);
+
+  const teacherAssessments = await getTeacherAssessmentData();
+  const studentAssessments = await getStudentAssessmentData();
+
+  let numberOfAssessments;
+
+  if (user.role === "TEACHER") {
+    numberOfAssessments = teacherAssessments?.length;
+  } else {
+    numberOfAssessments = studentAssessments?.length;
+  }
 
   return (
     <div className="w-full max-w-4xl mt-2 flex flex-col">
@@ -64,14 +81,14 @@ async function ClassPage({ params }: { params: { id: string } }) {
         <Card className="col-span-1 p-2">
           <h3>Assessments</h3>
           <p className="font-bold text-2xl">
-            {assessments ? assessments.length : "00"}
+            {numberOfAssessments}
           </p>
         </Card>
       </div>
-      {assessments && (
+      {teacherAssessments && user.role === "TEACHER" && (
         <AssessmentDataTable
           columns={oneClassAssessmentColumns}
-          data={assessments}
+          data={teacherAssessments}
           role={user.role}
           tableSize="small"
           classCode={classData.id}
@@ -79,13 +96,34 @@ async function ClassPage({ params }: { params: { id: string } }) {
           classes={null}
         />
       )}
+
+      {studentAssessments && user.role === "STUDENT" && (
+        <AssessmentDataTable
+          columns={oneClassStudentAssessmentColumns}
+          data={studentAssessments}
+          role={user.role}
+          tableSize="small"
+          classCode={null}
+          classTitle={null}
+          classes={null}
+        />
+      )}
       <div className="grid grid-cols-6 grid-rows-2 gap-x-2 gap-y-4 mt-4 ">
-        {userRole === "STUDENT" && <Card className="col-span-3 row-span-2 p-2">Individual Performance Graph</Card>}
-        <Card className="col-span-3 row-span-2 p-2">Class Performance Graph Go Here</Card>
+        {userRole === "STUDENT" && (
+          <Card className="col-span-3 row-span-2 p-2">
+            Individual Performance Graph
+          </Card>
+        )}
+        <Card className="col-span-3 row-span-2 p-2">
+          Class Performance Graph Go Here
+        </Card>
 
-        {userRole === "TEACHER" && <Card className="col-span-3 p-2">Lowest Performing Students</Card>}
-        {userRole === "TEACHER" && <Card className="col-span-3 p-2">Highest Performing Students</Card>}
-
+        {userRole === "TEACHER" && (
+          <Card className="col-span-3 p-2">Lowest Performing Students</Card>
+        )}
+        {userRole === "TEACHER" && (
+          <Card className="col-span-3 p-2">Highest Performing Students</Card>
+        )}
       </div>
     </div>
   );

@@ -38,11 +38,9 @@ export async function getAssessmentById(id: string) {
 
 export async function getTeacherAssessmentData() {
   const { userId } = auth();
-
   if (!userId) {
     return null;
   }
-
   try {
     const assessments = await prisma.assessment.findMany({
       where: {
@@ -53,9 +51,8 @@ export async function getTeacherAssessmentData() {
           orderBy: {
             createdAt: "desc",
           },
-          distinct: ["userId"],
-          take: 1,
           select: {
+            userId: true,
             score: true,
           },
         },
@@ -72,28 +69,38 @@ export async function getTeacherAssessmentData() {
     });
 
     const assessmentsWithStats = assessments.map((assessment) => {
-      const submissionCount = assessment.submissions.length;
+      const uniqueUserSubmissions = new Map();
+      
+      // Get the most recent submission for each unique user
+      assessment.submissions.forEach((submission) => {
+        if (!uniqueUserSubmissions.has(submission.userId)) {
+          uniqueUserSubmissions.set(submission.userId, submission.score);
+        }
+      });
+
+      const submissionCount = uniqueUserSubmissions.size;
       let averageScore: number | string = "N/A";
+
       if (submissionCount > 0) {
-        const totalScore = assessment.submissions.reduce(
-          (sum, sub) => sum + (sub.score || 0),
+        const totalScore = Array.from(uniqueUserSubmissions.values()).reduce(
+          (sum, score) => sum + (score || 0),
           0
         );
         averageScore = (totalScore / submissionCount).toFixed(2);
       }
+
       return {
         ...assessment,
         submissionCount,
         averageScore,
-        // Remove the submissions field as it's not needed in the final output
         submissions: undefined,
       };
     });
 
     return assessmentsWithStats;
   } catch (error) {
-    console.error("Error fetching teacher assessments:", error);
-    return null;
+    console.error("Error fetching teacher assessment data:", error);
+    throw error;
   }
 }
 

@@ -25,7 +25,7 @@ type AssessmentWithAttempts = Assessment & {
 };
 
 
-export const studentAssessmentColumns: ColumnDef<AssessmentWithAttempts>[] = [
+export const oneClassStudentAssessmentColumns: ColumnDef<AssessmentWithAttempts>[] = [
   {
     accessorKey: "title",
     header: ({ column }) => {
@@ -54,28 +54,6 @@ export const studentAssessmentColumns: ColumnDef<AssessmentWithAttempts>[] = [
     },
   },
   {
-    accessorKey: "class.title",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="w-full flex justify-start "
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Class
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      return (
-        <Link href={`/classes/${row.original.class.id}`} className="pl-4">
-          {row.original.class.title}
-        </Link>
-      );
-    },
-  },
-  {
     accessorKey: "attempts",
     header: "Attempts",
   },
@@ -84,7 +62,7 @@ export const studentAssessmentColumns: ColumnDef<AssessmentWithAttempts>[] = [
     header: "Latest Score",
     cell: ({ row }) => {
       const latestSubmission = row.original.submissions[0];
-      const latestScore = latestSubmission ? (latestSubmission.score?.toFixed(2) + "%" ?? "Not graded") : "Not attempted";
+      const latestScore = latestSubmission ? (latestSubmission.score + "%" ?? "Not graded") : "Not attempted";
       return <div className="">{latestScore}</div>;
     },
   },
