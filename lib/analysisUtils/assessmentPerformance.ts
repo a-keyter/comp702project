@@ -1,12 +1,12 @@
 import { prisma } from "../initPrisma";
 
-interface QuestionStatistics {
+export interface QuestionStatistics {
   assessmentItemId: string;
-  totalResponses: number;
-  correctResponses: number;
+  question: string;
+  responseAccuracy: number;
 }
 
-export async function fetchSubmissionsAndQuestionStats(assessmentId: string) {
+export async function fetchQuestionStats(assessmentId: string): Promise<QuestionStatistics[]> {
   try {
     const submissions = await prisma.submission.findMany({
       where: {
@@ -17,17 +17,12 @@ export async function fetchSubmissionsAndQuestionStats(assessmentId: string) {
       },
       distinct: ['userId'],
       include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
         responses: {
           include: {
             assessmentItem: {
               select: {
                 id: true,
+                content: true,
               },
             },
           },
@@ -35,35 +30,34 @@ export async function fetchSubmissionsAndQuestionStats(assessmentId: string) {
       },
     });
 
-    // Initialize a map to store statistics for each question
     const questionStats: Map<string, QuestionStatistics> = new Map();
 
-    // Process all submissions to calculate statistics
     submissions.forEach(submission => {
       submission.responses.forEach(response => {
-        const assessmentItemId = response.assessmentItem.id;
+        const { id: assessmentItemId, content: question } = response.assessmentItem;
+        
         if (!questionStats.has(assessmentItemId)) {
           questionStats.set(assessmentItemId, {
             assessmentItemId,
-            totalResponses: 0,
-            correctResponses: 0,
+            question,
+            responseAccuracy: 0,
           });
         }
 
         const stats = questionStats.get(assessmentItemId)!;
-        stats.totalResponses++;
-        if (response.isCorrect) {
-          stats.correctResponses++;
-        }
+        const totalResponses = (stats.responseAccuracy * questionStats.size) || 0;
+        const newTotalResponses = totalResponses + 1;
+        const newCorrectResponses = response.isCorrect ? 
+          (totalResponses * stats.responseAccuracy) + 1 : 
+          (totalResponses * stats.responseAccuracy);
+        
+        stats.responseAccuracy = newCorrectResponses / newTotalResponses;
       });
     });
 
-    return {
-      submissions,
-      questionStats: Array.from(questionStats.values()),
-    };
+    return Array.from(questionStats.values())
   } catch (error) {
-    console.error('Error fetching submissions and question stats:', error);
+    console.error('Error fetching question stats:', error);
     throw error;
   } finally {
     await prisma.$disconnect();

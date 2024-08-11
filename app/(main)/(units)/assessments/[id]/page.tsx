@@ -1,12 +1,13 @@
 import DeleteAssessmentDialog from "@/components/DeleteAssessmentDialog";
 import ReportIssueDialog from "@/components/ReportIssueDialog";
+
 import { responseColumns } from "@/components/submissionsTable/columns";
 import { AllResponsesDataTable } from "@/components/submissionsTable/data-table";
 import { studentColumns } from "@/components/submissionsTable/student-columns";
 import { StudentDataTable } from "@/components/submissionsTable/student-data-table";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { fetchSubmissionsAndQuestionStats } from "@/lib/analysisUtils/assessmentPerformance";
+import { fetchQuestionStats } from "@/lib/analysisUtils/assessmentPerformance";
 import { getAssessmentById } from "@/lib/assessmentUtils/getAssessmentDetails";
 import { getResultsByAssessmentId } from "@/lib/assessmentUtils/getAssessmentSubmissions";
 import { getStudentResultsByAssessmentId } from "@/lib/assessmentUtils/getStudentResultsByAssessmentId";
@@ -16,7 +17,16 @@ import { notFound, redirect } from "next/navigation";
 
 async function AssessmentPage({ params }: { params: { id: string } }) {
   const assessmentData = await getAssessmentById(params.id);
-  const { questionStats } = await fetchSubmissionsAndQuestionStats(params.id);
+  const questionStats = await fetchQuestionStats(params.id);
+  const sortedQuestions = questionStats.sort(
+    (a, b) => a.responseAccuracy - b.responseAccuracy
+  );
+  const hardestQuestions = questionStats.slice(
+    0,
+    sortedQuestions.length > 3 ? 3 : sortedQuestions.length
+  );
+
+  console.log(questionStats);
 
   if (!assessmentData) {
     notFound();
@@ -152,10 +162,16 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
         </Card>
       ) : (
         <div className="grid grid-cols-6 gap-x-2 mt-2">
-          <div className="w-full h-32 p-2 col-span-3">
-            Placeholder AI Feedback
-          </div>
-          <Card className="col-span-3 p-2">Most Challenging Questions</Card>
+          <Card className="col-span-3 p-2">
+            <h3>Most Challenging Questions</h3>
+            {hardestQuestions.map((question) => {return(
+              <p key={question.assessmentItemId} className="mt-2">
+                {question.question} <strong>{question.responseAccuracy.toFixed(2)}%</strong>
+              </p>
+            )})}
+            </Card>
+
+          <div className="w-full h-32 p-2 col-span-3"></div>
         </div>
       )}
     </div>

@@ -1,6 +1,5 @@
 "use server"
 
-import { auth } from "@clerk/nextjs/server";
 import { prisma } from "../initPrisma";
 import { IncorrectResponse } from "./submitResponses";
 import { generateFeedback } from "../langchainGenerations/generateFeedback";
