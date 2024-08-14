@@ -1,12 +1,12 @@
 import { prisma } from "../initPrisma";
 
-export interface QuestionStatistics {
+export interface OrderedQuestionStatistics {
   assessmentItemId: string;
   question: string;
   responseAccuracy: number;
 }
 
-export async function fetchQuestionStats(assessmentId: string): Promise<QuestionStatistics[]> {
+export async function fetchOrderedQuestionsStats(assessmentId: string): Promise<OrderedQuestionStatistics[]> {
   try {
     const submissions = await prisma.submission.findMany({
       where: {
@@ -30,7 +30,7 @@ export async function fetchQuestionStats(assessmentId: string): Promise<Question
       },
     });
 
-    const questionStats: Map<string, QuestionStatistics> = new Map();
+    const questionStats: Map<string, OrderedQuestionStatistics> = new Map();
 
     submissions.forEach(submission => {
       submission.responses.forEach(response => {

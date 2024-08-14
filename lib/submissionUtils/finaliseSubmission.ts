@@ -1,8 +1,8 @@
 "use server"
 
 import { prisma } from "../initPrisma";
+import { generateStudentFeedback } from "../langchainGenerations/generateFeedback";
 import { IncorrectResponse } from "./submitResponses";
-import { generateFeedback } from "../langchainGenerations/generateFeedback";
 
 
 export async function finaliseSubmission(
@@ -22,7 +22,7 @@ export async function finaliseSubmission(
       });
   
       // Generate feedback
-      const feedbackContent = await generateFeedback({
+      const feedbackContent = await generateStudentFeedback({
         assessmentTitle,
         assessmentObjectives,
         incorrectResponses,

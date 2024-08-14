@@ -9,13 +9,28 @@ export async function getAssessmentById(id: string) {
       where: { id },
       include: {
         createdBy: true,
-        class: true,
+        class: {
+          include: {
+            _count: {
+              select: { members: true },
+            },
+          },
+        },
         assessmentItems: true,
         submissions: {
+          orderBy: {
+            createdAt: "desc",
+          },
           select: {
             id: true,
             score: true,
             feedback: true,
+          },
+        },
+        teacherFeedback: {
+          select: {
+            content: true,
+            lastSubmissionId: true,
           },
         },
       },
@@ -70,7 +85,7 @@ export async function getTeacherAssessmentData() {
 
     const assessmentsWithStats = assessments.map((assessment) => {
       const uniqueUserSubmissions = new Map();
-      
+
       // Get the most recent submission for each unique user
       assessment.submissions.forEach((submission) => {
         if (!uniqueUserSubmissions.has(submission.userId)) {
@@ -141,7 +156,7 @@ export async function getClassAssessmentsTeacher(classId: string) {
 
     const assessmentsWithStats = assessments.map((assessment) => {
       const uniqueUserSubmissions = new Map();
-      
+
       // Get the most recent submission for each unique user
       assessment.submissions.forEach((submission) => {
         if (!uniqueUserSubmissions.has(submission.userId)) {
@@ -226,7 +241,6 @@ export async function getStudentAssessmentData() {
     return null;
   }
 }
-
 
 export async function getClassAssessmentsStudent(classId: string) {
   const { userId } = auth();

@@ -48,7 +48,6 @@ model Assessment {
   id              String           @id @default(uuid())
   title           String
   objectives      String
-  overallFeedback String?
   createdAt       DateTime         @default(now()) @map(name: "created_at")
   updatedAt       DateTime         @updatedAt @map(name: "updated_at")
   createdBy       User             @relation("AssessmentCreator", fields: [createdById], references: [id])
@@ -57,6 +56,18 @@ model Assessment {
   classId         String
   assessmentItems AssessmentItem[]
   submissions     Submission[]
+  teacherFeedback TeacherFeedback?
+}
+
+model TeacherFeedback {
+  id               String     @id @default(uuid())
+  content          String
+  assessment       Assessment @relation(fields: [assessmentId], references: [id])
+  assessmentId     String     @unique
+  submissionCount  Int
+  lastSubmission   Submission @relation(fields: [lastSubmissionId], references: [id])
+  lastSubmissionId String     @unique
+  createdAt        DateTime   @default(now()) @map(name: "created_at")
 }
 
 model AssessmentItem {
@@ -89,6 +100,7 @@ model Submission {
   responses    Response[]
   feedback     String?
   score        Float?
+  teacherFeedback TeacherFeedback?
 }
 
 model Response {

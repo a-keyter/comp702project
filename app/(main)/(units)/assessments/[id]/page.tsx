@@ -1,3 +1,5 @@
+import TeacherFeedback from "@/components/assessmentStatistics/GroupFeedback";
+import PerformanceGraph from "@/components/assessmentStatistics/PerformanceGraph";
 import DeleteAssessmentDialog from "@/components/DeleteAssessmentDialog";
 import ReportIssueDialog from "@/components/ReportIssueDialog";
 
@@ -7,7 +9,7 @@ import { studentColumns } from "@/components/submissionsTable/student-columns";
 import { StudentDataTable } from "@/components/submissionsTable/student-data-table";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { fetchQuestionStats } from "@/lib/analysisUtils/assessmentPerformance";
+import { fetchOrderedQuestionsStats } from "@/lib/analysisUtils/assessmentPerformance";
 import { getAssessmentById } from "@/lib/assessmentUtils/getAssessmentDetails";
 import { getResultsByAssessmentId } from "@/lib/assessmentUtils/getAssessmentSubmissions";
 import { getStudentResultsByAssessmentId } from "@/lib/assessmentUtils/getStudentResultsByAssessmentId";
@@ -17,16 +19,16 @@ import { notFound, redirect } from "next/navigation";
 
 async function AssessmentPage({ params }: { params: { id: string } }) {
   const assessmentData = await getAssessmentById(params.id);
-  const questionStats = await fetchQuestionStats(params.id);
-  const sortedQuestions = questionStats.sort(
+  const oderedQuestionStats = await fetchOrderedQuestionsStats(params.id);
+  const sortedQuestions = oderedQuestionStats.sort(
     (a, b) => a.responseAccuracy - b.responseAccuracy
   );
-  const hardestQuestions = questionStats.slice(
+  const hardestQuestions = oderedQuestionStats.slice(
     0,
     sortedQuestions.length > 3 ? 3 : sortedQuestions.length
   );
 
-  console.log(questionStats);
+  // console.log(oderedQuestionStats);
 
   if (!assessmentData) {
     notFound();
@@ -107,7 +109,7 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
         </Card>
         <Card className="col-span-1 p-2">
           <h3>Submissions</h3>
-          <p className="font-bold text-2xl">{submissionCount}</p>
+          <p className="font-bold text-2xl">{submissionCount} / {assessmentData.class._count.members}</p>
         </Card>
         {user.role === "TEACHER" ? (
           <Card className="col-span-1 p-2">
@@ -161,17 +163,49 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
           </p>
         </Card>
       ) : (
-        <div className="grid grid-cols-6 gap-x-2 mt-2">
-          <Card className="col-span-3 p-2">
-            <h3>Most Challenging Questions</h3>
-            {hardestQuestions.map((question) => {return(
-              <p key={question.assessmentItemId} className="mt-2">
-                {question.question} <strong>{question.responseAccuracy.toFixed(2)}%</strong>
-              </p>
-            )})}
+        <div className="mt-4">
+          <div>
+            <h2 className="font-semibold text-2xl text-center">
+              Assessment Analysis
+            </h2>
+          </div>
+          <div>
+            <Card className="p-2 mt-2">
+              <TeacherFeedback
+                teacherFeedback={assessmentData.teacherFeedback}
+                assessmentId={assessmentData.id}
+                averageScore={averageScore}
+                membersCount={assessmentData.class._count.members}
+                latestSubmissionId={assessmentData.submissions[0].id}
+                submissionCount={submissionCount}
+              />
+            </Card>
+          </div>
+          <div className="grid grid-cols-6 gap-x-2 mt-2">
+            <Card className="w-full p-4 col-span-3 flex flex-col">
+              <h2 className="text-xl font-semibold">Assessment Performance</h2>
+              <div className="items-center justify-center">
+                <PerformanceGraph assessmentId={assessmentData.id} />
+              </div>
+              {results && results?.length > 0 && (
+                <p className="text-center">Total Responses: {results.length}</p>
+              )}
             </Card>
 
-          <div className="w-full h-32 p-2 col-span-3"></div>
+            <Card className="col-span-3 p-2">
+              <h3 className="text-xl font-semibold">
+                Most Challenging Questions
+              </h3>
+              {hardestQuestions.map((question) => {
+                return (
+                  <p key={question.assessmentItemId} className="mt-2">
+                    {question.question}{" "}
+                    <strong>{question.responseAccuracy.toFixed(2)}</strong>
+                  </p>
+                );
+              })}
+            </Card>
+          </div>
         </div>
       )}
     </div>
