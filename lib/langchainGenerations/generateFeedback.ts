@@ -96,7 +96,7 @@ export async function generateTeacherFeedback(
       [
         "human",
         `
-    Analyze the following assessment data and provide brief, clear feedback to the teacher:
+    Analyze the following assessment data and provide brief, clear feedback to the teacher in less than 200 words:
     
     Assessment: {assessmentTitle}
     Objectives: {assessmentObjectives}
@@ -108,9 +108,8 @@ export async function generateTeacherFeedback(
     
     In your response, address:
     1. Overall class performance
-    2. Strengths and areas for improvement
+    2. Notable patterns, common misconceptions and areas for improvement
     3. Specific teaching or assessment suggestions
-    4. Notable patterns or common misconceptions
     
     Keep your feedback constructive, encouraging, and free of any special formatting.
         `,

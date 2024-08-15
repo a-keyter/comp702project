@@ -1,4 +1,5 @@
 import TeacherFeedback from "@/components/assessmentStatistics/GroupFeedback";
+import HardestQuestions from "@/components/assessmentStatistics/HardestQuestions";
 import PerformanceGraph from "@/components/assessmentStatistics/PerformanceGraph";
 import DeleteAssessmentDialog from "@/components/DeleteAssessmentDialog";
 import ReportIssueDialog from "@/components/ReportIssueDialog";
@@ -9,7 +10,6 @@ import { studentColumns } from "@/components/submissionsTable/student-columns";
 import { StudentDataTable } from "@/components/submissionsTable/student-data-table";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { fetchOrderedQuestionsStats } from "@/lib/analysisUtils/assessmentPerformance";
 import { getAssessmentById } from "@/lib/assessmentUtils/getAssessmentDetails";
 import { getResultsByAssessmentId } from "@/lib/assessmentUtils/getAssessmentSubmissions";
 import { getStudentResultsByAssessmentId } from "@/lib/assessmentUtils/getStudentResultsByAssessmentId";
@@ -19,16 +19,6 @@ import { notFound, redirect } from "next/navigation";
 
 async function AssessmentPage({ params }: { params: { id: string } }) {
   const assessmentData = await getAssessmentById(params.id);
-  const oderedQuestionStats = await fetchOrderedQuestionsStats(params.id);
-  const sortedQuestions = oderedQuestionStats.sort(
-    (a, b) => a.responseAccuracy - b.responseAccuracy
-  );
-  const hardestQuestions = oderedQuestionStats.slice(
-    0,
-    sortedQuestions.length > 3 ? 3 : sortedQuestions.length
-  );
-
-  // console.log(oderedQuestionStats);
 
   if (!assessmentData) {
     notFound();
@@ -109,7 +99,11 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
         </Card>
         <Card className="col-span-1 p-2">
           <h3>Submissions</h3>
-          <p className="font-bold text-2xl">{submissionCount} / {assessmentData.class._count.members}</p>
+          <p className="font-bold text-2xl">
+            {submissionCount}{" "}
+            {user.role === "TEACHER" &&
+              `/ ${assessmentData.class._count.members}`}
+          </p>
         </Card>
         {user.role === "TEACHER" ? (
           <Card className="col-span-1 p-2">
@@ -144,7 +138,7 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
         </div>
       )}
 
-      {results && user.role === "STUDENT" ? (
+      {results && user.role === "STUDENT" && (
         <Card className="p-2 mt-2">
           <div className="flex justify-between items-end py-2 mb-2 border-b-2">
             <h3 className="font-bold text-xl ">Feedback</h3>
@@ -162,7 +156,11 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
               : "No Feedback Available."}
           </p>
         </Card>
-      ) : (
+      ) }
+      
+      { assessmentData.submissions.length > 0 && 
+      
+       (
         <div className="mt-4">
           <div>
             <h2 className="font-semibold text-2xl text-center">
@@ -172,7 +170,6 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
           <div>
             <Card className="p-2 mt-2">
               <TeacherFeedback
-                teacherFeedback={assessmentData.teacherFeedback}
                 assessmentId={assessmentData.id}
                 averageScore={averageScore}
                 membersCount={assessmentData.class._count.members}
@@ -196,14 +193,7 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
               <h3 className="text-xl font-semibold">
                 Most Challenging Questions
               </h3>
-              {hardestQuestions.map((question) => {
-                return (
-                  <p key={question.assessmentItemId} className="mt-2">
-                    {question.question}{" "}
-                    <strong>{question.responseAccuracy.toFixed(2)}</strong>
-                  </p>
-                );
-              })}
+              <HardestQuestions assessmentId={params.id} />
             </Card>
           </div>
         </div>

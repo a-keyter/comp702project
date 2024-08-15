@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { createTeacherFeedback } from "@/lib/analysisUtils/generateTeacherFeedback";
+import { createTeacherFeedback } from "@/lib/analysisUtils/createTeacherFeedback";
+import { getTeacherFeedback } from "@/lib/analysisUtils/getTeacherFeedback";
 
 export interface TeacherFeedbackDetails {
   content: string;
@@ -10,7 +11,6 @@ export interface TeacherFeedbackDetails {
 }
 
 interface TeacherFeedbackProps {
-  teacherFeedback: TeacherFeedbackDetails | null;
   assessmentId: string;
   averageScore: number;
   submissionCount: number;
@@ -19,7 +19,6 @@ interface TeacherFeedbackProps {
 }
 
 export default function TeacherFeedback({
-  teacherFeedback,
   assessmentId,
   averageScore,
   submissionCount,
@@ -28,17 +27,25 @@ export default function TeacherFeedback({
 }: TeacherFeedbackProps) {
   const [loading, setLoading] = useState(true);
   const [feedbackContent, setFeedbackContent] = useState<string>("");
+  const isMounted = useRef(false);
 
-  const checkAndUpdateFeedback = useCallback(async () => {
-    async function checkAndUpdateFeedback() {
-      if (
-        teacherFeedback &&
-        teacherFeedback.lastSubmissionId === latestSubmissionId
-      ) {
-        setFeedbackContent(teacherFeedback.content);
-      } else {
-        try {
-          setLoading(true);
+  useEffect(() => {
+    const fetchFeedback = async () => {
+      if (isMounted.current) return;
+      isMounted.current = true;
+
+      try {
+        setLoading(true);
+
+        // First check if there is any feedback
+        const teacherFeedback = await getTeacherFeedback(assessmentId);
+
+        if (
+          teacherFeedback &&
+          teacherFeedback.lastSubmissionId === latestSubmissionId
+        ) {
+          setFeedbackContent(teacherFeedback.content);
+        } else {
           const newFeedback = await createTeacherFeedback({
             assessmentId,
             averageScore,
@@ -46,33 +53,28 @@ export default function TeacherFeedback({
             membersCount,
           });
           setFeedbackContent(newFeedback);
-        } catch (error) {
-          console.error("Error generating new feedback:", error);
-          setFeedbackContent(
-            "Failed to generate new feedback. Please try again later."
-          );
         }
+      } catch (error) {
+        console.error("Error generating new feedback:", error);
+        setFeedbackContent(
+          "Failed to generate new feedback. Please try again later."
+        );
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
-    }
+    };
 
-    checkAndUpdateFeedback();
+    fetchFeedback();
   }, [
-    teacherFeedback,
     latestSubmissionId,
     assessmentId,
     averageScore,
     submissionCount,
     membersCount,
   ]);
-
-  useEffect(() => {
-    checkAndUpdateFeedback();
-  }, [checkAndUpdateFeedback]);
-
   if (loading) {
     return (
-      <div className="w-full flex flex-col space-y-2">
+      <div className="w-full flex flex-col space-y-3">
         <h2 className="font-semibold text-xl">AI Generated Feedback</h2>
         <Skeleton className="h-20 w-full" />
       </div>

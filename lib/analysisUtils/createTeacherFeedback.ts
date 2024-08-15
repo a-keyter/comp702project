@@ -1,30 +1,21 @@
-"use server"
+"use server";
 
-import TeacherFeedback, { TeacherFeedbackDetails } from "@/components/assessmentStatistics/GroupFeedback";
 import { prisma } from "../initPrisma";
 import { generateTeacherFeedback } from "../langchainGenerations/generateFeedback";
 import { upsertTeacherFeedback } from "./upsertTeacherFeedback";
 
-async function fetchAssessmentPerformanceData({
+export async function fetchAssessmentPerformanceData({
   assessmentId,
-  averageScore,
-  submissionCount,
-  membersCount,
 }: {
   assessmentId: string;
-  averageScore: number;
-  submissionCount: number;
-  membersCount: number;
 }) {
   try {
-    // First fetch a list of the latest submissions and the answers to each question
     const latestSubmissionsData = await prisma.assessment.findUnique({
       where: { id: assessmentId },
       include: {
         submissions: {
-          distinct: ["userId"],
           orderBy: { createdAt: "desc" },
-          take: 1,
+          distinct: ["userId"],
           include: {
             responses: true,
           },
@@ -37,7 +28,9 @@ async function fetchAssessmentPerformanceData({
       },
     });
 
-    // Then we can fetch the results data for each question
+    // console.log("Assessment Items:", latestSubmissionsData?.assessmentItems);
+    // console.log("Submissions:", latestSubmissionsData?.submissions);
+
     const questionResponseBreakdown =
       latestSubmissionsData?.assessmentItems.map((item) => {
         const correctAnswer = item.answers.find((answer) => answer.isCorrect);
@@ -45,21 +38,24 @@ async function fetchAssessmentPerformanceData({
           (answer) => !answer.isCorrect
         );
 
-        // Calculate percent correct and incorrect answer distributions
-        const totalResponses = latestSubmissionsData.submissions.length;
-        const correctResponses = latestSubmissionsData.submissions.filter(
-          (submission) =>
-            submission.responses.some(
-              (response) =>
-                response.givenAnswerId === correctAnswer?.id &&
-                response.assessmentItemId === item.id
-            )
-        ).length;
+        // console.log("Correct Answer for question:", item.id, correctAnswer);
 
-        const percentCorrect = (
-          (correctResponses / totalResponses) *
-          100
-        ).toFixed(2);
+        const totalResponses = latestSubmissionsData.submissions.length;
+        const correctResponses = latestSubmissionsData.submissions.filter((submission) => {
+          const hasCorrectResponse = submission.responses.some(
+            (response) =>
+              response.givenAnswerId === correctAnswer?.id &&
+              response.assessmentItemId === item.id
+          );
+          // console.log("Submission:", submission.id, "Has correct response:", hasCorrectResponse);
+          return hasCorrectResponse;
+        }).length;
+
+        const percentCorrect = totalResponses > 0
+          ? ((correctResponses / totalResponses) * 100).toFixed(2)
+          : "0.00";
+
+        // console.log("Question:", item.id, "Total responses:", totalResponses, "Correct responses:", correctResponses, "Percent correct:", percentCorrect);
 
         const incorrectAnswerDistribution: Record<string, string> = {};
         incorrectAnswers.forEach((answer) => {
@@ -86,15 +82,16 @@ async function fetchAssessmentPerformanceData({
         };
       });
 
-    // Finally, we create our return object
-    return {
+    const returnObject = {
       assessmentTitle: latestSubmissionsData?.title,
       assessmentObjectives: latestSubmissionsData?.objectives,
-      averageScore: averageScore,
-      lastSubmission: latestSubmissionsData?.submissions[0].id,
-      submissionsCount: `${submissionCount} of ${membersCount}`,
+      lastSubmission: latestSubmissionsData?.submissions[0]?.id,
       questions: questionResponseBreakdown,
     };
+
+    // console.log("Return object:", returnObject);
+
+    return returnObject;
   } catch (error) {
     console.error("Error fetching class performance data:", error);
     throw error;
@@ -115,14 +112,20 @@ export async function createTeacherFeedback({
   try {
     // Fetch Assessment Performance Data
     const assessmentResults = await fetchAssessmentPerformanceData({
-      assessmentId, 
-      averageScore, 
-      submissionCount, 
-      membersCount
+      assessmentId,
     });
 
-    // Make the model call based on the data
-    const resultsAnalysis = await generateTeacherFeedback(assessmentResults);
+    // Extend the assessment results object with submissions count and average score:
+    const extendedAssessmentResults = {
+      ...assessmentResults,
+      submissionsCount: `${submissionCount} of ${membersCount}`,
+      averageScore: averageScore,
+    };
+
+    // Make the model call based on the extended data
+    const resultsAnalysis = await generateTeacherFeedback(
+      extendedAssessmentResults
+    );
 
     // If successful, upsert the teacher feedback
     if (resultsAnalysis) {
@@ -130,16 +133,15 @@ export async function createTeacherFeedback({
         assessmentId,
         content: resultsAnalysis,
         submissionCount,
-        lastSubmissionId: assessmentResults.lastSubmission // Assuming the last submission is the latest
+        lastSubmissionId: assessmentResults.lastSubmission,
       });
 
-      console.log('Teacher feedback created and saved successfully');
       return resultsAnalysis;
     } else {
-      throw new Error('Failed to generate teacher feedback');
+      throw new Error("Failed to generate teacher feedback");
     }
   } catch (error) {
-    console.error('Error in createTeacherFeedback:', error);
+    console.error("Error in createTeacherFeedback:", error);
     throw error; // Re-throw the error for the caller to handle
   }
 }
