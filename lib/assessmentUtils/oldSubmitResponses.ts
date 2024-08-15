@@ -4,7 +4,7 @@
 
 import { prisma } from "@/lib/initPrisma";
 import { auth } from "@clerk/nextjs/server";
-import { generateFeedback } from "../langchainGenerations/generateFeedback";
+import { generateStudentFeedback } from "../langchainGenerations/generateFeedback";
 
 interface SubmitResponsesParams {
   assessmentId: string;
@@ -100,7 +100,7 @@ export async function oldSubmitResponses({
     });
 
     // Generate feedback based on the results
-    const feedbackContent = await generateFeedback({
+    const feedbackContent = await generateStudentFeedback({
       assessmentTitle,
       assessmentObjectives,
       incorrectResponses,
