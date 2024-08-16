@@ -58,13 +58,16 @@ export async function getSubmissionResults(submissionId: string): Promise<Submis
     // Check if the current user is the creator of the class or a member of the class
     const classMembers = await prisma.class.findUnique({
       where: { id: submission.assessment.classId },
-      include: { members: true }
+      include: { 
+        taughtBy: true,
+        members: true }
     });
 
-    const isCreator = submission.assessment.createdById === userId;
+
+    const isTeacher = classMembers?.taughtBy.some(teacher => teacher.id === userId) || false;
     const isMember = classMembers?.members.some(member => member.id === userId) || false;
 
-    if (!isCreator && !isMember) {
+    if (!isTeacher && !isMember) {
       console.error('User is not authorized to view these results');
       return null;
     }

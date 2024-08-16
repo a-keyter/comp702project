@@ -60,7 +60,7 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
           </p>
         </div>
         <div className="flex flex-col gap-y-2">
-          {user.role === "TEACHER" && (
+          {user.role === "TEACHER" && submissionCount === 0 && (
             <div className="flex space-x-4 justify-end">
               <Link href={`/assessments/preview/${assessmentData.id}`}>
                 <Button>Preview</Button>
@@ -69,6 +69,20 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
                 <Button className="bg-yellow-300 text-black hover:text-white">
                   Edit
                 </Button>
+              </Link>
+              <DeleteAssessmentDialog
+                className=""
+                content="Delete"
+                classId={assessmentData.classId}
+                assessmentId={assessmentData.id}
+                assessmentTitle={assessmentData.title}
+              />
+            </div>
+          )}
+          {user.role === "TEACHER" && submissionCount > 0 && (
+            <div className="flex space-x-4 justify-end">
+              <Link href={`/assessments/preview/${assessmentData.id}`}>
+                <Button>Review</Button>
               </Link>
               <DeleteAssessmentDialog
                 className=""

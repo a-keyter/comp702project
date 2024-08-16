@@ -19,12 +19,12 @@ export async function getTeacherFeedback(assignmentId: string): Promise<TeacherF
       });
   
       if (feedback) {
-        console.log('Teacher feedback found for assignment:', assignmentId);
-        console.log("Last submission ID: " + feedback.lastSubmissionId)
-        console.log("Feedback ID: " + feedback.id)
+        // console.log('Teacher feedback found for assignment:', assignmentId);
+        // console.log("Last submission ID: " + feedback.lastSubmissionId)
+        // console.log("Feedback ID: " + feedback.id)
         return feedback;
       } else {
-        console.log('No teacher feedback found for assignment:', assignmentId);
+        // console.log('No teacher feedback found for assignment:', assignmentId);
         return null;
       }
     } catch (error) {

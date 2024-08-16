@@ -25,7 +25,7 @@ model User {
   createdAt          DateTime     @default(now()) @map(name: "created_at")
   updatedAt          DateTime     @updatedAt @map(name: "updated_at")
   role               Role
-  createdClasses     Class[]      @relation("CreatedBy")
+  taughtClasses      Class[]      @relation("TaughtBy")
   memberOfClasses    Class[]      @relation("ClassMembers")
   createdAssessments Assessment[] @relation("AssessmentCreator")
   submissions        Submission[] @relation("UserSubmissions")
@@ -38,8 +38,7 @@ model Class {
   description String
   createdAt   DateTime     @default(now()) @map(name: "created_at")
   updatedAt   DateTime     @updatedAt @map(name: "updated_at")
-  createdBy   User         @relation("CreatedBy", fields: [createdById], references: [id])
-  createdById String
+  taughtBy    User[]       @relation("TaughtBy")
   members     User[]       @relation("ClassMembers")
   assessments Assessment[] @relation("ClassAssessments")
 }

@@ -14,15 +14,16 @@ export async function deleteClass(classId: string) {
     // First, fetch the class to ensure it exists and the user has permission to delete it
     const existingClass = await prisma.class.findUnique({
       where: { id: classId },
-      select: { createdById: true }
+      // Multi Teacher Bug
+      include: { taughtBy: true }
     });
 
     if (!existingClass) {
       throw new Error("Class not found");
     }
 
-    // Check if the current user is the creator of the class
-    if (existingClass.createdById !== userId) {
+    // Check if the current user is a teacher of the class
+    if (existingClass.taughtBy.some(teacher => teacher.id !== userId)) {
       throw new Error("User does not have permission to delete this class");
     }
 

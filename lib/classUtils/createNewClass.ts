@@ -44,7 +44,8 @@ export async function createNewClass(formData: FormData) {
         id: validatedData.classCode, // Using classCode as the ID
         title: validatedData.title,
         description: validatedData.description,
-        createdBy: {
+        // FIX THE BUG
+        taughtBy: {
           connect: { id: userId },
         },
       },

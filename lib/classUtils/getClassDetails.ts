@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import { Class } from "@prisma/client";
 import { prisma } from "../initPrisma";
@@ -19,7 +19,9 @@ export type ClassWithCreator = {
 };
 
 // FETCH SPECIFIC CLASS
-export async function getClassById(classId: string): Promise<(Class & { memberCount: number }) | null> {
+export async function getClassById(
+  classId: string
+): Promise<(Class & { memberCount: number }) | null> {
   try {
     const classData = await prisma.class.findUnique({
       where: {
@@ -27,9 +29,9 @@ export async function getClassById(classId: string): Promise<(Class & { memberCo
       },
       include: {
         _count: {
-          select: { members: true }
-        }
-      }
+          select: { members: true },
+        },
+      },
     });
 
     if (!classData) {
@@ -38,9 +40,8 @@ export async function getClassById(classId: string): Promise<(Class & { memberCo
 
     return {
       ...classData,
-      memberCount: classData._count.members
+      memberCount: classData._count.members,
     };
-
   } catch (error) {
     console.error("Error fetching class:", error);
     throw error;
@@ -50,11 +51,13 @@ export async function getClassById(classId: string): Promise<(Class & { memberCo
 }
 
 // FETCH SPECIFIC CLASS Title
-export async function getClassTitleById(classId: string): Promise<string | null> {
+export async function getClassTitleById(
+  classId: string
+): Promise<string | null> {
   try {
-  const classData = await prisma.class.findUnique({
+    const classData = await prisma.class.findUnique({
       select: {
-        title: true
+        title: true,
       },
       where: {
         id: classId.toLowerCase(), // Ensure we're using lowercase for consistency
@@ -69,13 +72,16 @@ export async function getClassTitleById(classId: string): Promise<string | null>
   }
 }
 
-
 export async function getClassWithCreator(classCode: string) {
   try {
     // Fetch the class data
     const classData = await prisma.class.findUnique({
       where: {
         id: classCode.toLowerCase(), // Ensure we're using lowercase for consistency
+      },
+      // Buggy Taught By
+      include: {
+        taughtBy: true,
       },
     });
 
@@ -84,9 +90,9 @@ export async function getClassWithCreator(classCode: string) {
     }
 
     // Fetch the creator's details using the createdById
-    const creatorDetails = await getUserById(classData.createdById);
+    const teacherDetails = await getUserById(classData.taughtBy[0]?.id);
 
-    if (!creatorDetails) {
+    if (!teacherDetails) {
       return null; // Creator not found.
     }
 
@@ -98,11 +104,8 @@ export async function getClassWithCreator(classCode: string) {
         createdAt: classData.createdAt,
         updatedAt: classData.updatedAt,
       },
-      creator: {
-        name: creatorDetails.name,
-        nickname: creatorDetails.nickname,
-        role: creatorDetails.role,
-      },
+      // Buggy Taught By
+      teacherDetails,
     };
   } catch (error) {
     console.error("Error fetching class with creator:", error);
@@ -115,7 +118,7 @@ export async function getClassWithCreator(classCode: string) {
 // FETCH ALL CLASSES BY USER ID
 export async function getUserClasses() {
   const { userId } = auth();
-  
+
   if (!userId) {
     return null;
   }
@@ -128,43 +131,47 @@ export async function getUserClasses() {
 
   let classes: SafeClass[];
 
-  if (user.role === 'TEACHER') {
+  if (user.role === "TEACHER") {
     // If user.role === TEACHER, fetch all classes where class.createdBy === user.id
     classes = await prisma.class.findMany({
       where: {
-        createdById: user.id
+        taughtBy: {
+          some: {
+            id: userId,
+          },
+        },
       },
       select: {
         id: true,
         title: true,
         description: true,
         createdAt: true,
-        updatedAt: true
+        updatedAt: true,
       },
       orderBy: {
-        updatedAt: 'desc'
-      }
+        updatedAt: "desc",
+      },
     });
-  } else if (user.role === 'STUDENT') {
+  } else if (user.role === "STUDENT") {
     // If user.role === STUDENT, fetch all classes where class.members contains user.Id
     classes = await prisma.class.findMany({
       where: {
         members: {
           some: {
-            id: user.id
-          }
-        }
+            id: user.id,
+          },
+        },
       },
       select: {
         id: true,
         title: true,
         description: true,
         createdAt: true,
-        updatedAt: true
+        updatedAt: true,
       },
       orderBy: {
-        updatedAt: 'desc'
-      }
+        updatedAt: "desc",
+      },
     });
   } else {
     // If the role is neither TEACHER nor STUDENT, return null

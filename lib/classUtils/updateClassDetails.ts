@@ -14,7 +14,8 @@ export async function updateClassDetails(classId: string, updatedData: { title: 
       // First, fetch the class to ensure it exists and the user has permission to update it
       const existingClass = await prisma.class.findUnique({
         where: { id: classId },
-        select: { createdById: true }
+        // CHECK IF THE USER TEACHES THE CLASS
+        include: { taughtBy: true }
       });
   
       if (!existingClass) {
@@ -22,7 +23,7 @@ export async function updateClassDetails(classId: string, updatedData: { title: 
       }
   
       // Check if the current user is the creator of the class
-      if (existingClass.createdById !== userId) {
+      if (existingClass.taughtBy.some(teacher => teacher.id !== userId)) {
         throw new Error("User does not have permission to update this class");
       }
   
