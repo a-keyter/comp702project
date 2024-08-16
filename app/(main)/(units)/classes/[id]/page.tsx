@@ -2,9 +2,15 @@ import { AssessmentDataTable } from "@/components/assessmentsTable/data-table";
 import { oneClassAssessmentColumns } from "@/components/assessmentsTable/oneClassAssessmentColumns";
 import { oneClassStudentAssessmentColumns } from "@/components/assessmentsTableStudent/oneClassAssessmentColumnsStudent";
 import DeleteClassDialog from "@/components/DeleteClassDialog";
+import { classStudentsColumns } from "@/components/studentsTable/columns";
+import { ClassStudentsDataTable } from "@/components/studentsTable/data-table";
+import LateLoadStudentsByClassTable from "@/components/studentsTable/LateLoadStudentsByClassTable";
 import { Card } from "@/components/ui/card";
 import UpdateClassDialog from "@/components/UpdateClassDialog";
-import { getClassAssessmentsStudent, getClassAssessmentsTeacher } from "@/lib/assessmentUtils/getAssessmentDetails";
+import {
+  getClassAssessmentsStudent,
+  getClassAssessmentsTeacher,
+} from "@/lib/assessmentUtils/getAssessmentDetails";
 import { getClassById } from "@/lib/classUtils/getClassDetails";
 import { getUserById, getUserDetails } from "@/lib/userUtils/getUserDetails";
 import Link from "next/link";
@@ -72,9 +78,7 @@ async function ClassPage({ params }: { params: { id: string } }) {
         </Card>
         <Card className="col-span-1 p-2">
           <h3>Assessments</h3>
-          <p className="font-bold text-2xl">
-            {numberOfAssessments}
-          </p>
+          <p className="font-bold text-2xl">{numberOfAssessments}</p>
         </Card>
       </div>
       {teacherAssessments && user.role === "TEACHER" && (
@@ -117,6 +121,11 @@ async function ClassPage({ params }: { params: { id: string } }) {
           <Card className="col-span-3 p-2">Highest Performing Students</Card>
         )}
       </div>
+      {userRole === "TEACHER" && (
+        <Card className="w-full p-2 mt-4">
+          <LateLoadStudentsByClassTable classId={params.id} />
+        </Card>
+      )}
     </div>
   );
 }

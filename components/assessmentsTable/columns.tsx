@@ -132,7 +132,7 @@ export const assessmentColumns: ColumnDef<AssessmentWithStats>[] = [
             <Link href={`/assessments/edit/${thisAssessment.id}`}>
             <DropdownMenuItem>Edit Assessment</DropdownMenuItem>
             </Link>
-            <DeleteAssessmentDialog className="w-full text-left pl-2 bg-white text-black font-normal" content="Delete Assessment" classId={thisAssessment.classId} assessmentId={thisAssessment.id} assessmentTitle={thisAssessment.title} />
+            <DeleteAssessmentDialog className="w-full text-left pl-1 bg-white text-black font-normal" content="Delete Assessment" classId={thisAssessment.classId} assessmentId={thisAssessment.id} assessmentTitle={thisAssessment.title} />
           </DropdownMenuContent>
         </DropdownMenu>
       );

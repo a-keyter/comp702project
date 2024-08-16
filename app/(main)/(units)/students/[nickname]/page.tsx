@@ -13,7 +13,7 @@ async function IndividualStudentPage({ params }: { params: { nickname: string } 
     }
 
     return (
-    <div>This page is for showing an individual student that is a member of the teachers classes.</div>
+    <div>This page is for showing the performance of an individual student that is a member of the teachers classes.</div>
   )
 }
 
