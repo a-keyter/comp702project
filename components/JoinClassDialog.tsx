@@ -27,6 +27,9 @@ import {
 import { Input } from "@/components/ui/input";
 import LoadingSpinner from "./LoadingSpinner";
 import { addUserToClass } from "@/lib/classUtils/addUserToClass";
+import { Link2 } from "lucide-react";
+import { joinClassRequest } from "@/lib/issueUtils/joinClassRequest";
+import { useToast } from "./ui/use-toast";
 
 const FormSchema = z.object({
   classCode: z
@@ -44,9 +47,9 @@ const FormSchema = z.object({
 
 function JoinClassDialog() {
   const [open, setOpen] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  const { toast } = useToast()
+
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -56,30 +59,43 @@ function JoinClassDialog() {
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
+    setLoading(true);
+
     try {
-      setError(null);
-      setLoading(true);
+      const request = await joinClassRequest(data.classCode);
 
-      // Call the addUserToClass server action (to be implemented)
-      await addUserToClass(data.classCode);
-
-      // Close the dialog if successful
-      setLoading(false);
-      setOpen(false);
-
-      // Redirect to the joined class page
-      router.push(`/classes/${data.classCode.toLowerCase()}`);
+      if (request.outcome === "success") {
+        setOpen(false); // Close the dialog on success
+        toast({
+          title: "Success",
+          description: request.message,
+          variant: "default",
+        });
+      } else {
+        setOpen(false); // Close the dialog on failure
+        toast({
+          title: "Error",
+          description: request.message,
+          variant: "destructive",
+        });
+      }
     } catch (err) {
-      setLoading(false);
       console.error("Error joining class:", err);
-      setError("An error occurred while joining the class. Please try again.");
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+      form.reset(); // Reset the form after submission (success or failure)
     }
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="default">Join Class +</Button>
+        <Button variant="default"><Link2 className="pr-2"/>Join Class</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -116,7 +132,6 @@ function JoinClassDialog() {
                 )}
               </Button>
             </div>
-            {error && <p className="text-red-500 text-sm">{error}</p>}
           </form>
         </Form>
       </DialogContent>

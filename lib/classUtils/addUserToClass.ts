@@ -1,24 +1,23 @@
-'use server'
+"use server";
 
-import { auth } from '@clerk/nextjs/server'
-import { revalidatePath } from 'next/cache'
-import { prisma } from '../initPrisma'
+import { prisma } from "../initPrisma";
+import { getUserById } from "../userUtils/getUserDetails";
 
-export async function addUserToClass(classCode: string) {
-  const { userId } = auth()
+export async function addUserToClass(newUserId: string, classCode: string) {
+  const newUser = await getUserById(newUserId);
 
-  if (!userId) {
-    throw new Error('User not authenticated')
+  if (!newUser) {
+    throw new Error("User not found");
   }
 
   try {
     // Find the class
     const classToJoin = await prisma.class.findUnique({
       where: { id: classCode },
-    })
+    });
 
     if (!classToJoin) {
-      throw new Error('Class not found')
+      throw new Error("Class not found");
     }
 
     // Check if user is already a member of the class
@@ -27,32 +26,40 @@ export async function addUserToClass(classCode: string) {
         id: classCode,
         members: {
           some: {
-            id: userId,
+            id: newUserId,
           },
         },
       },
-    })
+    });
 
     if (existingMembership) {
-      throw new Error('User is already a member of this class')
+      throw new Error("User is already a member of this class");
     }
 
-    // Add user to the class
-    await prisma.class.update({
-      where: { id: classCode },
-      data: {
-        members: {
-          connect: { id: userId },
+    // Add user to the class, either as teacher or as student
+    if (newUser.role === "TEACHER") {
+      await prisma.class.update({
+        where: { id: classCode },
+        data: {
+          taughtBy: {
+            connect: { id: newUserId },
+          },
         },
-      },
-    })
+      });
+    } else if (newUser.role === "STUDENT") {
+      await prisma.class.update({
+        where: { id: classCode },
+        data: {
+          members: {
+            connect: { id: newUserId },
+          },
+        },
+      });
+    }
 
-    // Revalidate the classes page to reflect the changes
-    revalidatePath('/classes')
-
-    return { success: true }
+    return { success: true };
   } catch (error) {
-    console.error('Error adding user to class:', error)
-    throw error
+    console.error("Error adding user to class:", error);
+    throw error;
   }
 }

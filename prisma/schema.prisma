@@ -18,6 +18,20 @@ enum AssessmentItemType {
   CONTEXT
 }
 
+enum IssueType {
+  CLASS_JOIN_REQUEST
+  QUESTION_ISSUE
+  FEEDBACK_ISSUE
+}
+
+enum IssueStatus {
+  UNREAD
+  OPEN
+  RESOLVED
+  REJECTED
+}
+
+
 model User {
   id                 String       @id
   name               String
@@ -30,6 +44,9 @@ model User {
   createdAssessments Assessment[] @relation("AssessmentCreator")
   submissions        Submission[] @relation("UserSubmissions")
   responses          Response[]   @relation("UserResponses")
+  raisedIssues       Issue[]      @relation("UserIssues")
+  messages           Message[]    @relation("UserMessages")
+  lastUpdatedIssues  Issue[]      @relation("LastUpdatedBy")
 }
 
 model Class {
@@ -41,6 +58,7 @@ model Class {
   taughtBy    User[]       @relation("TaughtBy")
   members     User[]       @relation("ClassMembers")
   assessments Assessment[] @relation("ClassAssessments")
+  issues      Issue[]      @relation("ClassIssues")
 }
 
 model Assessment {
@@ -78,6 +96,7 @@ model AssessmentItem {
   assessmentId   String
   responses      Response[]
   answers        Answer[]           @relation("AssessmentItemToAnswer")
+  issues         Issue[]
 }
 
 model Answer {
@@ -100,6 +119,7 @@ model Submission {
   feedback     String?
   score        Float?
   teacherFeedback TeacherFeedback?
+  issues           Issue[]
 }
 
 model Response {
@@ -114,4 +134,41 @@ model Response {
   givenAnswer      Answer         @relation(fields: [givenAnswerId], references: [id])
   givenAnswerId    String
   isCorrect        Boolean
+}
+
+model Issue {
+  id               String      @id @default(uuid())
+  type             IssueType
+  status           IssueStatus @default(UNREAD)
+  createdAt        DateTime    @default(now()) @map(name: "created_at")
+  updatedAt        DateTime    @updatedAt @map(name: "updated_at")
+  raisedBy         User        @relation("UserIssues", fields: [raisedById], references: [id])
+  raisedById       String
+  lastUpdatedBy    User        @relation("LastUpdatedBy", fields: [lastUpdatedById], references: [id])
+  lastUpdatedById  String
+  relevantClass    Class       @relation("ClassIssues", fields: [relevantClassId], references: [id])
+  relevantClassId  String
+  messages         Message[]   @relation("IssueMessages")
+  
+  // Fields for question issues
+  question         String?
+  givenAnswer      String?
+  correctAnswer    String?
+  assessmentItem   AssessmentItem?   @relation(fields: [assessmentItemId], references: [id])
+  assessmentItemId String?
+  
+  // Fields for feedback issues
+  feedback         String?
+  submission       Submission? @relation(fields: [submissionId], references: [id])
+  submissionId     String?
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  sender    User     @relation("UserMessages", fields: [senderId], references: [id])
+  senderId  String
+  issue     Issue    @relation("IssueMessages", fields: [issueId], references: [id])
+  issueId   String
 }

@@ -87,8 +87,8 @@ export function ClassDataTable<TData, TValue>({
             }
             className="w-full"
           />
-          {role === "TEACHER" ? <CreateClassDialog /> : <JoinClassDialog />}
-          <Button><Link2 className="pr-2"/>Join Class</Button>
+          {role === "TEACHER" && <CreateClassDialog />}
+          <JoinClassDialog />
         </div>
       </div>
 
