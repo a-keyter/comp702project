@@ -120,24 +120,18 @@ export function ClassJoinRequestsDataTable({
       sorting,
       columnFilters,
     },
+    initialState: {
+      pagination: {
+        pageIndex: 0,
+        pageSize: 3, //custom default page size
+      },
+    },
   })
 
   return (
     <div>
-      <div className="flex justify-between items-center py-4">
+      <div className="flex justify-between items-center py-3">
         <h2 className="pl-2 font-semibold text-xl">Join Class Requests</h2>
-        <div className="flex gap-x-2 w-full max-w-md">
-        <Input
-          placeholder="Filter by student name..."
-          value={(table.getColumn("user.name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("user.name")?.setFilterValue(event.target.value)
-          }
-          className="w-full"
-        />
-        {/* TODO */}
-        <Button>Filter<Filter className="pl-2"/></Button>
-        </div>
       </div>
       <div>
         <Table>

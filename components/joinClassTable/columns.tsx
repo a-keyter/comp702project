@@ -30,7 +30,7 @@ export const classJoinRequestColumns: ColumnDef<ClassJoinRequest>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Student Name
+          User Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -108,7 +108,7 @@ export const classJoinRequestColumns: ColumnDef<ClassJoinRequest>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Submitted Date
+          Request Date
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );

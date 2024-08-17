@@ -1,13 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { getStudentsByClassWithStats } from "@/lib/studentUtils/getStudentsByClassWithStats";
 import { ClassStudentsDataTable } from "./data-table";
 import { classStudentsColumns } from "./columns";
