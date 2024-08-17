@@ -32,6 +32,7 @@ import { Input } from "../ui/input";
 import CreateClassDialog from "../CreateClassDialog";
 import Link from "next/link";
 import JoinClassDialog from "../JoinClassDialog";
+import { Link2 } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -76,7 +77,7 @@ export function ClassDataTable<TData, TValue>({
         <Link href="/classes" className="font-semibold text-xl pl-2">
           Classes
         </Link>
-        <div className="flex gap-x-4 py-1 w-full max-w-md justify-end">
+        <div className="flex gap-x-4 py-1 w-full max-w-lg justify-end">
           <Input
             name="Classes Search Bar"
             placeholder="Search classes..."
@@ -87,6 +88,7 @@ export function ClassDataTable<TData, TValue>({
             className="w-full"
           />
           {role === "TEACHER" ? <CreateClassDialog /> : <JoinClassDialog />}
+          <Button><Link2 className="pr-2"/>Join Class</Button>
         </div>
       </div>
 
