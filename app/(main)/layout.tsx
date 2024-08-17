@@ -18,7 +18,7 @@ export default function ApplicationLayout({
   return (
     <main className="h-screen flex flex-col items-center w-full">
       <UserNav />
-      <main className="flex-grow flex flex-col items-center w-full mb-1">
+      <main className="flex-grow flex flex-col items-center w-full mb-1 px-4">
         <Suspense fallback={<Loading />}>
         {children}
         </Suspense>

@@ -10,6 +10,7 @@ interface ResultsDisplayProps {
   assessmentId: string;
   assessmentTitle: string;
   classTitle: string;
+  classId: string;
   score: number;
   totalQuestions: number;
   correctAnswers: number;
@@ -23,6 +24,7 @@ function ResultsDisplay({
   assessmentId,
   assessmentTitle,
   classTitle,
+  classId,
   score,
   totalQuestions,
   correctAnswers,
@@ -84,7 +86,7 @@ function ResultsDisplay({
       <div className="space-y-4">
         {responses.map((response, index) => (
           <ResultItemWrapper
-            key={response.id}
+            key={response.responseId}
             response={response}
             index={index + 1}
           />

@@ -25,7 +25,10 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import LoadingSpinner from "./LoadingSpinner";
 import { TriangleAlert } from "lucide-react";
-import { ResultResponse } from "./assessmentAttempt/ResultItemWrapper";
+import { SubmittedResponse } from "@/lib/assessmentUtils/getSubmissionResults";
+import { toast } from "./ui/use-toast";
+import { raiseFeedbackIssue } from "@/lib/issueUtils/raiseFeedbackIssue";
+import { raiseQuestionIssue } from "@/lib/issueUtils/raiseQuestionIssue";
 
 const FormSchema = z.object({
   issueDescription: z.string().min(10, {
@@ -34,9 +37,9 @@ const FormSchema = z.object({
 });
 
 interface ReportIssueProps {
-  issueItemId: string;
+  issueItemId: string; // SubmissionId for Feedback or ResponseId for Question.
   issueType: string; // "Feedback" | "Question"
-  issueObject: null | string | ResultResponse;
+  issueObject: null | string | SubmittedResponse;
 }
 
 export default function ReportIssueDialog({
@@ -45,9 +48,7 @@ export default function ReportIssueDialog({
   issueObject,
 }: ReportIssueProps) {
   const [open, setOpen] = useState(false);
-  const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  const [issueId, setIssueId] = useState<string>("");
 
   const form = useForm({
     resolver: zodResolver(FormSchema),
@@ -57,29 +58,54 @@ export default function ReportIssueDialog({
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
+    setLoading(true);
+
     try {
-      setError("");
-      setLoading(true);
+      let result;
+      if (issueType === "Feedback") {
+        if (typeof issueObject !== "string") {
+          throw new Error("Feedback is required for Feedback issues");
+        }
+        result = await raiseFeedbackIssue(issueItemId, issueObject, data.issueDescription);
+      } else {
+        if (!issueObject || typeof issueObject === "string") {
+          throw new Error("SubmittedResponse object is required for Question issues");
+        }
+        result = await raiseQuestionIssue(
+          issueObject.responseId,
+          data.issueDescription,
+          issueObject.question,
+          issueObject.correctAnswer,
+          issueObject.givenAnswer
+        );
+      }
 
-      // Here you would typically call an API to create the issue
-      // For this example, we'll simulate it with a timeout
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Simulate getting an issueId back from the API
-      const newIssueId = "issue_" + Math.random().toString(36).substr(2, 9);
-      setIssueId(newIssueId);
-
-      // Simulate sending the first message
-      //   await fetchIssueMessages(newIssueId);
-
-      setLoading(false);
-      form.reset();
+      if (result.outcome === "success") {
+        setOpen(false);
+        form.reset();
+        toast({
+          title: "Success",
+          description: result.message,
+          variant: "default",
+        });
+      } else {
+        setOpen(false);
+        form.reset();
+        toast({
+          title: "Error",
+          description: result.message,
+          variant: "destructive",
+        });
+      }
     } catch (err) {
+      console.error(`Error reporting ${issueType.toLowerCase()} issue:`, err);
+      toast({
+        title: "Error",
+        description: `An unexpected error occurred while reporting the ${issueType.toLowerCase()} issue. Please try again.`,
+        variant: "destructive",
+      });
+    } finally {
       setLoading(false);
-      setError(
-        "An error occurred while reporting the issue. Please try again."
-      );
-      console.error("Error reporting issue:", err);
     }
   }
 
@@ -108,21 +134,21 @@ export default function ReportIssueDialog({
           <div className="p-2 bg-yellow-200 rounded-lg">
             <p>
               <strong>Question:</strong>{" "}
-              {(issueObject as ResultResponse).question}
+              {(issueObject as SubmittedResponse).question}
             </p>
             <div className="mt-2">
               <p>
               <strong>Correct Answer:</strong>
               <ul className="list-disc pl-5">
                 <li >
-                  {(issueObject as ResultResponse).correctAnswer}
+                  {(issueObject as SubmittedResponse).correctAnswer}
                 </li>
               </ul>
               </p>
               <p className="mt-2">
               <strong>Your Answer:</strong>
               <ul className="list-disc pl-5">
-                <li>{(issueObject as ResultResponse).givenAnswer}</li>
+                <li>{(issueObject as SubmittedResponse).givenAnswer}</li>
               </ul>
               </p>
             </div>
@@ -157,12 +183,6 @@ export default function ReportIssueDialog({
                 )}
               </Button>
             </div>
-            {error && <p className="text-red-500 text-sm">{error}</p>}
-            {issueId && (
-              <p className="text-green-500 text-sm">
-                Issue reported successfully. Issue ID: {issueId}
-              </p>
-            )}
           </form>
         </Form>
       </DialogContent>

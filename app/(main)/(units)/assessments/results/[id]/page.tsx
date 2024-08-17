@@ -14,6 +14,7 @@ async function AssessmentResultsPage({ params }: { params: { id: string } }) {
           assessmentId={results.assessmentId}
           assessmentTitle={results.assessmentTitle}
           classTitle={results.classTitle}
+          classId={results.classId}
           score={results.score}
           totalQuestions={results.totalQuestions}
           correctAnswers={results.correctAnswers}

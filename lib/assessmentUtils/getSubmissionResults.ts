@@ -4,7 +4,7 @@ import { prisma } from '@/lib/initPrisma';
 import { auth } from '@clerk/nextjs/server';
 
 export interface SubmittedResponse {
-  id: string;
+  responseId: string;
   assessmentItemId: string;
   question: string;
   givenAnswer: string;
@@ -16,6 +16,7 @@ export interface SubmissionResult {
   assessmentId: string;
   assessmentTitle: string;
   classTitle: string;
+  classId: string;
   score: number;
   totalQuestions: number;
   correctAnswers: number;
@@ -76,6 +77,7 @@ export async function getSubmissionResults(submissionId: string): Promise<Submis
       assessmentId: submission.assessment.id,
       assessmentTitle: submission.assessment.title,
       classTitle: submission.assessment.class.title,
+      classId: submission.assessment.class.id,
       score: submission.score || 0,
       totalQuestions: submission.responses.length,
       correctAnswers: 0,
@@ -97,7 +99,7 @@ export async function getSubmissionResults(submissionId: string): Promise<Submis
       }
 
       const resultResponse: SubmittedResponse = {
-        id: response.id,
+        responseId: response.id,
         assessmentItemId: response.assessmentItem.id,
         question: response.assessmentItem.content,
         givenAnswer: response.givenAnswer.content,
