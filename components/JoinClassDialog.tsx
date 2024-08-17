@@ -26,7 +26,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import LoadingSpinner from "./LoadingSpinner";
-import { addUserToClass } from "@/lib/classUtils/addUserToClass";
 import { Link2 } from "lucide-react";
 import { joinClassRequest } from "@/lib/issueUtils/joinClassRequest";
 import { useToast } from "./ui/use-toast";
