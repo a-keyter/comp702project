@@ -30,8 +30,6 @@ async function ClassPage({ params }: { params: { id: string } }) {
     return redirect("/onboard");
   }
 
-  // const creator = await getUserById(classData.);
-
   const teacherAssessments = await getClassAssessmentsTeacher(params.id);
   const studentAssessments = await getClassAssessmentsStudent(params.id);
 
@@ -64,8 +62,6 @@ async function ClassPage({ params }: { params: { id: string } }) {
           <h3 className="font-semibold text-lg">Description</h3>
           <p>{classData.description}</p>
           <p className="text-sm pt-2">
-            {/* <strong>Created by: </strong> */}
-            {/* {creator?.nickname} */}
           </p>
         </Card>
         <Card className="col-span-1 p-2">
