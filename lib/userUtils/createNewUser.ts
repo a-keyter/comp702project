@@ -1,6 +1,6 @@
 "use server"
 
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { z } from "zod";
 import { prisma } from "../initPrisma";
 
@@ -20,10 +20,10 @@ export async function createUser(data: FormData) {
   // Validate the data
   const parsedData = FormSchema.parse(data);
 
-  // Fetch the current user ID using Clerk auth
-  const { userId } = auth();
+  // Fetch the current user using Clerk auth
+  const user = await currentUser()
 
-  if (!userId) {
+  if (!user) {
     throw new Error("User is not authenticated");
   }
 
@@ -32,7 +32,8 @@ export async function createUser(data: FormData) {
 
   const newUser = await prisma.user.create({
     data: {
-      id: userId,
+      id: user.id,
+      email: user.emailAddresses[0].emailAddress,
       name: parsedData.name,
       nickname: parsedData.nickname,
       role,

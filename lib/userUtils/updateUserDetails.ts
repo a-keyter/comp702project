@@ -3,7 +3,7 @@
 
 import { z } from "zod";
 import { prisma } from "../initPrisma";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 const UpdateUserSchema = z.object({
   name: z.string().min(2),
@@ -11,17 +11,18 @@ const UpdateUserSchema = z.object({
 });
 
 export async function updateUserDetails(data: z.infer<typeof UpdateUserSchema>) {
-  const { userId } = auth();
-  
-  if (!userId) {
-    throw new Error('Not authenticated');
+  // Fetch the current user using Clerk auth
+  const user = await currentUser()
+
+  if (!user) {
+    throw new Error("User is not authenticated");
   }
 
   const validatedData = UpdateUserSchema.parse(data);
 
   try {
     const updatedUser = await prisma.user.update({
-      where: { id: userId },
+      where: { id: user.id },
       data: validatedData,
     });
 

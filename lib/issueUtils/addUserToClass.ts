@@ -1,10 +1,17 @@
 "use server";
 
+import { auth } from "@clerk/nextjs/server";
 import { prisma } from "../initPrisma";
-import { getUserById } from "../userUtils/getUserDetails";
+import { getUserByEmail } from "../userUtils/getUserDetails";
 
-export async function addUserToClass(newUserId: string, classCode: string) {
-  const newUser = await getUserById(newUserId);
+export async function addUserToClass(issueId: string, newUserEmail: string, classCode: string) {
+  const { userId } = auth();
+
+  if (!userId) {
+    return null;
+  }
+
+  const newUser = await getUserByEmail(newUserEmail);
 
   if (!newUser) {
     throw new Error("User not found");
@@ -26,7 +33,7 @@ export async function addUserToClass(newUserId: string, classCode: string) {
         id: classCode,
         members: {
           some: {
-            id: newUserId,
+            email: newUserEmail,
           },
         },
       },
@@ -42,7 +49,7 @@ export async function addUserToClass(newUserId: string, classCode: string) {
         where: { id: classCode },
         data: {
           taughtBy: {
-            connect: { id: newUserId },
+            connect: { id: newUser.id },
           },
         },
       });
@@ -51,11 +58,23 @@ export async function addUserToClass(newUserId: string, classCode: string) {
         where: { id: classCode },
         data: {
           members: {
-            connect: { id: newUserId },
+            connect: { id: newUser.id },
           },
         },
       });
     }
+
+    // Update the issue status, last updated time, and last updated by
+    await prisma.issue.update({
+      where: { id: issueId },
+      data: {
+        status: "RESOLVED",
+        updatedAt: new Date(),
+        lastUpdatedBy: {
+          connect: { id: userId },
+        },
+      },
+    });
 
     return { success: true };
   } catch (error) {

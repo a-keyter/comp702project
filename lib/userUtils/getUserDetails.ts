@@ -37,6 +37,23 @@ export async function getUserByNickname(nickname: string): Promise<User | null> 
   }
 }
 
+export async function getUserByEmail(userEmail: string): Promise<User | null> {
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        email: userEmail,
+      },
+    });
+    
+    return user;
+  } catch (error) {
+    console.error("Error fetching user by email", error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
 // Frontend should NEVER see userId.
 export type SafeUser = {
   name: string;
