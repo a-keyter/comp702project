@@ -4,6 +4,7 @@ import { ArrowLeftSquare, RecycleIcon, SkipBack } from "lucide-react";
 import { Button } from "../ui/button";
 import { SubmittedResponse } from "@/lib/assessmentUtils/getSubmissionResults";
 import ReportIssueDialog from "../ReportIssueDialog";
+import { Card } from "../ui/card";
 
 interface ResultsDisplayProps {
   submissionId: string;
@@ -34,18 +35,18 @@ function ResultsDisplay({
 }: ResultsDisplayProps) {
   return (
     <div className="flex flex-col gap-y-4 w-full py-4">
-      <div className="flex justify-between items-center">
-        <div>
+      <Card className="p-4 flex justify-between">
+        <div className="flex flex-col gap-y-2">
           <Link href={`/assessments/${assessmentId}`}>
-            <h2 className=""> Assessment Results</h2>
             <h2 className="text-2xl font-bold">{assessmentTitle}</h2>
+            <h2 className="">Assessment Results</h2>
           </Link>
           <p>
             <strong>Submitted by:</strong> {submitterName}
           </p>
         </div>
-        <div className="flex flex-col gap-y-2 items-end">
-          <div className="flex gap-x-2">
+        <div className="flex flex-col justify-between items-end">
+          <div className="flex h-full gap-x-2">
             <Link
               href={`/assessments/attempt/${assessmentId}`}
               className="w-full flex justify-end"
@@ -62,11 +63,11 @@ function ResultsDisplay({
             </Link>
           </div>
           <p className="text-right">
-            <strong>Class:</strong> {classTitle}
+            <strong>Class:</strong> <Link href={`/classes/${classId}`}>{classTitle}</Link>
           </p>
         </div>
-      </div>
-      <div className="bg-gray-100 p-4 rounded-md">
+      </Card>
+      <Card className="p-4">
         <p className="text-xl font-semibold">Score: {score.toFixed(2)}%</p>
         <p>
           Correct Answers: {correctAnswers} out of {totalQuestions}
@@ -82,7 +83,7 @@ function ResultsDisplay({
           />
         </div>
         <p>{feedback ? feedback : "No Feedback Available."}</p>
-      </div>
+      </Card>
       <div className="space-y-4">
         {responses.map((response, index) => (
           <ResultItemWrapper

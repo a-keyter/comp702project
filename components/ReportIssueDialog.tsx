@@ -112,7 +112,7 @@ export default function ReportIssueDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button title="Report Issue" variant="default" className="rounded-full">
+        <Button title={`Report Issue with ${issueType.toLowerCase()}`} variant="default" className="rounded-full">
           <TriangleAlert />
         </Button>
       </DialogTrigger>
