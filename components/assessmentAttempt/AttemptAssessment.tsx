@@ -9,6 +9,7 @@ import LoadingSpinner from "../LoadingSpinner";
 import { initialiseSubmission } from "@/lib/submissionUtils/initialiseSubmission";
 import { submitResponses } from "@/lib/submissionUtils/submitResponses";
 import { finaliseSubmission } from "@/lib/submissionUtils/finaliseSubmission";
+import { Card } from "../ui/card";
 
 interface AttemptAssessmentProps {
   assessmentId: string;
@@ -87,6 +88,7 @@ function AttemptAssessment({
 
   return (
     <div className="flex flex-col gap-y-2 w-full py-1">
+      <Card className="p-2">
       <div className="flex justify-between items-center py-2">
         <div className="flex flex-col gap-y-2">
           <h2 className="text-2xl font-bold">{assessmentTitle}</h2>
@@ -99,21 +101,19 @@ function AttemptAssessment({
         <strong>Assessment Objectives: </strong>
         {assessmentObjectives}
       </p>
+      </Card>
       {items.map((item, index) => (
-        <div
+        <Card
           key={item.id}
-          className="flex flex-col border-2 py-1 px-2 rounded-md w-full"
+          className="flex flex-col border-2 p-3 rounded-md w-full"
         >
-          <div className="flex justify-between items-center mb-2">
-            {/* <span className="font-bold">Question {index + 1}</span> */}
-          </div>
           <AttemptItemWrapper
             item={item}
             answers={item.type === "MCQ" ? mcqAnswers[item.id] : undefined}
             selectedAnswerId={responses[item.id]}
             onSelect={(answerId) => handleResponseChange(item.id, answerId)}
           />
-        </div>
+        </Card>
       ))}
       <div className="flex justify-end">
       <Button onClick={handleSubmit} className="mt-4">

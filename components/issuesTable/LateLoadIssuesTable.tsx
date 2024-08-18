@@ -10,11 +10,13 @@ import { studentQuestionFeedbackIssueColumns } from "./studentColumns";
 import { fetchOpenStudentQuestionFeedbackIssues } from "@/lib/issueUtils/fetchStudentOpenQFIssues";
 
 interface LateLoadQuestionFeedbackIssuesProps {
-  userRole: "TEACHER" | "STUDENT";
+  userRole: string;
+  size: "SMALL" | "LARGE"
 }
 
 export default function LateLoadQuestionFeedbackIssues({
   userRole,
+  size,
 }: LateLoadQuestionFeedbackIssuesProps) {
   const [issues, setIssues] = useState<QuestionFeedbackIssue[]>([]);
   const [loading, setLoading] = useState(true);
@@ -64,6 +66,7 @@ export default function LateLoadQuestionFeedbackIssues({
       data={issues}
       columns={userRole === "TEACHER" ? questionFeedbackIssueColumns : studentQuestionFeedbackIssueColumns}
       userRole={userRole}
+      size={size}
     />
   );
 }

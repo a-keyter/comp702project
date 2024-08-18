@@ -29,12 +29,14 @@ interface DataTableProps {
   data: QuestionFeedbackIssue[];
   columns: ColumnDef<QuestionFeedbackIssue>[];
   userRole: string;
+  size: "SMALL" | "LARGE"
 }
 
 export function QuestionFeedbackIssuesDataTable({
   columns,
   data,
   userRole,
+  size,
 }: DataTableProps) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -55,7 +57,7 @@ export function QuestionFeedbackIssuesDataTable({
     initialState: {
       pagination: {
         pageIndex: 0,
-        pageSize: userRole === "TEACHER" ? 6 : 10,
+        pageSize: size === "SMALL" ? 6 : 10,
       },
     },
   })

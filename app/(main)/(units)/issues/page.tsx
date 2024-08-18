@@ -27,7 +27,7 @@ export default async function IssuesPage() {
       )}
 
       <Card className="p-2 flex-grow w-full flex flex-col gap-y-2">
-        <LateLoadQuestionFeedbackIssues userRole={user.role}/>
+        <LateLoadQuestionFeedbackIssues userRole={user.role} size={user.role === "TEACHER" ? "SMALL" : "LARGE"}/>
       </Card>
     </div>
   );

@@ -2,6 +2,7 @@ import TeacherFeedback from "@/components/assessmentStatistics/GroupFeedback";
 import HardestQuestions from "@/components/assessmentStatistics/HardestQuestions";
 import PerformanceGraph from "@/components/assessmentStatistics/PerformanceGraph";
 import DeleteAssessmentDialog from "@/components/DeleteAssessmentDialog";
+import LateLoadQuestionFeedbackIssues from "@/components/issuesTable/LateLoadIssuesTable";
 import ReportIssueDialog from "@/components/ReportIssueDialog";
 
 import { responseColumns } from "@/components/submissionsTable/columns";
@@ -172,7 +173,7 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
         </Card>
       ) }
       
-      { assessmentData.submissions.length > 0 && 
+      { assessmentData.submissions.length > 0 && user.role === "TEACHER" && 
       
        (
         <div className="mt-4">

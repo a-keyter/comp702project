@@ -49,7 +49,11 @@ export const questionFeedbackIssueColumns: ColumnDef<QuestionFeedbackIssue>[] =
           </Button>
         );
       },
-      cell: ({ row }) => <Link href={`/issues/${row.original.id}`} className="pl-4 w-full">{row.original.issueType}</Link>,
+      cell: ({ row }) => (
+        <Link href={`/issues/${row.original.id}`} className="pl-4 w-full">
+          {row.original.issueType}
+        </Link>
+      ),
     },
     {
       accessorKey: "createdBy.name",
@@ -67,8 +71,12 @@ export const questionFeedbackIssueColumns: ColumnDef<QuestionFeedbackIssue>[] =
       cell: ({ row }) => {
         const name = row.original.createdBy.name;
         const truncatedName =
-        name.length > 20 ? `${name.substring(0, 20)}...` : name;
-        return <div className="pl-4" title={name}>{truncatedName}</div>;
+          name.length > 20 ? `${name.substring(0, 20)}...` : name;
+        return (
+          <div className="pl-4" title={name}>
+            {truncatedName}
+          </div>
+        );
       },
     },
     {
@@ -146,7 +154,11 @@ export const questionFeedbackIssueColumns: ColumnDef<QuestionFeedbackIssue>[] =
           year: "2-digit",
           hour12: false,
         });
-        return <div className="pl-4">{formatted}</div>;
+        return (
+          <Link href={`/issues/${row.original.id}`} className="pl-4">
+            {formatted}
+          </Link>
+        );
       },
     },
     {
@@ -162,8 +174,8 @@ export const questionFeedbackIssueColumns: ColumnDef<QuestionFeedbackIssue>[] =
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <Link href={`/issues/${row.original.id}`} >
-              <DropdownMenuItem>Manage Issue</DropdownMenuItem>
+              <Link href={`/issues/${row.original.id}`}>
+                <DropdownMenuItem>Manage Issue</DropdownMenuItem>
               </Link>
             </DropdownMenuContent>
           </DropdownMenu>

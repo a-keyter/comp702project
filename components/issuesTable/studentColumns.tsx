@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { QuestionFeedbackIssue } from "./columns";
 
-
 export const studentQuestionFeedbackIssueColumns: ColumnDef<QuestionFeedbackIssue>[] =
   [
     {
@@ -33,7 +32,11 @@ export const studentQuestionFeedbackIssueColumns: ColumnDef<QuestionFeedbackIssu
           </Button>
         );
       },
-      cell: ({ row }) => <Link href={`/issues/${row.original.id}`} className="pl-4 w-full">{row.original.issueType}</Link>,
+      cell: ({ row }) => (
+        <Link href={`/issues/${row.original.id}`} className="pl-4 w-full">
+          {row.original.issueType}
+        </Link>
+      ),
     },
     {
       accessorKey: "lastUpdatedBy.name",
@@ -51,34 +54,37 @@ export const studentQuestionFeedbackIssueColumns: ColumnDef<QuestionFeedbackIssu
       cell: ({ row }) => {
         const name = row.original.lastUpdatedBy.name;
         const truncatedName =
-        name.length > 20 ? `${name.substring(0, 20)}...` : name;
-        return <div title={name} className="pl-4">{truncatedName}</div>;
+          name.length > 20 ? `${name.substring(0, 20)}...` : name;
+        return (
+          <div title={name} className="pl-4">
+            {truncatedName}
+          </div>
+        );
       },
     },
     {
-        accessorKey: "classId",
-        header: ({ column }) => {
-          return (
-            <Button
-              variant="ghost"
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-              Class
-              <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-          );
-        },
-        cell: ({ row }) => (
-            <Link
-              href={`/classes/${row.original.classId}`}
-              className="pl-4 hover:underline"
-              title={row.original.classTitle}
-            >
-              {row.original.classId}
-            </Link>
-          
-        ),
+      accessorKey: "classId",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Class
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
       },
+      cell: ({ row }) => (
+        <Link
+          href={`/classes/${row.original.classId}`}
+          className="pl-4 hover:underline"
+          title={row.original.classTitle}
+        >
+          {row.original.classId}
+        </Link>
+      ),
+    },
     {
       accessorKey: "assessmentTitle",
       header: ({ column }) => {
@@ -107,7 +113,7 @@ export const studentQuestionFeedbackIssueColumns: ColumnDef<QuestionFeedbackIssu
         );
       },
     },
-    
+
     {
       accessorKey: "lastUpdated",
       header: ({ column }) => {
@@ -131,7 +137,11 @@ export const studentQuestionFeedbackIssueColumns: ColumnDef<QuestionFeedbackIssu
           year: "2-digit",
           hour12: false,
         });
-        return <div className="pl-4">{formatted}</div>;
+        return (
+          <Link href={`/issues/${row.original.id}`} className="pl-4">
+            {formatted}
+          </Link>
+        );
       },
     },
     {
@@ -147,8 +157,8 @@ export const studentQuestionFeedbackIssueColumns: ColumnDef<QuestionFeedbackIssu
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <Link href={`/issues/${row.original.id}`} >
-              <DropdownMenuItem>Manage Issue</DropdownMenuItem>
+              <Link href={`/issues/${row.original.id}`}>
+                <DropdownMenuItem>Manage Issue</DropdownMenuItem>
               </Link>
             </DropdownMenuContent>
           </DropdownMenu>

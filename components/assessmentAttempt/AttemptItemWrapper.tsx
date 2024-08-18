@@ -31,7 +31,7 @@ export default function AttemptItemWrapper({
       <div>
         <p className="font-semibold mb-2">{item.content}</p>
         {randomizedAnswers.length > 0 && (
-          <div className="space-y-2">
+          <div className="space-y-2 pr-2">
             {randomizedAnswers.map((answer) => (
               <div key={answer.id} className="flex items-center justify-between">
                 <span>{answer.content}</span>
