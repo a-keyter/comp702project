@@ -23,93 +23,25 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ClassJoinRequest } from "./columns";
-import { addUserToClass } from "@/lib/issueUtils/addUserToClass";
-import { toast } from "../ui/use-toast";
-import { rejectJoinRequest } from "@/lib/issueUtils/rejectJoinRequest";
-import { Ban, Filter, Plus } from "lucide-react";
+import { QuestionFeedbackIssue } from "./columns";
 
 interface DataTableProps {
-  data: ClassJoinRequest[];
-  columns: ColumnDef<ClassJoinRequest>[];
-  updateJoinRequests: (issueId: string) => void;
+  data: QuestionFeedbackIssue[];
+  columns: ColumnDef<QuestionFeedbackIssue>[];
+  userRole: string;
 }
 
-export function ClassJoinRequestsDataTable({
+export function QuestionFeedbackIssuesDataTable({
   columns,
   data,
-  updateJoinRequests,
+  userRole,
 }: DataTableProps) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
-  const handleAddUser = async (request: ClassJoinRequest) => {
-    try {
-      await addUserToClass(request.issueId, request.user.email, request.classId);
-      toast({
-        title: "Success",
-        description: `${request.user.name} has been added to ${request.classTitle}`,
-      });
-      updateJoinRequests(request.issueId);
-    } catch (error) {
-      console.error("Error adding user to class:", error);
-      toast({
-        title: "Error",
-        description: "Failed to add user to class. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleRejectRequest = async (request: ClassJoinRequest) => {
-    try {
-      await rejectJoinRequest(request.issueId);
-      toast({
-        title: "Success",
-        description: `Join request from ${request.user.name} has been rejected`,
-      });
-      updateJoinRequests(request.issueId);
-    } catch (error) {
-      console.error("Error rejecting join request:", error);
-      toast({
-        title: "Error",
-        description: "Failed to reject join request. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const tableColumns: ColumnDef<ClassJoinRequest>[] = [
-    ...columns,
-    {
-      id: "actions",
-      cell: ({ row }) => {
-        const request = row.original;
-        return (
-          <div className="flex justify-end gap-x-4 pr-4">
-            <button 
-              className="bg-green-600 px-1 rounded-lg hover:bg-green-300" 
-              title="Add to class"
-              onClick={() => handleAddUser(request)}
-            >
-              <Plus className="h-6 w-6 text-white"/>
-            </button>
-            <button 
-              className="bg-red-600 px-1 py-1 rounded-lg hover:bg-red-300" 
-              title="Reject request"
-              onClick={() => handleRejectRequest(request)}
-            >
-              <Ban className="h-6 w-6 text-black"/>
-            </button>
-          </div>
-        );
-      },
-    },
-  ];
-
   const table = useReactTable({
     data,
-    columns: tableColumns,
+    columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
@@ -123,7 +55,7 @@ export function ClassJoinRequestsDataTable({
     initialState: {
       pagination: {
         pageIndex: 0,
-        pageSize: 3, //custom default page size
+        pageSize: userRole === "TEACHER" ? 6 : 10,
       },
     },
   })
@@ -131,7 +63,15 @@ export function ClassJoinRequestsDataTable({
   return (
     <div>
       <div className="flex justify-between items-center py-2">
-        <h2 className="pl-2 font-semibold text-xl">Join Class Requests</h2>
+        <h2 className="pl-2 font-semibold text-xl">Open Question and Feedback Issues</h2>
+        <Input
+          placeholder="Filter by assessment title..."
+          value={(table.getColumn("assessmentTitle")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("assessmentTitle")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
       </div>
       <div>
         <Table>
@@ -167,7 +107,7 @@ export function ClassJoinRequestsDataTable({
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={tableColumns.length} className="h-24 text-center">
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>
@@ -175,7 +115,7 @@ export function ClassJoinRequestsDataTable({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="flex items-center justify-end space-x-2 py-2">
         <Button
           variant="outline"
           size="sm"

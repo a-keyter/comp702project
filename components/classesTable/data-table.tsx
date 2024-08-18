@@ -77,7 +77,7 @@ export function ClassDataTable<TData, TValue>({
         <Link href="/classes" className="font-semibold text-xl pl-2">
           Classes
         </Link>
-        <div className="flex gap-x-4 py-1 w-full max-w-lg justify-end">
+        <div className="flex gap-x-4 py-1 w-full max-w-md justify-end">
           <Input
             name="Classes Search Bar"
             placeholder="Search classes..."

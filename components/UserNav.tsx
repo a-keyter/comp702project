@@ -51,7 +51,7 @@ async function UserNav() {
             <div>
               <Clipboard />
             </div>{" "}
-            Assessments
+            Tests
           </Button>
         </Link>
         <Link href={"/issues"}>
@@ -62,14 +62,7 @@ async function UserNav() {
             Issues
           </Button>
         </Link>
-        <Link href={"/dashboard"}>
-          <Button variant={"ghost"} className="flex flex-col px-2">
-            <div>
-              <Home />
-            </div>
-            Dashboard
-          </Button>
-        </Link>
+       
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant={"ghost"} className="flex flex-col px-2">
@@ -99,6 +92,14 @@ async function UserNav() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <Link href={"/dashboard"}>
+          <Button variant={"ghost"} className="flex flex-col px-2">
+            <div>
+              <Home />
+            </div>
+            Home
+          </Button>
+        </Link>
       </div>
     </nav>
   );

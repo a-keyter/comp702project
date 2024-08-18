@@ -61,6 +61,7 @@ export async function raiseQuestionIssue(responseId: string, issueDescription: s
         raisedBy: { connect: { id: userId } },
         lastUpdatedBy: { connect: { id: userId } },
         relevantClass: { connect: { id: response.submission.assessment.classId } },
+        relevantAssessment: { connect: {id: response.submission.assessmentId}},
         assessmentItem: { connect: { id: response.assessmentItemId } },
         question: question,
         correctAnswer: correctAnswer,

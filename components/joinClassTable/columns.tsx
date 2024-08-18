@@ -1,12 +1,9 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Ban, MoreHorizontal, Plus } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { addUserToClass } from "@/lib/issueUtils/addUserToClass";
-import { toast } from "../ui/use-toast";
-import { rejectJoinRequest } from "@/lib/issueUtils/rejectJoinRequest";
 
 // This type is used to define the shape of our data.
 export type ClassJoinRequest = {

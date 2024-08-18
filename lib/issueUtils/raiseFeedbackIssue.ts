@@ -69,6 +69,7 @@ export async function raiseFeedbackIssue(submissionId: string, feedback: string,
         raisedBy: { connect: { id: userId } },
         lastUpdatedBy: { connect: { id: userId } },
         relevantClass: { connect: { id: submission.assessment.classId } },
+        relevantAssessment: { connect: {id: submission.assessmentId}},
         submission: { connect: { id: submissionId } },
         feedback: feedback
       },
