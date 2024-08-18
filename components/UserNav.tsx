@@ -33,7 +33,7 @@ async function UserNav() {
   const userRole = user?.role.charAt(0).toUpperCase() + user?.role.slice(1).toLowerCase()
 
   return (
-    <nav className="flex justify-between w-full max-w-4xl items-center pt-4 pb-2 mb-1 pl-4 pr-3 lg:px-0">
+    <nav className="flex justify-between w-full max-w-4xl items-center pt-4 pb-2 mb-1 pl-1">
       <div title="logo" className="font-bold text-2xl">
         <Link href={"/dashboard"}>Ambi-Learn - {userRole}</Link>
       </div>

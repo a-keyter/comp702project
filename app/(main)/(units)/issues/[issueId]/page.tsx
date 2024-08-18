@@ -1,29 +1,43 @@
-async function fetchIssueData(issueId:string) {
-    return {
-        issueId: issueId,
-        status: "Unopened / Under Review / Closed",
-        issueType: "Question", // Could also be Feedback
-        issueItemId: "ashdaiosjdwidapj" // This is either the AssessmentItem ID or the ResponseId
-    }
-}
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { fetchIssueById } from "@/lib/issueUtils/fetchIssueById";
+import { Send } from "lucide-react";
+import IssueDetailsCard from "./IssueDetailsCard";
+import { redirect } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
+import { getUserById } from "@/lib/userUtils/getUserDetails";
+import { Skeleton } from "@/components/ui/skeleton";
+import IssueChat from "./IssueChat";
 
-// This function will return the array of all messages in the issue thread.
-// The first message will inevitably be from a student, since they are the person who raises the issue.
-async function fetchIssueMessages(issueId:string) {
-    return [{
-        issueId: issueId,
-        messageId: "someMessageId",
-        sentBy: "someUserId", // The person who sent the message
-        sentDate: "someArbitraryDate", // The date / time the message was sent
-        messageContent: "Message will say some arbitrary thing about the", // The contents of the meesage
-        senderRole: "Student" // This is either the AssessmentItem ID or the ResponseId
-    }]
-}
+export default async function IssuePage({
+  params,
+}: {
+  params: { issueId: string };
+}) {
+  const { userId } = auth();
 
-export default async function IssuePage({ params }: { params: { issueId: string } }) {
-    const issueData = fetchIssueData(params.issueId)
+  let user;
+  if (userId) {
+    user = await getUserById(userId);
+  }
 
-    return (
-        <div>This is where the user will be able to see individual issueData</div>
-    )
+  if (!user) {
+    redirect("/onboard")
+  }
+
+  const issueData = await fetchIssueById(params.issueId);
+
+  if (!issueData) {
+    redirect("/issues");
+  }
+
+  return (
+    <div className="flex flex-col w-full max-w-4xl flex-1 gap-y-4">
+      {/* This component will display the data about the issue. */}
+      <IssueDetailsCard issue={issueData} />
+
+      <IssueChat issueId={params.issueId} userName={user.name} userRole={user.role}/>
+    </div>
+  );
 }
