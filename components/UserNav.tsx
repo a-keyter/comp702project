@@ -1,8 +1,8 @@
-"use server"
+"use server";
 
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { Clipboard, Home, StopCircle, User, Users } from "lucide-react";
+import { Bell, Clipboard, Home, StopCircle, User, Users } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -16,21 +16,23 @@ import { SignOutButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import { getUserById } from "@/lib/userUtils/getUserDetails";
 import { redirect } from "next/navigation";
+import NotificationsButton from "./NotificationsButton";
 
 async function UserNav() {
-  const {userId} = auth()
+  const { userId } = auth();
 
   if (!userId) {
-    redirect("/")
+    redirect("/");
   }
 
   const user = await getUserById(userId);
 
   if (!user) {
-    redirect("/onboard")
+    redirect("/onboard");
   }
 
-  const userRole = user?.role.charAt(0).toUpperCase() + user?.role.slice(1).toLowerCase()
+  const userRole =
+    user?.role.charAt(0).toUpperCase() + user?.role.slice(1).toLowerCase();
 
   return (
     <nav className="flex justify-between w-full max-w-4xl items-center pt-4 pb-2 mb-1 pl-1">
@@ -62,7 +64,7 @@ async function UserNav() {
             Issues
           </Button>
         </Link>
-       
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant={"ghost"} className="flex flex-col px-2">
@@ -86,12 +88,13 @@ async function UserNav() {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <SignOutButton redirectUrl={"/"} >
+              <SignOutButton redirectUrl={"/"}>
                 <button className="w-full text-left">Sign out</button>
               </SignOutButton>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <NotificationsButton />
         <Link href={"/dashboard"}>
           <Button variant={"ghost"} className="flex flex-col px-2">
             <div>

@@ -11,6 +11,7 @@ type Issue = {
   raisedBy: {
     id: string;
     name: string;
+    email: string;
   };
   lastUpdatedBy: {
     id: string;
@@ -39,6 +40,7 @@ async function fetchIssueById(issueId: string): Promise<Issue | null> {
           select: {
             id: true,
             name: true,
+            email: true,
           },
         },
         lastUpdatedBy: {

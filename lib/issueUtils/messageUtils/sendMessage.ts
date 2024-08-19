@@ -2,10 +2,10 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/initPrisma";
+import { newMessageNotification } from "@/lib/notificationUtils/newMessageNotification";
 
 export async function sendNewMessage(
   issueId: string,
-  userRole: string,
   messageContent: string
 ) {
   const { userId } = auth();
@@ -18,6 +18,13 @@ export async function sendNewMessage(
     // First, verify that the issue exists
     const issue = await prisma.issue.findUnique({
       where: { id: issueId },
+      include: {
+        relevantClass: {
+          include: {
+            taughtBy: true
+          }
+        }
+      }
     });
 
     if (!issue) {
@@ -60,6 +67,20 @@ export async function sendNewMessage(
         },
       });
     }
+
+    // Get the IDs for the users involved:
+    const studentId = issue.raisedById
+    const teachers = issue.relevantClass.taughtBy
+
+    // If the message sender is the student, notify the teachers, otherwise notify the student.
+    if (userId === studentId) {
+      await Promise.all(teachers.map(teacher => 
+        newMessageNotification(issueId, userId, teacher.id)
+      ));
+    } else {
+      await newMessageNotification(issueId, userId, studentId)
+    }
+
 
     return {
       id: newMessage.id,

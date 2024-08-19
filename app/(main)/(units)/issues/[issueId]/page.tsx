@@ -23,7 +23,7 @@ export default async function IssuePage({
   }
 
   if (!user) {
-    redirect("/onboard")
+    redirect("/onboard");
   }
 
   const issueData = await fetchIssueById(params.issueId);
@@ -37,7 +37,13 @@ export default async function IssuePage({
       {/* This component will display the data about the issue. */}
       <IssueDetailsCard issue={issueData} />
 
-      <IssueChat issueId={params.issueId} userName={user.name} userRole={user.role}/>
+      {issueData.type !== "CLASS_JOIN_REQUEST" && (
+        <IssueChat
+          issueId={params.issueId}
+          userName={user.name}
+          userRole={user.role}
+        />
+      )}
     </div>
   );
 }

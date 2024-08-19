@@ -3,6 +3,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "../initPrisma";
 import { getUserByEmail } from "../userUtils/getUserDetails";
+import { newClassNotification } from "../notificationUtils/newClassNotification";
 
 export async function addUserToClass(issueId: string, newUserEmail: string, classCode: string) {
   const { userId } = auth();
@@ -75,6 +76,8 @@ export async function addUserToClass(issueId: string, newUserEmail: string, clas
         },
       },
     });
+
+    await newClassNotification(classCode, userId, newUser.id)
 
     return { success: true };
   } catch (error) {

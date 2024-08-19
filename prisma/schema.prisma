@@ -31,34 +31,47 @@ enum IssueStatus {
   REJECTED
 }
 
+enum NotificationType {
+  NEW_ASSESSMENT
+  CLASS_JOIN_REQUEST
+  CLASS_JOIN_REJECTED
+  CLASS_JOIN_ACCEPTED
+  FEEDBACK_ISSUE_RAISED
+  QUESTION_ISSUE_RAISED
+  NEW_ISSUE_MESSAGE
+}
+
 model User {
-  id                 String       @id
+  id                 String         @id
   name               String
-  nickname           String       @unique
-  email              String       @unique
-  createdAt          DateTime     @default(now()) @map(name: "created_at")
-  updatedAt          DateTime     @updatedAt @map(name: "updated_at")
+  nickname           String         @unique
+  email              String         @unique
+  createdAt          DateTime       @default(now()) @map(name: "created_at")
+  updatedAt          DateTime       @updatedAt @map(name: "updated_at")
   role               Role
-  taughtClasses      Class[]      @relation("TaughtBy")
-  memberOfClasses    Class[]      @relation("ClassMembers")
-  createdAssessments Assessment[] @relation("AssessmentCreator")
-  submissions        Submission[] @relation("UserSubmissions")
-  responses          Response[]   @relation("UserResponses")
-  raisedIssues       Issue[]      @relation("UserIssues")
-  messages           Message[]    @relation("UserMessages")
-  lastUpdatedIssues  Issue[]      @relation("LastUpdatedBy")
+  taughtClasses      Class[]        @relation("TaughtBy")
+  memberOfClasses    Class[]        @relation("ClassMembers")
+  createdAssessments Assessment[]   @relation("AssessmentCreator")
+  submissions        Submission[]   @relation("UserSubmissions")
+  responses          Response[]     @relation("UserResponses")
+  raisedIssues       Issue[]        @relation("UserIssues")
+  messages           Message[]      @relation("UserMessages")
+  lastUpdatedIssues  Issue[]        @relation("LastUpdatedBy")
+  receivedNotifications Notification[] @relation("UserNotifications")
+  sentNotifications  Notification[] @relation("NotificationSender")
 }
 
 model Class {
-  id          String       @id
-  title       String
-  description String
-  createdAt   DateTime     @default(now()) @map(name: "created_at")
-  updatedAt   DateTime     @updatedAt @map(name: "updated_at")
-  taughtBy    User[]       @relation("TaughtBy")
-  members     User[]       @relation("ClassMembers")
-  assessments Assessment[] @relation("ClassAssessments")
-  issues      Issue[]      @relation("ClassIssues")
+  id            String         @id
+  title         String
+  description   String
+  createdAt     DateTime       @default(now()) @map(name: "created_at")
+  updatedAt     DateTime       @updatedAt @map(name: "updated_at")
+  taughtBy      User[]         @relation("TaughtBy")
+  members       User[]         @relation("ClassMembers")
+  assessments   Assessment[]   @relation("ClassAssessments")
+  issues        Issue[]        @relation("ClassIssues")
+  notifications Notification[] @relation("ClassNotifications")
 }
 
 model Assessment {
@@ -75,6 +88,7 @@ model Assessment {
   submissions     Submission[]
   issues          Issue[]          @relation("AssessmentIssues")
   teacherFeedback TeacherFeedback?
+  notifications   Notification[]   @relation("AssessmentNotifications")
 }
 
 model TeacherFeedback {
@@ -138,20 +152,21 @@ model Response {
 }
 
 model Issue {
-  id                    String      @id @default(uuid())
+  id                    String         @id @default(uuid())
   type                  IssueType
-  status                IssueStatus @default(UNREAD)
-  createdAt             DateTime    @default(now()) @map(name: "created_at")
-  updatedAt             DateTime    @updatedAt @map(name: "updated_at")
-  raisedBy              User        @relation("UserIssues", fields: [raisedById], references: [id])
+  status                IssueStatus    @default(UNREAD)
+  createdAt             DateTime       @default(now()) @map(name: "created_at")
+  updatedAt             DateTime       @updatedAt @map(name: "updated_at")
+  raisedBy              User           @relation("UserIssues", fields: [raisedById], references: [id])
   raisedById            String
-  lastUpdatedBy         User        @relation("LastUpdatedBy", fields: [lastUpdatedById], references: [id])
+  lastUpdatedBy         User           @relation("LastUpdatedBy", fields: [lastUpdatedById], references: [id])
   lastUpdatedById       String
-  relevantClass         Class       @relation("ClassIssues", fields: [relevantClassId], references: [id], onDelete: Cascade)
+  relevantClass         Class          @relation("ClassIssues", fields: [relevantClassId], references: [id], onDelete: Cascade)
   relevantClassId       String
-  relevantAssessment    Assessment? @relation("AssessmentIssues", fields: [relevantAssessmentId], references: [id], onDelete: Cascade)
+  relevantAssessment    Assessment?    @relation("AssessmentIssues", fields: [relevantAssessmentId], references: [id], onDelete: Cascade)
   relevantAssessmentId  String?
-  messages              Message[]   @relation("IssueMessages")
+  messages              Message[]      @relation("IssueMessages")
+  notifications         Notification[] @relation("IssueNotifications")
   
   // Fields for question issues
   question              String?
@@ -162,7 +177,7 @@ model Issue {
   
   // Fields for feedback issues
   feedback              String?
-  submission            Submission? @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  submission            Submission? @relation(fields: [submissionId], references: [id], onDelete: SetNull)
   submissionId          String?
 }
 
@@ -174,4 +189,24 @@ model Message {
   senderId  String
   issue     Issue    @relation("IssueMessages", fields: [issueId], references: [id], onDelete: Cascade)
   issueId   String
+}
+
+model Notification {
+  id           String           @id @default(uuid())
+  type         NotificationType
+  recipient    User             @relation("UserNotifications", fields: [recipientId], references: [id], onDelete: Cascade)
+  recipientId  String
+  sender       User             @relation("NotificationSender", fields: [senderId], references: [id], onDelete: SetNull)
+  senderId     String
+  class        Class?           @relation("ClassNotifications", fields: [classId], references: [id], onDelete: Cascade)
+  classId      String?
+  assessment   Assessment?      @relation("AssessmentNotifications", fields: [assessmentId], references: [id], onDelete: Cascade)
+  assessmentId String?
+  issue        Issue?           @relation("IssueNotifications", fields: [issueId], references: [id], onDelete: Cascade)
+  issueId      String?
+  is_unread    Boolean          @default(true)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@unique([type, issueId, senderId, recipientId])
 }
