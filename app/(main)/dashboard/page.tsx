@@ -1,11 +1,9 @@
 import { classColumns } from "@/components/classesTable/columns";
-import CreateClassDialog from "@/components/CreateClassDialog";
 import { ClassDataTable } from "@/components/classesTable/data-table";
 import { getUserClasses } from "@/lib/classUtils/getClassDetails";
 import { getUserDetails } from "@/lib/userUtils/getUserDetails";
 import { redirect } from "next/navigation";
 import { AssessmentDataTable } from "@/components/assessmentsTable/data-table";
-import CreateAssessmentDialog from "@/components/CreateAssessmentDialog";
 import { assessmentColumns } from "@/components/assessmentsTable/columns";
 import { getStudentAssessmentData, getTeacherAssessmentData } from "@/lib/assessmentUtils/getAssessmentDetails";
 import { studentAssessmentColumns } from "@/components/assessmentsTableStudent/columns";
@@ -36,7 +34,7 @@ export default async function Dashboard() {
           data={teacherAssessments}
           role={user.role}
           tableSize="small"
-          classCode={null}
+          classId={null}
           classTitle={null}
           classes={classes}
         />
@@ -48,7 +46,7 @@ export default async function Dashboard() {
         data={studentAssessments}
         role={user.role}
         tableSize="small"
-        classCode={null}
+        classId={null}
         classTitle={null}
         classes={classes}
         />
