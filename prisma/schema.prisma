@@ -13,6 +13,11 @@ enum Role {
   STUDENT
 }
 
+enum AssessmentStatus {
+  DRAFT
+  LIVE
+}
+
 enum AssessmentItemType {
   MCQ
   CONTEXT
@@ -78,6 +83,7 @@ model Assessment {
   id              String           @id @default(uuid())
   title           String
   objectives      String
+  status          AssessmentStatus @default(DRAFT)
   createdAt       DateTime         @default(now()) @map(name: "created_at")
   updatedAt       DateTime         @updatedAt @map(name: "updated_at")
   createdBy       User             @relation("AssessmentCreator", fields: [createdById], references: [id])

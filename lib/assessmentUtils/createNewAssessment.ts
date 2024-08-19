@@ -3,9 +3,10 @@
 import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
 import { prisma } from "../initPrisma";
+import { newAssessmentNotification } from "../notificationUtils/newAssessmentNotification";
 
 const FormSchema = z.object({
-    classCode: z
+    classId: z
       .string()
       .min(6, {
         message: "Class code must be at least 6 characters.",
@@ -45,10 +46,21 @@ export async function createNewAssessment(formData: FormData): Promise<string> {
         data: {
           title: formData.title,
           objectives: formData.objectives,
-          classId: formData.classCode,
+          classId: formData.classId,
           createdById: userId, // Replace with actual user ID, e.g., from session
         },
+        include: {
+          class: {
+            include: {
+              members: true
+            }
+          }
+        }
       });
+
+      await Promise.all(newAssessment.class.members.map(student => 
+        newAssessmentNotification(newAssessment.id, formData.classId, userId, student.id)
+      ));
   
       // Return the assessment ID
       return newAssessment.id;

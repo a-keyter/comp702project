@@ -2,6 +2,7 @@ import { Answer, AssessmentItem } from "@prisma/client";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import PreviewItemWrapper from "./PreviewItemWrapper";
+import { Card } from "../ui/card";
 
 interface PreviewDisplayProps {
   assessmentId: string;
@@ -26,7 +27,8 @@ function PreviewDisplay({
 }: PreviewDisplayProps) {
   return (
     <div className="flex flex-col gap-y-2 w-full py-1">
-      <div className="flex justify-between items-center py-2">
+      <Card className="flex flex-col p-2 gap-y-2">
+        <div className="flex justify-between items-center">
         <div className="flex flex-col gap-y-2">
           <h2 className="text-2xl font-bold">{assessmentTitle}</h2>
           <p>
@@ -35,9 +37,6 @@ function PreviewDisplay({
         </div>
         <div className="flex flex-col gap-y-2">
           <div className="flex space-x-4 justify-end">
-            <Link href={`/assessments/edit/${assessmentId}`}>
-              <Button>Edit Assessment</Button>
-            </Link>
             <Link href={`/assessments/${assessmentId}`}>
               <Button className="bg-yellow-300 text-black hover:text-white">
                 Close Preview
@@ -48,24 +47,24 @@ function PreviewDisplay({
             <strong>Last Updated:</strong> {assessmentUpdated}
           </p>
         </div>
-      </div>
-      <p className="mb-2">
+        
+        </div>
+        <p>
         <strong>Assessment Objectives: </strong>
         {assessmentObjectives}
-      </p>
+        </p>
+      </Card>
+      
       {items.map((item, index) => (
-        <div
+        <Card
           key={item.id}
-          className="flex flex-col border-2 py-1 px-2 rounded-md w-full"
+          className="flex flex-col border-2 p-2 rounded-md w-full"
         >
-          <div className="flex justify-between items-center mb-2">
-            <span className="font-bold">{index + 1}</span>
-          </div>
           <PreviewItemWrapper
             item={item}
             answers={item.type === "MCQ" ? mcqAnswers[item.id] : undefined}
           />
-        </div>
+        </Card>
       ))}
     </div>
   );

@@ -76,7 +76,6 @@ function DeleteAssessmentDialog({
 
       // Redirect to that assessment's class page after deletion
       router.push(`/classes/${classId}`);
-      window.location.reload();
     } catch (err) {
       setLoading(false);
       console.error("Error deleting assessment:", err);

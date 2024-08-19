@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import { prisma } from "../initPrisma";
 import { getUserByEmail } from "../userUtils/getUserDetails";
 import { newClassNotification } from "../notificationUtils/newClassNotification";
+import { deleteJoinRequestNotifications } from "../notificationUtils/deleteJoinRequestNotification";
 
 export async function addUserToClass(issueId: string, newUserEmail: string, classCode: string) {
   const { userId } = auth();
@@ -78,6 +79,7 @@ export async function addUserToClass(issueId: string, newUserEmail: string, clas
     });
 
     await newClassNotification(classCode, userId, newUser.id)
+    await deleteJoinRequestNotifications(issueId)
 
     return { success: true };
   } catch (error) {

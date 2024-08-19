@@ -15,6 +15,7 @@ import {
 import Link from "next/link";
 import { Assessment } from "@prisma/client";
 import DeleteAssessmentDialog from "../DeleteAssessmentDialog";
+import { Badge } from "../ui/badge";
 
 type AssessmentWithStats = Assessment & {
   submissionCount: number;
@@ -109,6 +110,25 @@ export const assessmentColumns: ColumnDef<AssessmentWithStats>[] = [
         hour12: false,
       });
       return <div className="pl-4">{formatted}</div>;
+    },
+  },
+  {
+    accessorKey: "status",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="w-full flex justify-start"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Status
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const status = row.original.status
+      return <div className="pl-4"><Badge className={status==="DRAFT" ? "bg-yellow-200 text-black" : "bg-green-600"}>{status}</Badge></div>;
     },
   },
   {

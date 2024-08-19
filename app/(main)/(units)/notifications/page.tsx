@@ -3,6 +3,7 @@ import { getUserNotifications } from "@/lib/notificationUtils/getUserNotificatio
 import Link from "next/link";
 import { NotificationType } from "@prisma/client";
 import NotificationItemWrapper from "./NotificationItemWrapper";
+import { clearUnreadNotifications } from "@/lib/notificationUtils/clearNotifications";
 
 // Define the shape of a Notification
 export interface Notification {
@@ -41,13 +42,16 @@ async function NotificationsPage() {
     return (
       <Card className="flex-1 w-full max-w-4xl">
         <div className="flex flex-col overflow-y-auto">
-          <div className="bg-blue-200 w-full h-20 border-b-2 border-blue-300 flex items-center justify-center">
+          <div className="bg-blue-100 w-full h-20 border-b-2 border-gray-600 flex items-center justify-center">
             {error || "No Notifications."}
           </div>
         </div>
       </Card>
     );
   }
+
+  // Clear unread notifications
+  await clearUnreadNotifications();
 
   return (
     <Card className="flex-1 w-full max-w-4xl">

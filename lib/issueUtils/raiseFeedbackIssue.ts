@@ -1,22 +1,27 @@
-"use server"
+"use server";
 
 import { auth } from "@clerk/nextjs/server";
 import { IssueType, IssueStatus } from "@prisma/client"; // Import the enums from Prisma client
 import { prisma } from "../initPrisma";
+import { newFeedbackIssueNotification } from "../notificationUtils/newFeedbackIssueNotification";
 
 type RequestOutcome = {
   outcome: "success" | "error";
   message: string;
 };
 
-export async function raiseFeedbackIssue(submissionId: string, feedback: string, issueDescription: string): Promise<RequestOutcome> {
+export async function raiseFeedbackIssue(
+  submissionId: string,
+  feedback: string,
+  issueDescription: string
+): Promise<RequestOutcome> {
   // Fetch the current user ID using Clerk auth
   const { userId } = auth();
 
   if (!userId) {
     return {
       outcome: "error",
-      message: "Error raising feedback issue: User not authenticated."
+      message: "Error raising feedback issue: User not authenticated.",
     };
   }
 
@@ -24,13 +29,13 @@ export async function raiseFeedbackIssue(submissionId: string, feedback: string,
     // Find the submission by submissionId
     const submission = await prisma.submission.findUnique({
       where: { id: submissionId },
-      include: { assessment: { include: { class: true } } }
+      include: { assessment: { include: { class: true } } },
     });
 
     if (!submission) {
       return {
         outcome: "error",
-        message: "Error raising feedback issue: Submission not found."
+        message: "Error raising feedback issue: Submission not found.",
       };
     }
 
@@ -38,7 +43,8 @@ export async function raiseFeedbackIssue(submissionId: string, feedback: string,
     if (submission.userId !== userId) {
       return {
         outcome: "error",
-        message: "Error raising feedback issue: You are not authorized to raise an issue for this submission."
+        message:
+          "Error raising feedback issue: You are not authorized to raise an issue for this submission.",
       };
     }
 
@@ -49,15 +55,16 @@ export async function raiseFeedbackIssue(submissionId: string, feedback: string,
         submissionId: submissionId,
         raisedById: userId,
         status: {
-          not: IssueStatus.RESOLVED
-        }
-      }
+          not: IssueStatus.RESOLVED,
+        },
+      },
     });
 
     if (existingIssue) {
       return {
         outcome: "error",
-        message: "Error raising feedback issue: An open issue already exists for this submission."
+        message:
+          "Error raising feedback issue: An open issue already exists for this submission.",
       };
     }
 
@@ -69,30 +76,48 @@ export async function raiseFeedbackIssue(submissionId: string, feedback: string,
         raisedBy: { connect: { id: userId } },
         lastUpdatedBy: { connect: { id: userId } },
         relevantClass: { connect: { id: submission.assessment.classId } },
-        relevantAssessment: { connect: {id: submission.assessmentId}},
+        relevantAssessment: { connect: { id: submission.assessmentId } },
         submission: { connect: { id: submissionId } },
-        feedback: feedback
+        feedback: feedback,
+      },
+      include: {
+        relevantClass: {
+          include: {
+            taughtBy: true,
+          },
+        },
       },
     });
 
     await prisma.message.create({
-        data: {
-          content: issueDescription,
-          sender: { connect: { id: userId } },
-          issue: { connect: { id: newIssue.id } },
-        },
-      });
+      data: {
+        content: issueDescription,
+        sender: { connect: { id: userId } },
+        issue: { connect: { id: newIssue.id } },
+      },
+    });
+
+    await Promise.all(
+      newIssue.relevantClass.taughtBy.map((teacher) =>
+        newFeedbackIssueNotification(
+          newIssue.id,
+          submission.assessmentId,
+          userId,
+          teacher.id
+        )
+      )
+    );
 
     return {
       outcome: "success",
-      message: "Feedback issue successfully raised. A teacher will review it soon."
+      message:
+        "Feedback issue successfully raised. A teacher will review it soon.",
     };
-
   } catch (error) {
     console.error("Error raising feedback issue:", error);
     return {
       outcome: "error",
-      message: "Error raising feedback issue: An unexpected error occurred."
+      message: "Error raising feedback issue: An unexpected error occurred.",
     };
   }
 }

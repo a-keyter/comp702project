@@ -83,7 +83,7 @@ async function ClassPage({ params }: { params: { id: string } }) {
           data={teacherAssessments}
           role={user.role}
           tableSize="small"
-          classCode={classData.id}
+          classId={classData.id}
           classTitle={classData.title}
           classes={null}
         />
@@ -95,7 +95,7 @@ async function ClassPage({ params }: { params: { id: string } }) {
           data={studentAssessments}
           role={user.role}
           tableSize="small"
-          classCode={null}
+          classId={null}
           classTitle={null}
           classes={null}
         />

@@ -43,10 +43,10 @@ export function AssessmentDataTable<TData, TValue>({
   data,
   role,
   tableSize,
-  classCode,
+  classId,
   classTitle,
   classes
-}: DataTableProps<TData, TValue> & { role: string; tableSize: string, classCode: string | null, classTitle: string | null, classes: SafeClass[] | null}) {
+}: DataTableProps<TData, TValue> & { role: string; tableSize: string, classId: string | null, classTitle: string | null, classes: SafeClass[] | null}) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -87,7 +87,7 @@ export function AssessmentDataTable<TData, TValue>({
           }
           className="w-full"
         />
-            {role === "TEACHER" && <CreateAssessmentDialog classCode={classCode} classTitle={classTitle} classes={classes}/>}
+            {role === "TEACHER" && <CreateAssessmentDialog classId={classId} classTitle={classTitle} classes={classes}/>}
           </div>
         </div>
 

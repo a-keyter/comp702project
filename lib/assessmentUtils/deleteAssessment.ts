@@ -1,6 +1,7 @@
 'use server'
 
 import { prisma } from '@/lib/initPrisma'
+import { deleteNewAssessmentNotification } from '../notificationUtils/deleteNewAssessmentNotification'
 
 export async function deleteAssessment(assessmentId: string) {
   try {
@@ -47,6 +48,8 @@ export async function deleteAssessment(assessmentId: string) {
 
       return { success: true }
     })
+
+    await deleteNewAssessmentNotification(assessmentId)
 
     return result
   } catch (error) {

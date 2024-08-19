@@ -6,6 +6,7 @@ import { Bell } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getUserNotificationCount } from "@/lib/notificationUtils/getNotificationCount";
 import { clearUnreadNotifications } from "@/lib/notificationUtils/clearNotifications";
+import Link from "next/link";
 
 function NotificationsButton() {
   const [notificationCount, setNotificationCount] = useState(0);
@@ -30,19 +31,14 @@ function NotificationsButton() {
   const handleClick = async (event: React.MouseEvent) => {
     event.preventDefault(); // Prevent the default link behavior
 
-    // Clear unread notifications
-    const result = await clearUnreadNotifications();
-
-    if (result.success) {
-      // Update the notification count
-      setNotificationCount(0);
-    }
+    setNotificationCount(0);
 
     // Navigate to the notifications page
     router.push("/notifications");
   };
 
   return (
+    <Link href="/notifications">
     <Button
       variant="ghost"
       className="flex flex-col px-2"
@@ -66,6 +62,7 @@ function NotificationsButton() {
       </div>
       Updates
     </Button>
+    </Link>
   );
 }
 

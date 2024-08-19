@@ -41,7 +41,8 @@ const FormSchema = z.object({
     })
     .regex(/^[a-zA-Z0-9-]+$/, {
       message: "Class code must contain only alphanumeric characters and hyphens (No spaces).",
-    }),
+    })
+    ,
 });
 
 function JoinClassDialog() {
@@ -61,7 +62,7 @@ function JoinClassDialog() {
     setLoading(true);
 
     try {
-      const request = await joinClassRequest(data.classCode);
+      const request = await joinClassRequest(data.classCode.toLowerCase());
 
       if (request.outcome === "success") {
         setOpen(false); // Close the dialog on success

@@ -9,6 +9,7 @@ import { responseColumns } from "@/components/submissionsTable/columns";
 import { AllResponsesDataTable } from "@/components/submissionsTable/data-table";
 import { studentColumns } from "@/components/submissionsTable/student-columns";
 import { StudentDataTable } from "@/components/submissionsTable/student-data-table";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { getAssessmentById } from "@/lib/assessmentUtils/getAssessmentDetails";
@@ -63,9 +64,7 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
         <div className="flex flex-col gap-y-2">
           {user.role === "TEACHER" && submissionCount === 0 && (
             <div className="flex space-x-4 justify-end">
-              <Link href={`/assessments/preview/${assessmentData.id}`}>
-                <Button>Preview</Button>
-              </Link>
+              <Badge>{assessmentData.status}</Badge>
               <Link href={`/assessments/edit/${assessmentData.id}`}>
                 <Button className="bg-yellow-300 text-black hover:text-white">
                   Edit
@@ -82,8 +81,9 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
           )}
           {user.role === "TEACHER" && submissionCount > 0 && (
             <div className="flex space-x-4 justify-end">
+              <Badge>{assessmentData.status}</Badge>
               <Link href={`/assessments/preview/${assessmentData.id}`}>
-                <Button>Review</Button>
+                <Button>View</Button>
               </Link>
               <DeleteAssessmentDialog
                 className=""
@@ -171,11 +171,9 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
               : "No Feedback Available."}
           </p>
         </Card>
-      ) }
-      
-      { assessmentData.submissions.length > 0 && user.role === "TEACHER" && 
-      
-       (
+      )}
+
+      {assessmentData.submissions.length > 0 && user.role === "TEACHER" && (
         <div className="mt-4">
           <div>
             <h2 className="font-semibold text-2xl text-center">

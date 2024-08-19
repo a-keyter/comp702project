@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { Notification } from "./page";
 import { NotificationType } from "@prisma/client";
+import RemoveNotificationButton from "./RemoveNotificationButton";
 
 export default function NotificationItemWrapper({
     notification,
@@ -47,8 +48,9 @@ export default function NotificationItemWrapper({
     }
   
     return (
-      <Link href={href}>
-        <div className="bg-blue-200 w-full h-auto min-h-20 border-b-2 border-blue-300 flex flex-col justify-center p-4">
+      <div className={`flex flex-1 gap-x-4 border-b-2 border-gray-300 items-center ${notification.is_unread === true ? "bg-blue-200" : "bg-white"}`}>
+      <Link href={href} className="w-full">
+        <div className={`w-full h-auto min-h-20 flex flex-col justify-center p-4`}>
           <span className="font-semibold">{content}</span>
           <span className="text-sm text-gray-500 mt-2">
             From: {notification.sender.name} •{" "}
@@ -56,5 +58,7 @@ export default function NotificationItemWrapper({
           </span>
         </div>
       </Link>
+      <RemoveNotificationButton notificationId={notification.id}/>
+      </div>
     );
   }

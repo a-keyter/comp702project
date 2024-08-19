@@ -39,7 +39,7 @@ import {
 import { SafeClass } from "@/lib/classUtils/getClassDetails";
 
 const FormSchema = z.object({
-  classCode: z
+  classId: z
     .string()
     .min(6, {
       message: "Class code must be at least 6 characters.",
@@ -60,11 +60,11 @@ const FormSchema = z.object({
 });
 
 function CreateAssessmentDialog({
-  classCode,
+  classId,
   classTitle,
   classes,
 }: {
-  classCode: string | null;
+  classId: string | null;
   classTitle: string | null;
   classes: SafeClass[] | null;
 }) {
@@ -76,7 +76,7 @@ function CreateAssessmentDialog({
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      classCode: classCode ? classCode : "",
+      classId: classId ? classId : "",
       title: "",
       objectives: "",
     },
@@ -122,13 +122,13 @@ function CreateAssessmentDialog({
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
-              name="classCode"
+              name="classId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Select a Class</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={classCode || field.value}
+                    defaultValue={classId || field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -136,7 +136,7 @@ function CreateAssessmentDialog({
                           <SelectValue placeholder="Select the class for the assignment" />
                         ) : (
                           <SelectValue
-                            placeholder={`${classCode} - ${classTitle}`}
+                            placeholder={`${classId} - ${classTitle}`}
                           />
                         )}
                       </SelectTrigger>
@@ -148,10 +148,10 @@ function CreateAssessmentDialog({
                               {`${classItem.id} - ${classItem.title}`}
                             </SelectItem>
                           ))
-                        : classCode &&
+                        : classId &&
                           classTitle && (
-                            <SelectItem value={classCode}>
-                              {`${classCode} - ${classTitle}`}
+                            <SelectItem value={classId}>
+                              {`${classId} - ${classTitle}`}
                             </SelectItem>
                           )}
                     </SelectContent>

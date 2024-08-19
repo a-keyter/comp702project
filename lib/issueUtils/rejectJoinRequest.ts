@@ -2,6 +2,7 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "../initPrisma";
+import { deleteJoinRequestNotifications } from "../notificationUtils/deleteJoinRequestNotification";
 
 export async function rejectJoinRequest(issueId: string) {
   const { userId } = auth();
@@ -34,6 +35,8 @@ export async function rejectJoinRequest(issueId: string) {
         },
       },
     });
+
+    await deleteJoinRequestNotifications(issueId)
 
     return { success: true, issue: updatedIssue };
   } catch (error) {
