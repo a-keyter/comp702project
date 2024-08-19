@@ -31,7 +31,6 @@ import { Card } from "../ui/card";
 import { Input } from "../ui/input";
 import CreateAssessmentDialog from "../CreateAssessmentDialog";
 import { SafeClass } from "@/lib/classUtils/getClassDetails";
-import Link from "next/link";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

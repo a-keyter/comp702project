@@ -25,7 +25,7 @@ async function page() {
       data={teacherAssessments}
       role={user.role}
       tableSize="large"
-      classCode={null}
+      classId={null}
       classTitle={null}
       classes={classes}
     />
@@ -37,7 +37,7 @@ async function page() {
     data={studentAssessments}
     role={user.role}
     tableSize="large"
-    classCode={null}
+    classId={null}
     classTitle={null}
     classes={classes}
     />
