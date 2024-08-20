@@ -18,6 +18,7 @@ type IssueDetailsCardProps = {
       id: string;
       name: string;
       email: string;
+      role: string;
     };
     lastUpdatedBy: {
       id: string;
@@ -71,13 +72,20 @@ export default function IssueDetailsCard({ issue }: IssueDetailsCardProps) {
         <div className="grid grid-cols-3 gap-3">
           <Card className="p-1">
             <h3 className="font-semibold">Raised By</h3>
-            <p>{issue.raisedBy.name}</p>
+            <p>{issue.raisedBy.name} - ({issue.raisedBy.role.charAt(0) + issue.raisedBy.role.slice(1).toLowerCase()})</p>
           </Card>
-          {/*  */}
-          <Card className="p-1">
-            <h3 className="font-semibold">Last Updated By</h3>
-            <p>{issue.lastUpdatedBy.name}</p>
-          </Card>
+          {issue.type === "CLASS_JOIN_REQUEST" ? (
+            <Card className="p-1">
+              <h3 className="font-semibold">User Email</h3>
+              <p>{issue.raisedBy.email}</p>
+            </Card>
+          ) : (
+            <Card className="p-1">
+              <h3 className="font-semibold">Last Updated By</h3>
+              <p>{issue.lastUpdatedBy.name}</p>
+            </Card>
+          )}
+
           <Card className="p-1">
             <h3 className="font-semibold">Relevant Class</h3>
             <p>{issue.relevantClass.title}</p>

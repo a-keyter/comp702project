@@ -1,3 +1,4 @@
+import AddStudentsDialog from "@/components/AddStudentsDialog";
 import { AssessmentDataTable } from "@/components/assessmentsTable/data-table";
 import { oneClassAssessmentColumns } from "@/components/assessmentsTable/oneClassAssessmentColumns";
 import { oneClassStudentAssessmentColumns } from "@/components/assessmentsTableStudent/oneClassAssessmentColumnsStudent";
@@ -5,6 +6,7 @@ import DeleteClassDialog from "@/components/DeleteClassDialog";
 import { classStudentsColumns } from "@/components/studentsTable/columns";
 import { ClassStudentsDataTable } from "@/components/studentsTable/data-table";
 import LateLoadStudentsByClassTable from "@/components/studentsTable/LateLoadStudentsByClassTable";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import UpdateClassDialog from "@/components/UpdateClassDialog";
 import {
@@ -13,6 +15,7 @@ import {
 } from "@/lib/assessmentUtils/getAssessmentDetails";
 import { getClassById } from "@/lib/classUtils/getClassDetails";
 import { getUserById, getUserDetails } from "@/lib/userUtils/getUserDetails";
+import { Plus } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
@@ -61,12 +64,19 @@ async function ClassPage({ params }: { params: { id: string } }) {
         <Card className="col-span-4 p-2 px-4">
           <h3 className="font-semibold text-lg">Description</h3>
           <p>{classData.description}</p>
-          <p className="text-sm pt-2">
-          </p>
+          <p className="text-sm pt-2"></p>
         </Card>
         <Card className="col-span-1 p-2">
           {userRole === "TEACHER" ? (
-            <Link href={`/classes/students/${params.id}`}>Students</Link>
+            <div className="flex justify-between">
+              <Link href={`/classes/students/${params.id}`}>Students</Link>
+              <AddStudentsDialog
+                classId={params.id}
+                classTitle={classData.title}
+                classes={null}
+                variant="plus"
+              />
+            </div>
           ) : (
             <h3>Students</h3>
           )}

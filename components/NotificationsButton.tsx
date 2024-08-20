@@ -22,10 +22,10 @@ function NotificationsButton() {
     fetchNotificationCount();
 
     // Set up an interval to fetch every 60 seconds
-    const intervalId = setInterval(fetchNotificationCount, 60000);
+    // const intervalId = setInterval(fetchNotificationCount, 10000);
 
     // Clean up the interval when the component unmounts
-    return () => clearInterval(intervalId);
+    // return () => clearInterval(intervalId);
   }, []);
 
   const handleClick = async (event: React.MouseEvent) => {

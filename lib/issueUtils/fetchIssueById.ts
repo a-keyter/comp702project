@@ -12,6 +12,7 @@ type Issue = {
     id: string;
     name: string;
     email: string;
+    role: string;
   };
   lastUpdatedBy: {
     id: string;
@@ -41,6 +42,7 @@ async function fetchIssueById(issueId: string): Promise<Issue | null> {
             id: true,
             name: true,
             email: true,
+            role: true,
           },
         },
         lastUpdatedBy: {

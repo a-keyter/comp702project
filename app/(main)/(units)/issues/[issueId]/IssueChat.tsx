@@ -132,16 +132,10 @@ export default function IssueChat({
                     </span>
                   </p>
                   <div className="flex flex-col items-end">
-                    {/* TODO - ADD EDIT / DELETE MESSAGE FUNCTIONALITY */}
+                    {/* TODO - ADD EDIT MESSAGE FUNCTIONALITY */}
                     {userName === message.sender.name &&
                       message === messages[0] && (
                         <div className="flex gap-x-2">
-                          <button
-                            title="Delete Message"
-                            className="bg-red-600 p-1 rounded-lg"
-                          >
-                            <Trash className="h-4 w-4" />
-                          </button>
                           <button
                             title="Edit Message"
                             className="bg-blue-300 p-1 rounded-lg"

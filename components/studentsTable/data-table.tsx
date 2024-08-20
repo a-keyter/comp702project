@@ -25,9 +25,11 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import Link from "next/link";
+import AddStudentsDialog from "../AddStudentsDialog";
 
 interface DataTableProps<TData, TValue> {
   classCode: string;
+  classTitle: string;
   tableSize: string;
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -35,6 +37,7 @@ interface DataTableProps<TData, TValue> {
 
 export function ClassStudentsDataTable<TData, TValue>({
   classCode,
+  classTitle,
   tableSize,
   columns,
   data,
@@ -78,14 +81,22 @@ export function ClassStudentsDataTable<TData, TValue>({
             Students of <Link href={`/classes/${classCode}`}>{classCode}</Link>
           </h2>
         )}
+        <div className="flex gap-x-4 w-full max-w-md">
         <Input
           placeholder="Search for a student..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="w-full"
         />
+        <AddStudentsDialog
+                classId={classCode}
+                classTitle={classTitle}
+                classes={null}
+                variant="text"
+              />
+        </div>
       </div>
       <div>
         <Table>

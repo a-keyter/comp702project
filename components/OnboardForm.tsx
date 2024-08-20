@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Switch } from "./ui/switch";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createUser } from "@/lib/userUtils/createNewUser";
 import LoadingSpinner from "./LoadingSpinner";
@@ -32,7 +31,6 @@ const FormSchema = z.object({
 });
 
 export function OnboardForm() {
-  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false)
 
@@ -52,11 +50,13 @@ export function OnboardForm() {
       setLoading(true)
 
       // Call the createUser function
-      const newUser = await createUser(data);
+      await createUser(data);
+
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
       setLoading(false)
       // If successful, redirect to dashboard
-      router.push("/dashboard");
+      window.location.href = "/dashboard";
     } catch (err) {
       // Handle any errors
       setLoading(false)
@@ -69,7 +69,7 @@ export function OnboardForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-1/2 space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
         <FormField
           control={form.control}
           name="name"
@@ -106,10 +106,10 @@ export function OnboardForm() {
           control={form.control}
           name="teachermode"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+            <FormItem className="flex flex-row items-center justify-between w-full">
               <div className="space-y-0.5">
                 <FormLabel className="text-base">Teacher Mode?</FormLabel>
-                <FormDescription>
+                <FormDescription className="pr-4">
                   Teachers can create classes and assessments. <br />
                   Do not use this mode if you are not a teacher.
                 </FormDescription>
@@ -123,7 +123,7 @@ export function OnboardForm() {
             </FormItem>
           )}
         />
-        <div className="w-full flex justify-center">
+        <div className="w-full flex flex-col gap-y-2 justify-center">
           <Button type="submit">Lets get started!{loading && <div className="pl-4"><LoadingSpinner/></div>}</Button>
           {error && <p className="error">{error}</p>}
         </div>

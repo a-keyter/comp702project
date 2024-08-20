@@ -20,8 +20,8 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={inter.className + " bg-gray-200"}>
-          <div>
+        <body className={inter.className + " bg-gray-200 w-full h-full"}>
+          <div className="w-full h-full flex flex-1">
           {children}
           </div>
           <Toaster />

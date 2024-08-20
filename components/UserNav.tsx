@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { Bell, Clipboard, Home, StopCircle, User, Users } from "lucide-react";
+import { Clipboard, Home, StopCircle, User, Users } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -27,17 +27,18 @@ async function UserNav() {
 
   const user = await getUserById(userId);
 
-  if (!user) {
-    redirect("/onboard");
-  }
+  let userRole;
 
-  const userRole =
+  if (user) {
     user?.role.charAt(0).toUpperCase() + user?.role.slice(1).toLowerCase();
+  }
 
   return (
     <nav className="flex justify-between w-full max-w-4xl items-center pt-4 pb-2 mb-1 pl-1">
       <div title="logo" className="font-bold text-2xl">
-        <Link href={"/dashboard"}>Ambi-Learn - {userRole}</Link>
+        <Link href={"/dashboard"}>
+          Ambi-Learn {userRole && `- ${userRole}`}
+        </Link>
       </div>
       <div className="flex">
         <Link href={"/classes"}>
@@ -62,6 +63,16 @@ async function UserNav() {
               <StopCircle />
             </div>
             Issues
+          </Button>
+        </Link>
+
+        <NotificationsButton />
+        <Link href={"/dashboard"}>
+          <Button variant={"ghost"} className="flex flex-col px-2">
+            <div>
+              <Home />
+            </div>
+            Home
           </Button>
         </Link>
 
@@ -94,15 +105,6 @@ async function UserNav() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <NotificationsButton />
-        <Link href={"/dashboard"}>
-          <Button variant={"ghost"} className="flex flex-col px-2">
-            <div>
-              <Home />
-            </div>
-            Home
-          </Button>
-        </Link>
       </div>
     </nav>
   );

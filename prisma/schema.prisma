@@ -64,6 +64,7 @@ model User {
   lastUpdatedIssues  Issue[]        @relation("LastUpdatedBy")
   receivedNotifications Notification[] @relation("UserNotifications")
   sentNotifications  Notification[] @relation("NotificationSender")
+  queuedStudents QueuedClassJoin[] @relation("QueuedStudents")
 }
 
 model Class {
@@ -77,6 +78,7 @@ model Class {
   assessments   Assessment[]   @relation("ClassAssessments")
   issues        Issue[]        @relation("ClassIssues")
   notifications Notification[] @relation("ClassNotifications")
+  futureStudents QueuedClassJoin[] @relation("FutureClassStudents")
 }
 
 model Assessment {
@@ -215,4 +217,13 @@ model Notification {
   updatedAt    DateTime         @updatedAt
 
   @@unique([type, issueId, senderId, recipientId])
+}
+
+model QueuedClassJoin {
+  id           String           @id @default(uuid())
+  email        String
+  class        Class?           @relation("FutureClassStudents", fields: [classId], references: [id], onDelete: Cascade)
+  classId      String? 
+  raisedBy     User           @relation("QueuedStudents", fields: [raisedById], references: [id])
+  raisedById   String
 }

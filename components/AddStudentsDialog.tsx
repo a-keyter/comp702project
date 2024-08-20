@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -24,10 +24,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
 import LoadingSpinner from "./LoadingSpinner";
-import { createNewAssessment } from "@/lib/assessmentUtils/createNewAssessment";
 
 import {
   Select,
@@ -37,6 +36,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SafeClass } from "@/lib/classUtils/getClassDetails";
+import { Plus } from "lucide-react";
+import { toast } from "./ui/use-toast";
+import bulkAddStudentsToClass from "@/lib/teacherUtils/bulkAddStudents";
 
 const FormSchema = z.object({
   classId: z
@@ -51,56 +53,96 @@ const FormSchema = z.object({
       message:
         "Class code must contain only alphanumeric characters and hyphens (No spaces).",
     }),
-  title: z.string().min(2, {
-    message: "Title must be at least 2 characters.",
-  }),
-  objectives: z.string().min(10, {
-    message: "Learning objectives must be at least 10 characters.",
-  }),
+  studentEmails: z.array(z.string().email("Invalid email address")),
 });
 
-function CreateAssessmentDialog({
+function AddStudentsDialog({
   classId,
   classTitle,
   classes,
+  variant,
 }: {
   classId: string | null;
   classTitle: string | null;
   classes: SafeClass[] | null;
+  variant: "plus" | "text";
 }) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [studentEmails, setStudentEmails] = useState<string[]>([]);
+  const [inputValue, setInputValue] = useState("");
   const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       classId: classId ? classId : "",
-      title: "",
-      objectives: "",
+      studentEmails: [],
     },
   });
+
+  useEffect(() => {
+    form.setValue("studentEmails", studentEmails);
+  }, [studentEmails, form]);
+
+  const processInput = (input: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const newEmails = input
+      .split(/[\s,\t\n]+/)
+      .map((email) => email.trim())
+      .filter(
+        (email) =>
+          email && !studentEmails.includes(email) && emailRegex.test(email)
+      );
+
+    if (newEmails.length > 0) {
+      setStudentEmails((prev) => [...prev, ...newEmails]);
+      setInputValue("");
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    setInputValue(value);
+
+    if (value.endsWith(" ") || value.endsWith(",") || value.endsWith("\n")) {
+      processInput(value);
+    }
+  };
+
+  const handleInputBlur = () => {
+    processInput(inputValue);
+  };
+
+  const removeEmail = (emailToRemove: string) => {
+    setStudentEmails((prev) => prev.filter((email) => email !== emailToRemove));
+  };
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       setError(null);
       setLoading(true);
 
-      // Call the createNewClass function
-      const assessCode = await createNewAssessment(data);
+      // add all students to the class
+      await bulkAddStudentsToClass(data.classId, data.studentEmails);
 
       // Close the dialog if successful
       setLoading(false);
       setOpen(false);
-
-      // Reload the page to show the new class
-      router.push(`/assessments/edit/${assessCode}`);
-    } catch (err) {
+      setStudentEmails([])
+      toast({
+        title: "Success",
+        description: "Students have been successfully added to the class.",
+        variant: "default",
+      })
+      // Reload the page or update the UI to reflect the changes
+      router.refresh();
+    } catch (error) {
       setLoading(false);
-      console.error("Error creating new assessment:", err);
+      console.error("Error adding students to class:", error);
       setError(
-        "An error occurred while creating the assessment. Please try again."
+        "An error occurred while adding students to the class. Please try again."
       );
     }
   }
@@ -108,14 +150,20 @@ function CreateAssessmentDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>+ New Assessment </Button>
+        {variant === "plus" ? (
+          <button title="Add Students" className="rounded-full p-1 bg-black">
+            <Plus className="h-5 w-5 text-white" />
+          </button>
+        ) : (
+          <Button>Add Students</Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create New Assessment</DialogTitle>
+          <DialogTitle>Add Students to Class</DialogTitle>
           <DialogDescription>
-            Enter the details for your new Assessment. Click create when you are
-            done.
+            Enter the email addresses of the students you want to add to the
+            class.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -133,7 +181,7 @@ function CreateAssessmentDialog({
                     <FormControl>
                       <SelectTrigger>
                         {classes ? (
-                          <SelectValue placeholder="Select the class for the assignment" />
+                          <SelectValue placeholder="Select the class to add students to" />
                         ) : (
                           <SelectValue
                             placeholder={`${classId} - ${classTitle}`}
@@ -164,40 +212,46 @@ function CreateAssessmentDialog({
 
             <FormField
               control={form.control}
-              name="title"
+              name="studentEmails"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Title</FormLabel>
+                  <FormLabel>Student Emails</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Textarea
+                      placeholder="Enter student email addresses"
+                      value={inputValue}
+                      onChange={handleInputChange}
+                      onBlur={handleInputBlur}
+                    />
                   </FormControl>
-                  <FormDescription>
-                    The title of the assessment.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
-            <FormField
-              control={form.control}
-              name="objectives"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Objectives</FormLabel>
-                  <FormControl>
-                    <Textarea {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    The learning objectives of the assessment.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
+            <div className="max-h-[200px] overflow-y-auto">
+              {studentEmails.length > 0 && (
+                <p className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-3">
+                  Emails to be added:
+                </p>
               )}
-            />
+              <div className="flex flex-wrap gap-2">
+                {studentEmails.map((email) => (
+                  <Badge key={email} variant="default">
+                    {email}
+                    <button
+                      type="button"
+                      onClick={() => removeEmail(email)}
+                      className="ml-2 text-xs"
+                    >
+                      ×
+                    </button>
+                  </Badge>
+                ))}
+              </div>
+            </div>
             <div className="flex justify-end">
               <Button type="submit">
-                Create Assessment
+                Add Students
                 {loading && (
                   <div className="pl-4">
                     <LoadingSpinner />
@@ -213,4 +267,4 @@ function CreateAssessmentDialog({
   );
 }
 
-export default CreateAssessmentDialog;
+export default AddStudentsDialog;

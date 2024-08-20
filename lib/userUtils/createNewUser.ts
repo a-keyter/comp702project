@@ -3,6 +3,7 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { z } from "zod";
 import { prisma } from "../initPrisma";
+import { processQueuedClassJoins } from "./processQueuedClassJoins";
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -39,6 +40,10 @@ export async function createUser(data: FormData) {
       role,
     },
   });
+
+  if (role === "STUDENT") {
+    processQueuedClassJoins(newUser.email)
+  }
 
   return newUser;
 }

@@ -22,7 +22,7 @@ export async function getUserNotificationCount(): Promise<number> {
 
     return count;
   } catch (error) {
-    console.error("Failed to fetch user notification count:", error);
+    // console.error("Failed to fetch user notification count:", error);
     return 0; // Return 0 if there's an error
   }
 }

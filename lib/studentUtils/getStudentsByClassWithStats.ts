@@ -27,6 +27,11 @@ export async function getStudentsByClassWithStats(
               orderBy: {
                 createdAt: "desc",
               },
+              where: {
+                assessment: {
+                  classId: classId,
+                }
+              },
               distinct: ["assessmentId"],
               include: {
                 assessment: true,
