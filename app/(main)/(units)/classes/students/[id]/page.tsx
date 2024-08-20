@@ -27,7 +27,7 @@ async function ClassStudentsPage({ params }: { params: { id: string } }) {
   return (
     <div className="w-full max-w-4xl">
       <Card className="w-full p-2">
-        <ClassStudentsDataTable classCode={params.id} classTitle={classData?.title} tableSize="large" columns={classStudentsColumns} data={classStudentsData}/>
+        <ClassStudentsDataTable classId={params.id} classTitle={classData?.title} tableSize="large" columns={classStudentsColumns} data={classStudentsData}/>
       </Card>
     </div>
   );
