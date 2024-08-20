@@ -28,7 +28,7 @@ import Link from "next/link";
 import AddStudentsDialog from "../AddStudentsDialog";
 
 interface DataTableProps<TData, TValue> {
-  classCode: string;
+  classId: string;
   classTitle: string;
   tableSize: string;
   columns: ColumnDef<TData, TValue>[];
@@ -36,7 +36,7 @@ interface DataTableProps<TData, TValue> {
 }
 
 export function ClassStudentsDataTable<TData, TValue>({
-  classCode,
+  classId,
   classTitle,
   tableSize,
   columns,
@@ -71,14 +71,14 @@ export function ClassStudentsDataTable<TData, TValue>({
       <div className="flex justify-between items-center py-4">
         {tableSize === "small" ? (
           <Link
-            href={`/classes/students/${classCode}`}
+            href={`/classes/students/${classId}`}
             className="font-semibold text-xl pl-2"
           >
-            Students of {classCode}
+            Students of {classId}
           </Link>
         ) : (
           <h2 className="font-semibold text-xl pl-2">
-            Students of <Link href={`/classes/${classCode}`}>{classCode}</Link>
+            Students of <Link href={`/classes/${classId}`}>{classId}</Link>
           </h2>
         )}
         <div className="flex gap-x-4 w-full max-w-md">
@@ -91,7 +91,7 @@ export function ClassStudentsDataTable<TData, TValue>({
           className="w-full"
         />
         <AddStudentsDialog
-                classId={classCode}
+                classId={classId}
                 classTitle={classTitle}
                 classes={null}
                 variant="text"

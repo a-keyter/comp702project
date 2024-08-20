@@ -385,15 +385,17 @@ function AssessmentEditor({
         <Button onClick={() => addItem("MCQ")}>Add MCQ</Button>
       </div>
 
-      <div className="flex justify-end">
-        <Button onClick={handleSubmit} className="mt-4">
-          Save Assessment
+      <div className="flex gap-x-4 justify-end mt-4">
+        <Button onClick={handleSubmit} className="bg-yellow-300 text-black hover:bg-yellow-600">
+          Save As Draft
           {loading && (
             <div className="pl-4">
               <LoadingSpinner />
             </div>
           )}
         </Button>
+        {/* TODO - Set publish vs Draft Mode */}
+        <Button className="bg-green-300 hover:bg-green-600 text-black hover:text-white">TODO - Publish</Button>
       </div>
     </div>
   );

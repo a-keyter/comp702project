@@ -31,6 +31,7 @@ import { Card } from "../ui/card";
 import { Input } from "../ui/input";
 import CreateAssessmentDialog from "../CreateAssessmentDialog";
 import { SafeClass } from "@/lib/classUtils/getClassDetails";
+import { Filter } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -86,7 +87,7 @@ export function AssessmentDataTable<TData, TValue>({
           }
           className="w-full"
         />
-            {role === "TEACHER" && <CreateAssessmentDialog classId={classId} classTitle={classTitle} classes={classes}/>}
+            {role === "TEACHER" ? <CreateAssessmentDialog classId={classId} classTitle={classTitle} classes={classes}/> : <Button>Filter <Filter/></Button>}
           </div>
         </div>
 

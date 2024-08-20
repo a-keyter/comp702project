@@ -129,7 +129,7 @@ async function ClassPage({ params }: { params: { id: string } }) {
       </div>
       {userRole === "TEACHER" && (
         <Card className="w-full p-2 mt-4">
-          <LateLoadStudentsByClassTable classId={params.id} />
+          <LateLoadStudentsByClassTable classId={params.id} classTitle={classData.title} />
         </Card>
       )}
     </div>

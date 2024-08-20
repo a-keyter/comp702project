@@ -29,4 +29,3 @@ async function OnboardPage() {
 }
 
 export default OnboardPage
-

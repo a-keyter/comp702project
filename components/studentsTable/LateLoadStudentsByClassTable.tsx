@@ -14,8 +14,10 @@ type Student = {
 
 export default function LateLoadStudentsByClassTable({
   classId,
+  classTitle,
 }: {
   classId: string;
+  classTitle: string;
 }) {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
@@ -44,7 +46,8 @@ export default function LateLoadStudentsByClassTable({
 
   return (
     <ClassStudentsDataTable
-      classCode={classId}
+      classId={classId}
+      classTitle={classTitle}
       tableSize="small"
       columns={classStudentsColumns}
       data={students}
