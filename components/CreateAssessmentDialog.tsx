@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
-import { format } from "date-fns";
+import { format, setHours, setMinutes } from "date-fns";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -87,7 +87,7 @@ function CreateAssessmentDialog({
       classId: classId ? classId : "",
       title: "",
       objectives: "",
-      dueDate: new Date(),
+      dueDate: setHours(setMinutes(new Date(), 0), 17), // Set default to today at 5 PM
     },
   });
 
@@ -188,7 +188,7 @@ function CreateAssessmentDialog({
               )}
             />
 
-<FormField
+            <FormField
               control={form.control}
               name="dueDate"
               render={({ field }) => (
@@ -214,17 +214,22 @@ function CreateAssessmentDialog({
                       </FormControl>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) => date < new Date()}
-                        initialFocus
-                      />
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={(date) => {
+                        if (date) {
+                          const dateAt5PM = setHours(setMinutes(date, 0), 17);
+                          field.onChange(dateAt5PM);
+                        }
+                      }}
+                      disabled={(date) => date < new Date()}
+                      initialFocus
+                    />
                     </PopoverContent>
                   </Popover>
                   <FormDescription>
-                    Set the due date for the assessment.
+                  Set the due date for the assessment. The time will default to 5:00 PM.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -247,8 +252,6 @@ function CreateAssessmentDialog({
                 </FormItem>
               )}
             />
-
-            
 
             <div className="flex justify-end">
               <Button type="submit">

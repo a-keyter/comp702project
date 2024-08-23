@@ -1,9 +1,9 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { format } from "date-fns";
+import { format, setHours, setMinutes } from "date-fns";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -164,14 +164,19 @@ export function UpdateAssessmentDetailsDialog({
                       <Calendar
                         mode="single"
                         selected={field.value}
-                        onSelect={field.onChange}
+                        onSelect={(date) => {
+                          if (date) {
+                            const dateAt5PM = setHours(setMinutes(date, 0), 17);
+                            field.onChange(dateAt5PM);
+                          }
+                        }}
                         disabled={(date) => date < new Date()}
                         initialFocus
                       />
                     </PopoverContent>
                   </Popover>
                   <FormDescription>
-                    Set the due date for the assessment.
+                    Set the due date for the assessment. (Time will default to 5pm)
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
