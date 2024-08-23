@@ -51,7 +51,7 @@ export async function getAssessmentsByNicknameAndClass(nickname: string, classId
       
       // Calculate the x-axis label based on the assessment's creation date
       const creationDate = new Date(assessment.createdAt);
-      const xAxisLabel = `A${creationDate.getMonth() + 1}/${creationDate.getDate()}`;
+      const xAxisLabel = `A${creationDate.getDate()}/${creationDate.getMonth() + 1}`;
 
       return {
         assessmentId: assessment.id,
