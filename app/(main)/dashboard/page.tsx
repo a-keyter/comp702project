@@ -34,6 +34,7 @@ export default async function Dashboard() {
           data={teacherAssessments}
           role={user.role}
           tableSize="small"
+          display="Upcoming"
           classId={null}
           classTitle={null}
           classes={classes}
@@ -46,6 +47,7 @@ export default async function Dashboard() {
         data={studentAssessments}
         role={user.role}
         tableSize="small"
+        display="Upcoming"
         classId={null}
         classTitle={null}
         classes={classes}

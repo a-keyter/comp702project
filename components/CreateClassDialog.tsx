@@ -27,7 +27,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import LoadingSpinner from "./LoadingSpinner";
-import { ShuffleIcon } from "lucide-react";
+import { Plus, ShuffleIcon } from "lucide-react";
 import { createNewClass } from "@/lib/classUtils/createNewClass";
 
 const FormSchema = z.object({
@@ -94,7 +94,7 @@ function CreateClassDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>+ New Class </Button>
+      <Button><Plus className="pr-2"/> New </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

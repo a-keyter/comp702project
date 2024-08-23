@@ -40,7 +40,7 @@ import {
 import { SafeClass } from "@/lib/classUtils/getClassDetails";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Plus } from "lucide-react";
 import { Calendar } from "./ui/calendar";
 
 const FormSchema = z.object({
@@ -71,10 +71,12 @@ function CreateAssessmentDialog({
   classId,
   classTitle,
   classes,
+  variant,
 }: {
   classId: string | null;
   classTitle: string | null;
   classes: SafeClass[] | null;
+  variant: "icon" | "text"
 }) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -117,7 +119,13 @@ function CreateAssessmentDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>+ New Assessment </Button>
+      {variant === "icon" ? (
+          <button title="New Assessment" className="rounded-full p-1 bg-black">
+            <Plus className="h-5 w-5 text-white" />
+          </button>
+        ) : (
+          <Button><Plus className="pr-2"/> New </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

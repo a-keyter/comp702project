@@ -49,7 +49,7 @@ export const assessmentColumns: ColumnDef<AssessmentWithStats>[] = [
           : thisAssessment.title;
       return (
         <Link href={`/assessments/${thisAssessment.id}`}>
-          <p title={thisAssessment.title} className="pl-4">{truncatedTitle}</p>
+          <p title={thisAssessment.title} className="pl-4 hover:underline">{truncatedTitle}</p>
         </Link>
       );
     },
@@ -71,7 +71,7 @@ export const assessmentColumns: ColumnDef<AssessmentWithStats>[] = [
     cell: ({ row }) => {
       const classTitle = row.original.class.title
       return (
-        <Link title={classTitle} href={`/classes/${row.original.class.id}`} className="pl-4">
+        <Link title={classTitle} href={`/classes/${row.original.class.id}`} className="pl-4 hover:underline">
           {row.original.class.id}
         </Link>
       );
@@ -102,8 +102,6 @@ export const assessmentColumns: ColumnDef<AssessmentWithStats>[] = [
     cell: ({ row }) => {
       const date = new Date(row.getValue("dueDate"));
       const formatted = date.toLocaleString("en-GB", {
-        hour: "2-digit",
-        minute: "2-digit",
         day: "2-digit",
         month: "2-digit",
         year: "2-digit",
@@ -149,11 +147,7 @@ export const assessmentColumns: ColumnDef<AssessmentWithStats>[] = [
             <Link href={`/assessments/${thisAssessment.id}`}>
             <DropdownMenuItem>Overview</DropdownMenuItem>
             </Link>
-            <Link href={`/assessments/edit/${thisAssessment.id}`}>
-            <DropdownMenuItem>Edit Assessment</DropdownMenuItem>
-            </Link>
-            <DeleteAssessmentDialog className="w-full text-left pl-1 bg-white text-black font-normal" content="Delete Assessment" classId={thisAssessment.classId} assessmentId={thisAssessment.id} assessmentTitle={thisAssessment.title} />
-          </DropdownMenuContent>
+         </DropdownMenuContent>
         </DropdownMenu>
       );
     },

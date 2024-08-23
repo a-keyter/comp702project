@@ -41,7 +41,7 @@ export const classStudentsColumns: ColumnDef<Student>[] = [
       },
       cell: ({ row }) => {
         const value = row.original
-        return (<Link href={`/students/${value.nickname}`} className="pl-4">{value.name}</Link>)
+        return (<Link href={`/students/${value.nickname}`} className="pl-4 hover:underline">{value.name}</Link>)
       }
   },
   {

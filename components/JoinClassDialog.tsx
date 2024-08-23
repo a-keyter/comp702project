@@ -95,7 +95,7 @@ function JoinClassDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="default"><Link2 className="pr-2"/>Join Class</Button>
+        <Button variant="default"><Link2 className="pr-2"/>Join</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

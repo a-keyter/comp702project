@@ -65,7 +65,7 @@ function AddStudentsDialog({
   classId: string | null;
   classTitle: string | null;
   classes: SafeClass[] | null;
-  variant: "plus" | "text";
+  variant: "icon" | "text";
 }) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -150,7 +150,7 @@ function AddStudentsDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        {variant === "plus" ? (
+        {variant === "icon" ? (
           <button title="Add Students" className="rounded-full p-1 bg-black">
             <Plus className="h-5 w-5 text-white" />
           </button>

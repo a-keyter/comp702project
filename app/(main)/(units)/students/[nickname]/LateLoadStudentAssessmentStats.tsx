@@ -99,19 +99,6 @@ export default function LateLoadStudentAssessmentStats({
     fetchAssessmentData();
   }, [studentNickname, classFocusId]);
 
-  const getAverageScore = () => {
-    if (assessmentData.length === 0) return 0;
-    const sum = assessmentData.reduce((acc, curr) => acc + curr.latestScore, 0);
-    return (sum / assessmentData.length).toFixed(2);
-  };
-
-  const getTrendPercentage = () => {
-    if (assessmentData.length < 2) return 0;
-    const firstScore = assessmentData[0].latestScore;
-    const lastScore = assessmentData[assessmentData.length - 1].latestScore;
-    return (((lastScore - firstScore) / firstScore) * 100).toFixed(1);
-  };
-
   return (
     <div className="grid grid-cols-6 gap-4 w-full">
 
@@ -132,7 +119,6 @@ export default function LateLoadStudentAssessmentStats({
         </Select>
         </CardHeader>
         {classFocusId !== "" && (
-          <>
         <CardContent>
           { loading ? (
             <Skeleton className="h-full"/>
@@ -141,24 +127,16 @@ export default function LateLoadStudentAssessmentStats({
               <LineChart data={assessmentData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="xAxisLabel" />
-                <YAxis domain={[0, 100]} /> {/* Assuming scores are out of 100 */}
+                <YAxis domain={[0, 100]} />
                 <Tooltip content={<CustomTooltip />} />
                 <Line type="monotone" dataKey="latestScore" stroke="#8884d8" activeDot={{ r: 8 }} />
               </LineChart>
             </ResponsiveContainer>
           ) : (
-            <p>No assessment data available for this class</p>
+            <p>No assessment data available for this student</p>
           )}
         </CardContent>
-        <CardFooter className="flex-col items-start gap-2 text-sm">
-          <div className="flex gap-2 font-medium leading-none">
-            Trending {Number(getTrendPercentage()) >= 0 ? "up" : "down"} by {Math.abs(Number(getTrendPercentage()))}% 
-            <TrendingUp className={`h-4 w-4 ${Number(getTrendPercentage()) >= 0 ? 'text-green-500' : 'text-red-500'}`} />
-          </div>
-          <div className="leading-none text-muted-foreground">
-            Average score: {getAverageScore()}
-          </div>
-        </CardFooter></>)}
+        )}
       </Card>
     </div>
   );

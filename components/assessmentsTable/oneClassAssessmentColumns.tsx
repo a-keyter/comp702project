@@ -49,7 +49,7 @@ export const oneClassAssessmentColumns: ColumnDef<AssessmentWithStats>[] = [
           : thisAssessment.title;
       return (
         <Link href={`/assessments/${thisAssessment.id}`}>
-          <p title={thisAssessment.title} className="pl-4">{truncatedTitle}</p>
+          <p title={thisAssessment.title} className="pl-4 hover:underline">{truncatedTitle}</p>
         </Link>
       );
     },
@@ -130,22 +130,9 @@ export const oneClassAssessmentColumns: ColumnDef<AssessmentWithStats>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <Link href={`/assessments/${thisAssessment.id}`}>
-              <DropdownMenuItem>Assessment Overview</DropdownMenuItem>
+            <Link href={`/assessments/${thisAssessment.id}`} >
+              <DropdownMenuItem >Assessment Overview</DropdownMenuItem>
             </Link>
-            <Link href={`/assessments/edit/${thisAssessment.id}`}>
-              <DropdownMenuItem>Edit Assessment</DropdownMenuItem>
-            </Link>
-            <Link href={`/assessments/preview/${thisAssessment.id}`}>
-              <DropdownMenuItem>Preview Assessment</DropdownMenuItem>
-            </Link>
-            <DeleteAssessmentDialog
-              className="w-full text-left pl-2 bg-white text-black font-normal"
-              content="Delete Assessment"
-              classId={thisAssessment.classId}
-              assessmentId={thisAssessment.id}
-              assessmentTitle={thisAssessment.title}
-            />
           </DropdownMenuContent>
         </DropdownMenu>
       );

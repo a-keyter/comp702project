@@ -52,6 +52,7 @@ export async function getAssessmentById(id: string) {
 }
 
 export async function getTeacherAssessmentData() {
+  const currentDate = new Date()
   const { userId } = auth();
   if (!userId) {
     return null;
@@ -59,6 +60,7 @@ export async function getTeacherAssessmentData() {
   try {
     const assessments = await prisma.assessment.findMany({
       where: {
+        dueDate: {gt: currentDate },
         class: {
           taughtBy: {
             some: {
@@ -136,7 +138,7 @@ export async function getClassAssessmentsTeacher(classId: string) {
     const assessments = await prisma.assessment.findMany({
       where: {
         class: { taughtBy: { some: { id: userId } } },
-        classId: classId, // Add this condition to filter by classId
+        classId: classId, // Filter by classId
       },
       include: {
         submissions: {
@@ -251,6 +253,8 @@ export async function getStudentAssessmentData() {
 
 export async function getClassAssessmentsStudent(classId: string) {
   const { userId } = auth();
+  const currentDate = new Date();
+
   if (!userId) {
     return null;
   }
@@ -260,6 +264,7 @@ export async function getClassAssessmentsStudent(classId: string) {
         classId: classId,
         class: { members: { some: { id: userId } } },
         status: "LIVE",
+        dueDate: {gt: currentDate }
       },
       include: {
         submissions: {

@@ -69,7 +69,7 @@ export default function IssueDetailsCard({ issue }: IssueDetailsCardProps) {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-2">
           <Card className="p-1">
             <h3 className="font-semibold">Raised By</h3>
             <p>{issue.raisedBy.name} - ({issue.raisedBy.role.charAt(0) + issue.raisedBy.role.slice(1).toLowerCase()})</p>

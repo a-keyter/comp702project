@@ -20,6 +20,7 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import SingleClassStudentAssessmentStats from "@/components/assessmentStatistics/SingleClassStudentAssessmentStats";
+import CreateAssessmentDialog from "@/components/CreateAssessmentDialog";
 
 async function ClassPage({ params }: { params: { id: string } }) {
   const classData = await getClassById(params.id);
@@ -76,7 +77,7 @@ async function ClassPage({ params }: { params: { id: string } }) {
                 classId={params.id}
                 classTitle={classData.title}
                 classes={null}
-                variant="plus"
+                variant="icon"
               />
             </div>
           ) : (
@@ -85,7 +86,9 @@ async function ClassPage({ params }: { params: { id: string } }) {
           <p className="font-bold text-2xl">{classData.memberCount}</p>
         </Card>
         <Card className="col-span-1 p-2">
+          <div className="flex justify-between">
           <h3>Assessments</h3>
+          </div>
           <p className="font-bold text-2xl">{numberOfAssessments}</p>
         </Card>
       </div>
@@ -95,6 +98,7 @@ async function ClassPage({ params }: { params: { id: string } }) {
           data={teacherAssessments}
           role={user.role}
           tableSize="small"
+          display="All"
           classId={classData.id}
           classTitle={classData.title}
           classes={null}
@@ -106,6 +110,7 @@ async function ClassPage({ params }: { params: { id: string } }) {
           columns={oneClassStudentAssessmentColumns}
           data={studentAssessments}
           role={user.role}
+          display="All"
           tableSize="small"
           classId={null}
           classTitle={null}
