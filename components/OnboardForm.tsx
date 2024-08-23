@@ -79,7 +79,7 @@ export function OnboardForm() {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="Josephine Bloggs" {...field} />
+                <Input placeholder="Clark Kent" {...field} />
               </FormControl>
               <FormDescription>
                 This name is used to identify your profile.
@@ -93,12 +93,12 @@ export function OnboardForm() {
           name="nickname"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nickname</FormLabel>
+              <FormLabel>Nickname (Alphanumerical Characters Only)</FormLabel>
               <FormControl>
                 <Input placeholder="shadcn" {...field} />
               </FormControl>
               <FormDescription>
-                This is your public display name.
+                This is used to create a link to your profile.
               </FormDescription>
               <FormMessage />
             </FormItem>

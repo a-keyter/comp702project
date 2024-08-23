@@ -39,7 +39,7 @@ export async function getStudentsByClassWithStats(
             },
           },
         },
-        assessments: true,
+        assessments: {where: {status: "LIVE"}},
       },
     });
 

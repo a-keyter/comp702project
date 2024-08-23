@@ -59,7 +59,13 @@ export async function getTeacherAssessmentData() {
   try {
     const assessments = await prisma.assessment.findMany({
       where: {
-        createdById: userId,
+        class: {
+          taughtBy: {
+            some: {
+              id: userId,
+            },
+          },
+        },
       },
       include: {
         submissions: {
@@ -129,7 +135,7 @@ export async function getClassAssessmentsTeacher(classId: string) {
   try {
     const assessments = await prisma.assessment.findMany({
       where: {
-        createdById: userId,
+        class: { taughtBy: { some: { id: userId } } },
         classId: classId, // Add this condition to filter by classId
       },
       include: {
@@ -199,6 +205,7 @@ export async function getStudentAssessmentData() {
     const assessments = await prisma.assessment.findMany({
       where: {
         class: { members: { some: { id: userId } } },
+        status: "LIVE",
       },
       include: {
         submissions: {
@@ -252,6 +259,7 @@ export async function getClassAssessmentsStudent(classId: string) {
       where: {
         classId: classId,
         class: { members: { some: { id: userId } } },
+        status: "LIVE",
       },
       include: {
         submissions: {

@@ -44,9 +44,9 @@ export async function createNewAssessment(formData: FormData): Promise<string> {
       // Create new assessment
       const newAssessment = await prisma.assessment.create({
         data: {
-          title: formData.title,
-          objectives: formData.objectives,
-          classId: formData.classId,
+          title: validatedData.title,
+          objectives: validatedData.objectives,
+          classId: validatedData.classId,
           createdById: userId, // Replace with actual user ID, e.g., from session
         },
         include: {
@@ -57,10 +57,6 @@ export async function createNewAssessment(formData: FormData): Promise<string> {
           }
         }
       });
-
-      await Promise.all(newAssessment.class.members.map(student => 
-        newAssessmentNotification(newAssessment.id, formData.classId, userId, student.id)
-      ));
   
       // Return the assessment ID
       return newAssessment.id;

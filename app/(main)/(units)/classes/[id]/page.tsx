@@ -3,6 +3,7 @@ import { AssessmentDataTable } from "@/components/assessmentsTable/data-table";
 import { oneClassAssessmentColumns } from "@/components/assessmentsTable/oneClassAssessmentColumns";
 import { oneClassStudentAssessmentColumns } from "@/components/assessmentsTableStudent/oneClassAssessmentColumnsStudent";
 import DeleteClassDialog from "@/components/DeleteClassDialog";
+import LateLoadStudentAssessmentStats from "@/app/(main)/(units)/students/[nickname]/LateLoadStudentAssessmentStats";
 import { classStudentsColumns } from "@/components/studentsTable/columns";
 import { ClassStudentsDataTable } from "@/components/studentsTable/data-table";
 import LateLoadStudentsByClassTable from "@/components/studentsTable/LateLoadStudentsByClassTable";
@@ -18,6 +19,7 @@ import { getUserById, getUserDetails } from "@/lib/userUtils/getUserDetails";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import SingleClassStudentAssessmentStats from "@/components/assessmentStatistics/SingleClassStudentAssessmentStats";
 
 async function ClassPage({ params }: { params: { id: string } }) {
   const classData = await getClassById(params.id);
@@ -46,8 +48,8 @@ async function ClassPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="w-full max-w-4xl mt-2 flex flex-col">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold pl-2">
+      <div className="flex justify-between items-center px-1">
+        <h2 className="text-2xl font-bold">
           {classData.id.toUpperCase()} - {classData.title}
         </h2>
         {user.role === "TEACHER" && (
@@ -110,26 +112,18 @@ async function ClassPage({ params }: { params: { id: string } }) {
           classes={null}
         />
       )}
-      <div className="grid grid-cols-6 grid-rows-2 gap-x-2 gap-y-4 mt-4 ">
-        {userRole === "STUDENT" && (
-          <Card className="col-span-3 row-span-2 p-2">
-            Individual Performance Graph
-          </Card>
-        )}
-        <Card className="col-span-3 row-span-2 p-2">
-          Class Performance Graph Go Here
-        </Card>
-
-        {userRole === "TEACHER" && (
-          <Card className="col-span-3 p-2">Lowest Performing Students</Card>
-        )}
-        {userRole === "TEACHER" && (
-          <Card className="col-span-3 p-2">Highest Performing Students</Card>
-        )}
-      </div>
+      {userRole === "STUDENT" && (
+        <SingleClassStudentAssessmentStats
+          studentNickname={user.nickname}
+          classId={params.id}
+        />
+      )}
       {userRole === "TEACHER" && (
         <Card className="w-full p-2 mt-4">
-          <LateLoadStudentsByClassTable classId={params.id} classTitle={classData.title} />
+          <LateLoadStudentsByClassTable
+            classId={params.id}
+            classTitle={classData.title}
+          />
         </Card>
       )}
     </div>
@@ -137,3 +131,5 @@ async function ClassPage({ params }: { params: { id: string } }) {
 }
 
 export default ClassPage;
+
+//

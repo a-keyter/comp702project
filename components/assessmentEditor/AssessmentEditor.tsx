@@ -13,6 +13,7 @@ import { Trash } from "lucide-react";
 import { generateFullMcq } from "@/lib/langchainGenerations/generateMCQ";
 import { generateAnswers } from "@/lib/langchainGenerations/generateAnswers";
 import { generateFalseAnswers } from "@/lib/langchainGenerations/generateFalseAnswers";
+import { setAssessmentLive } from "@/lib/assessmentUtils/setAssessmentLive";
 
 interface AssessmentEditorProps {
   assessmentId: string;
@@ -37,6 +38,7 @@ function AssessmentEditor({
 }: AssessmentEditorProps) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const [publishLoading, setPublishLoading] = useState<boolean>(false);
   const [assessmentItems, setAssessmentItems] = useState<AssessmentItem[]>(
     initialItems || []
   );
@@ -173,9 +175,13 @@ function AssessmentEditor({
     }
   };
 
-  const handleSubmit = async () => {
+  const saveDraft = async () => {
     setLoading(true);
-    const result = await saveAssessmentItems(assessmentId, assessmentItems, mcqAnswers);
+    const result = await saveAssessmentItems(
+      assessmentId,
+      assessmentItems,
+      mcqAnswers
+    );
     if (result.success) {
       setLoading(false);
       router.push(`/assessments/${assessmentId}`);
@@ -185,9 +191,30 @@ function AssessmentEditor({
     }
   };
 
+  const saveLive = async () => {
+    setPublishLoading(true);
+    const result = await saveAssessmentItems(
+      assessmentId,
+      assessmentItems,
+      mcqAnswers
+    );
+    const setLive = await setAssessmentLive(assessmentId);
+    if (result.success && setLive) {
+      setPublishLoading(false);
+      router.push(`/assessments/${assessmentId}`);
+    } else {
+      setPublishLoading(false);
+      alert("Failed to save assessment items. Please try again.");
+    }
+  };
+
   const handlePreview = async () => {
     setLoading(true);
-    const result = await saveAssessmentItems(assessmentId, assessmentItems, mcqAnswers);
+    const result = await saveAssessmentItems(
+      assessmentId,
+      assessmentItems,
+      mcqAnswers
+    );
     if (result.success) {
       setLoading(false);
       router.push(`/assessments/preview/${assessmentId}`);
@@ -200,33 +227,56 @@ function AssessmentEditor({
   const handleGenerateFullMcq = async (itemId: string) => {
     try {
       // Extract existing questions
-    const existingQuestions = assessmentItems
-    .filter(item => item.type === "MCQ" && item.content.trim() !== "")
-    .map(item => item.content);
+      const existingQuestions = assessmentItems
+        .filter((item) => item.type === "MCQ" && item.content.trim() !== "")
+        .map((item) => item.content);
 
-  const result = await generateFullMcq({
-    assessmentDetails: {
-      assessmentTitle,
-      assessmentObjectives,
-      existingQuestions,
-    }
-  });
-      
+      const result = await generateFullMcq({
+        assessmentDetails: {
+          assessmentTitle,
+          assessmentObjectives,
+          existingQuestions,
+        },
+      });
+
       // Update the question
       updateAssessmentItem(itemId, { content: result.question });
-      
+
       // Update the answers
       if (mcqAnswers[itemId]) {
         const newAnswers = [
-          { id: mcqAnswers[itemId][0].id, content: result.correctAnswer, isCorrect: true },
-          { id: mcqAnswers[itemId][1].id, content: result.falseAnswer1, isCorrect: false },
-          { id: mcqAnswers[itemId][2].id, content: result.falseAnswer2, isCorrect: false },
-          { id: mcqAnswers[itemId][3].id, content: result.falseAnswer3, isCorrect: false },
-          { id: mcqAnswers[itemId][4].id, content: result.falseAnswer4, isCorrect: false },
+          {
+            id: mcqAnswers[itemId][0].id,
+            content: result.correctAnswer,
+            isCorrect: true,
+          },
+          {
+            id: mcqAnswers[itemId][1].id,
+            content: result.falseAnswer1,
+            isCorrect: false,
+          },
+          {
+            id: mcqAnswers[itemId][2].id,
+            content: result.falseAnswer2,
+            isCorrect: false,
+          },
+          {
+            id: mcqAnswers[itemId][3].id,
+            content: result.falseAnswer3,
+            isCorrect: false,
+          },
+          {
+            id: mcqAnswers[itemId][4].id,
+            content: result.falseAnswer4,
+            isCorrect: false,
+          },
         ];
-        
-        newAnswers.forEach(answer => {
-          updateMcqAnswer(itemId, answer.id, { content: answer.content, isCorrect: answer.isCorrect });
+
+        newAnswers.forEach((answer) => {
+          updateMcqAnswer(itemId, answer.id, {
+            content: answer.content,
+            isCorrect: answer.isCorrect,
+          });
         });
       }
     } catch (error) {
@@ -235,34 +285,57 @@ function AssessmentEditor({
   };
 
   const handleGenerateAnswers = async (itemId: string) => {
-    console.log("Generating Answers.")
-    
+    console.log("Generating Answers.");
+
     const item = assessmentItems.find((item) => item.id === itemId);
-    
+
     if (!item || item.type !== "MCQ" || !item.content.trim()) {
       console.error("Cannot generate answers: Invalid item or empty question");
       return;
     }
-  
+
     try {
       const result = await generateAnswers({
         props: {
           question: item.content,
           assessmentTitle,
-        }
+        },
       });
-      
+
       if (mcqAnswers[itemId]) {
         const newAnswers = [
-          { id: mcqAnswers[itemId][0].id, content: result.correctAnswer, isCorrect: true },
-          { id: mcqAnswers[itemId][1].id, content: result.falseAnswer1, isCorrect: false },
-          { id: mcqAnswers[itemId][2].id, content: result.falseAnswer2, isCorrect: false },
-          { id: mcqAnswers[itemId][3].id, content: result.falseAnswer3, isCorrect: false },
-          { id: mcqAnswers[itemId][4].id, content: result.falseAnswer4, isCorrect: false },
+          {
+            id: mcqAnswers[itemId][0].id,
+            content: result.correctAnswer,
+            isCorrect: true,
+          },
+          {
+            id: mcqAnswers[itemId][1].id,
+            content: result.falseAnswer1,
+            isCorrect: false,
+          },
+          {
+            id: mcqAnswers[itemId][2].id,
+            content: result.falseAnswer2,
+            isCorrect: false,
+          },
+          {
+            id: mcqAnswers[itemId][3].id,
+            content: result.falseAnswer3,
+            isCorrect: false,
+          },
+          {
+            id: mcqAnswers[itemId][4].id,
+            content: result.falseAnswer4,
+            isCorrect: false,
+          },
         ];
-        
-        newAnswers.forEach(answer => {
-          updateMcqAnswer(itemId, answer.id, { content: answer.content, isCorrect: answer.isCorrect });
+
+        newAnswers.forEach((answer) => {
+          updateMcqAnswer(itemId, answer.id, {
+            content: answer.content,
+            isCorrect: answer.isCorrect,
+          });
         });
       }
     } catch (error) {
@@ -272,39 +345,62 @@ function AssessmentEditor({
 
   const handleGenerateFalseAnswers = async (itemId: string) => {
     const item = assessmentItems.find((item) => item.id === itemId);
-    
+
     if (!item || item.type !== "MCQ" || !item.content.trim()) {
-      console.error("Cannot generate false answers: Invalid item or empty question");
+      console.error(
+        "Cannot generate false answers: Invalid item or empty question"
+      );
       return;
     }
-  
-    const correctAnswer = mcqAnswers[itemId]?.find(answer => answer.isCorrect)?.content;
-  
+
+    const correctAnswer = mcqAnswers[itemId]?.find(
+      (answer) => answer.isCorrect
+    )?.content;
+
     if (!correctAnswer) {
       console.error("Cannot generate false answers: No correct answer set");
       return;
     }
-  
+
     try {
       const result = await generateFalseAnswers({
         props: {
           question: item.content,
           correctAnswer: correctAnswer,
           assessmentTitle,
-        }
+        },
       });
-      
+
       if (mcqAnswers[itemId]) {
         const newAnswers = [
-          ...mcqAnswers[itemId].filter(answer => answer.isCorrect),
-          { id: mcqAnswers[itemId][1].id, content: result.falseAnswer1, isCorrect: false },
-          { id: mcqAnswers[itemId][2].id, content: result.falseAnswer2, isCorrect: false },
-          { id: mcqAnswers[itemId][3].id, content: result.falseAnswer3, isCorrect: false },
-          { id: mcqAnswers[itemId][4].id, content: result.falseAnswer4, isCorrect: false },
+          ...mcqAnswers[itemId].filter((answer) => answer.isCorrect),
+          {
+            id: mcqAnswers[itemId][1].id,
+            content: result.falseAnswer1,
+            isCorrect: false,
+          },
+          {
+            id: mcqAnswers[itemId][2].id,
+            content: result.falseAnswer2,
+            isCorrect: false,
+          },
+          {
+            id: mcqAnswers[itemId][3].id,
+            content: result.falseAnswer3,
+            isCorrect: false,
+          },
+          {
+            id: mcqAnswers[itemId][4].id,
+            content: result.falseAnswer4,
+            isCorrect: false,
+          },
         ];
-        
-        newAnswers.forEach(answer => {
-          updateMcqAnswer(itemId, answer.id, { content: answer.content, isCorrect: answer.isCorrect });
+
+        newAnswers.forEach((answer) => {
+          updateMcqAnswer(itemId, answer.id, {
+            content: answer.content,
+            isCorrect: answer.isCorrect,
+          });
         });
       }
     } catch (error) {
@@ -363,7 +459,7 @@ function AssessmentEditor({
                 onClick={() => deleteItem(index)}
                 className="bg-red-500 hover:bg-red-700"
               >
-                <Trash/>
+                <Trash />
               </Button>
             </div>
           </div>
@@ -386,7 +482,10 @@ function AssessmentEditor({
       </div>
 
       <div className="flex gap-x-4 justify-end mt-4">
-        <Button onClick={handleSubmit} className="bg-yellow-300 text-black hover:bg-yellow-600">
+        <Button
+          onClick={saveDraft}
+          className="bg-yellow-300 text-black hover:bg-yellow-600"
+        >
           Save As Draft
           {loading && (
             <div className="pl-4">
@@ -394,8 +493,17 @@ function AssessmentEditor({
             </div>
           )}
         </Button>
-        {/* TODO - Set publish vs Draft Mode */}
-        <Button className="bg-green-300 hover:bg-green-600 text-black hover:text-white">TODO - Publish</Button>
+        <Button
+          onClick={saveLive}
+          className="bg-green-300 hover:bg-green-600 text-black hover:text-white"
+        >
+          Publish 
+          {publishLoading ? (
+            <div className="pl-4">
+              <LoadingSpinner />
+            </div>
+          ): " Assessment"}
+        </Button>
       </div>
     </div>
   );

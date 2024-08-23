@@ -30,7 +30,7 @@ async function UserNav() {
   let userRole;
 
   if (user) {
-    user?.role.charAt(0).toUpperCase() + user?.role.slice(1).toLowerCase();
+    userRole = user?.role.charAt(0).toUpperCase() + user?.role.slice(1).toLowerCase();
   }
 
   return (

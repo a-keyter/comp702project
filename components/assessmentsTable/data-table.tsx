@@ -87,7 +87,7 @@ export function AssessmentDataTable<TData, TValue>({
           }
           className="w-full"
         />
-            {role === "TEACHER" ? <CreateAssessmentDialog classId={classId} classTitle={classTitle} classes={classes}/> : <Button>Filter <Filter/></Button>}
+            {role === "TEACHER" && <CreateAssessmentDialog classId={classId} classTitle={classTitle} classes={classes}/>}
           </div>
         </div>
 

@@ -62,7 +62,7 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
           </p>
         </div>
         <div className="flex flex-col gap-y-2">
-          {user.role === "TEACHER" && submissionCount === 0 && (
+          {user.role === "TEACHER" && assessmentData.status === "DRAFT" && (
             <div className="flex space-x-4 justify-end">
               <Badge>{assessmentData.status}</Badge>
               <Link href={`/assessments/edit/${assessmentData.id}`}>
@@ -79,7 +79,7 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
               />
             </div>
           )}
-          {user.role === "TEACHER" && submissionCount > 0 && (
+          {user.role === "TEACHER" && assessmentData.status === "LIVE" && (
             <div className="flex space-x-4 justify-end">
               <Badge>{assessmentData.status}</Badge>
               <Link href={`/assessments/preview/${assessmentData.id}`}>
@@ -129,7 +129,7 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
           <Card className="col-span-1 p-2">
             <h3>Latest Score</h3>
             <p className="font-bold text-2xl">
-              {results && results.length > 0 ? results[0].score + "%" : "N/A"}
+              {results && results.length > 0 ? results[0].score?.toFixed(2) + "%" : "N/A"}
             </p>
           </Card>
         )}

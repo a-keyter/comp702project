@@ -1,6 +1,6 @@
 "use server"
 
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 import { z } from "zod";
 import { prisma } from "../initPrisma";
 import { processQueuedClassJoins } from "./processQueuedClassJoins";
