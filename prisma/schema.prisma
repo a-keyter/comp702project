@@ -88,6 +88,7 @@ model Assessment {
   status          AssessmentStatus @default(DRAFT)
   createdAt       DateTime         @default(now()) @map(name: "created_at")
   updatedAt       DateTime         @updatedAt @map(name: "updated_at")
+  dueDate         DateTime
   createdBy       User             @relation("AssessmentCreator", fields: [createdById], references: [id])
   createdById     String
   class           Class            @relation("ClassAssessments", fields: [classId], references: [id], onDelete: Cascade)

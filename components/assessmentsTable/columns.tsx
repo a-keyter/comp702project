@@ -86,7 +86,7 @@ export const assessmentColumns: ColumnDef<AssessmentWithStats>[] = [
     header: "Average Score",
   },
   {
-    accessorKey: "updatedAt",
+    accessorKey: "dueDate",
     header: ({ column }) => {
       return (
         <Button
@@ -94,13 +94,13 @@ export const assessmentColumns: ColumnDef<AssessmentWithStats>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Last Updated
+          Due Date
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
     cell: ({ row }) => {
-      const date = new Date(row.getValue("updatedAt"));
+      const date = new Date(row.getValue("dueDate"));
       const formatted = date.toLocaleString("en-GB", {
         hour: "2-digit",
         minute: "2-digit",

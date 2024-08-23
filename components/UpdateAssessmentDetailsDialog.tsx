@@ -1,11 +1,10 @@
-"use client";
-
-import { useState } from "react";
+"use client"
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useRouter } from "next/navigation";
 import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -28,34 +27,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import LoadingSpinner from "./LoadingSpinner";
-import { createNewAssessment } from "@/lib/assessmentUtils/createNewAssessment";
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { SafeClass } from "@/lib/classUtils/getClassDetails";
-import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { CalendarIcon } from "lucide-react";
 import { Calendar } from "./ui/calendar";
+import { CalendarIcon, Pencil } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { updateAssessmentDetails } from "@/lib/assessmentUtils/updateAssessmentDetails";
 
 const FormSchema = z.object({
-  classId: z
-    .string()
-    .min(6, {
-      message: "Class code must be at least 6 characters.",
-    })
-    .max(8, {
-      message: "Class code must be 8 characters at most.",
-    })
-    .regex(/^[a-zA-Z0-9-]+$/, {
-      message:
-        "Class code must contain only alphanumeric characters and hyphens (No spaces).",
-    }),
   title: z.string().min(2, {
     message: "Title must be at least 2 characters.",
   }),
@@ -67,15 +45,21 @@ const FormSchema = z.object({
   }),
 });
 
-function CreateAssessmentDialog({
-  classId,
-  classTitle,
-  classes,
-}: {
-  classId: string | null;
-  classTitle: string | null;
-  classes: SafeClass[] | null;
-}) {
+interface UpdateAssessmentDetailsDialogProps {
+  assessmentId: string;
+  currentTitle: string;
+  currentDueDate: Date;
+  currentObjectives: string;
+  icon: boolean;
+}
+
+export function UpdateAssessmentDetailsDialog({
+  assessmentId,
+  currentTitle,
+  currentDueDate,
+  currentObjectives,
+  icon,
+}: UpdateAssessmentDetailsDialogProps) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -84,10 +68,9 @@ function CreateAssessmentDialog({
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      classId: classId ? classId : "",
-      title: "",
-      objectives: "",
-      dueDate: new Date(),
+      title: currentTitle,
+      dueDate: new Date(currentDueDate),
+      objectives: currentObjectives,
     },
   });
 
@@ -96,20 +79,20 @@ function CreateAssessmentDialog({
       setError(null);
       setLoading(true);
 
-      // Call the createNewClass function
-      const assessCode = await createNewAssessment(data);
+      const assessmentData = { ...data, assessmentId };
 
-      // Close the dialog if successful
+      await updateAssessmentDetails(assessmentData);
+
       setLoading(false);
       setOpen(false);
 
-      // Reload the page to show the new class
-      router.push(`/assessments/edit/${assessCode}`);
+      // Refresh the current page
+      router.refresh();
     } catch (err) {
       setLoading(false);
-      console.error("Error creating new assessment:", err);
+      console.error("Error updating assessment:", err);
       setError(
-        "An error occurred while creating the assessment. Please try again."
+        "An error occurred while updating the assessment. Please try again."
       );
     }
   }
@@ -117,60 +100,24 @@ function CreateAssessmentDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>+ New Assessment </Button>
+        {icon ? (
+          <Button>
+            <Pencil />
+          </Button>
+        ) : (
+          <Button variant="outline">Edit Details</Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create New Assessment</DialogTitle>
+          <DialogTitle>Update Assessment Details</DialogTitle>
           <DialogDescription>
-            Enter the details for your new Assessment. Click create when you are
+            Make changes to your assessment here. Click save when you&apos;re
             done.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="classId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Select a Class</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={classId || field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        {classes ? (
-                          <SelectValue placeholder="Select the class for the assignment" />
-                        ) : (
-                          <SelectValue
-                            placeholder={`${classId} - ${classTitle}`}
-                          />
-                        )}
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {classes
-                        ? classes.map((classItem) => (
-                            <SelectItem key={classItem.id} value={classItem.id}>
-                              {`${classItem.id} - ${classItem.title}`}
-                            </SelectItem>
-                          ))
-                        : classId &&
-                          classTitle && (
-                            <SelectItem value={classId}>
-                              {`${classId} - ${classTitle}`}
-                            </SelectItem>
-                          )}
-                    </SelectContent>
-                  </Select>
-                  <FormDescription></FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <FormField
               control={form.control}
               name="title"
@@ -188,7 +135,7 @@ function CreateAssessmentDialog({
               )}
             />
 
-<FormField
+            <FormField
               control={form.control}
               name="dueDate"
               render={({ field }) => (
@@ -248,11 +195,9 @@ function CreateAssessmentDialog({
               )}
             />
 
-            
-
             <div className="flex justify-end">
               <Button type="submit">
-                Create Assessment
+                Save Changes
                 {loading && (
                   <div className="pl-4">
                     <LoadingSpinner />
@@ -267,5 +212,3 @@ function CreateAssessmentDialog({
     </Dialog>
   );
 }
-
-export default CreateAssessmentDialog;

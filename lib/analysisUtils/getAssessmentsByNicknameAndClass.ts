@@ -1,16 +1,19 @@
-"use server"
+"use server";
 
-import { prisma } from '@/lib/initPrisma'
+import { prisma } from "@/lib/initPrisma";
 
-export async function getAssessmentsByNicknameAndClass(nickname: string, classId: string) {
+export async function getAssessmentsByNicknameAndClass(
+  nickname: string,
+  classId: string
+) {
   try {
     const user = await prisma.user.findUnique({
       where: { nickname },
-      select: { id: true }
+      select: { id: true },
     });
 
     if (!user) {
-      throw new Error('User not found');
+      throw new Error("User not found");
     }
 
     // Fetch all live assessments for the class
@@ -23,50 +26,57 @@ export async function getAssessmentsByNicknameAndClass(nickname: string, classId
         id: true,
         title: true,
         createdAt: true,
+        dueDate: true,
       },
-      orderBy: { createdAt: 'asc' },
+      orderBy: { dueDate: "asc" },
     });
 
     // Fetch the latest submissions for each assessment
     const latestSubmissions = await prisma.submission.findMany({
-      where: { 
+      where: {
         userId: user.id,
-        assessmentId: { in: liveAssessments.map(a => a.id) },
+        assessmentId: { in: liveAssessments.map((a) => a.id) },
       },
-      orderBy: { createdAt: 'desc' },
-      distinct: ['assessmentId'],
+      orderBy: { createdAt: "desc" },
+      distinct: ["assessmentId"],
       select: {
         assessmentId: true,
         score: true,
         createdAt: true,
-      }
+      },
     });
 
     // Create a map of assessment ID to submission for quick lookup
-    const submissionMap = new Map(latestSubmissions.map(s => [s.assessmentId, s]));
+    const submissionMap = new Map(
+      latestSubmissions.map((s) => [s.assessmentId, s])
+    );
 
     // Combine assessment and submission data
     const assessmentData = liveAssessments.map((assessment, index) => {
       const submission = submissionMap.get(assessment.id);
-      
-      // Calculate the x-axis label based on the assessment's creation date
-      const creationDate = new Date(assessment.createdAt);
-      const xAxisLabel = `A${creationDate.getDate()}/${creationDate.getMonth() + 1}`;
+
+      // Calculate the x-axis label based on the assessment's due date
+      const dueDate = assessment.dueDate.toLocaleString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        hour12: false,
+      });
+      const xAxisLabel = `A${index + 1} - due ${dueDate}`
 
       return {
         assessmentId: assessment.id,
         assessmentTitle: assessment.title,
         latestScore: submission?.score ?? 0,
         xAxisLabel: xAxisLabel,
-        submissionDate: submission?.createdAt?.toISOString() ?? assessment.createdAt.toISOString(),
-        status: submission ? "Submitted" : "Not submitted"
+        submissionDate: submission?.createdAt?.toLocaleDateString() ?? null,
+        dueDate: assessment.dueDate,
+        status: submission ? "Submitted" : "Not submitted",
       };
     });
 
-    console.log(assessmentData);
     return assessmentData;
   } catch (error) {
-    console.error('Error fetching assessment data:', error);
+    console.error("Error fetching assessment data:", error);
     throw error;
   }
 }

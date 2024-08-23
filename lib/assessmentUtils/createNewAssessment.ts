@@ -23,6 +23,9 @@ const FormSchema = z.object({
     objectives: z.string().min(10, {
       message: "Learning objectives must be at least 10 characters.",
     }),
+    dueDate: z.date({
+      required_error: "Due date is required.",
+    }),
   });
 
 
@@ -47,15 +50,9 @@ export async function createNewAssessment(formData: FormData): Promise<string> {
           title: validatedData.title,
           objectives: validatedData.objectives,
           classId: validatedData.classId,
-          createdById: userId, // Replace with actual user ID, e.g., from session
+          createdById: userId,
+          dueDate: validatedData.dueDate 
         },
-        include: {
-          class: {
-            include: {
-              members: true
-            }
-          }
-        }
       });
   
       // Return the assessment ID

@@ -12,6 +12,7 @@ import { StudentDataTable } from "@/components/submissionsTable/student-data-tab
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { UpdateAssessmentDetailsDialog } from "@/components/UpdateAssessmentDetailsDialog";
 import { getAssessmentById } from "@/lib/assessmentUtils/getAssessmentDetails";
 import { getResultsByAssessmentId } from "@/lib/assessmentUtils/getAssessmentSubmissions";
 import { getStudentResultsByAssessmentId } from "@/lib/assessmentUtils/getStudentResultsByAssessmentId";
@@ -65,6 +66,13 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
           {user.role === "TEACHER" && assessmentData.status === "DRAFT" && (
             <div className="flex space-x-4 justify-end">
               <Badge>{assessmentData.status}</Badge>
+              <UpdateAssessmentDetailsDialog
+                assessmentId={assessmentData.id}
+                currentDueDate={assessmentData.dueDate}
+                currentObjectives={assessmentData.objectives}
+                currentTitle={assessmentData.title}
+                icon={false}
+              />
               <Link href={`/assessments/edit/${assessmentData.id}`}>
                 <Button className="bg-yellow-300 text-black hover:text-white">
                   Edit
@@ -82,6 +90,13 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
           {user.role === "TEACHER" && assessmentData.status === "LIVE" && (
             <div className="flex space-x-4 justify-end">
               <Badge>{assessmentData.status}</Badge>
+              <UpdateAssessmentDetailsDialog
+                assessmentId={assessmentData.id}
+                currentDueDate={assessmentData.dueDate}
+                currentObjectives={assessmentData.objectives}
+                currentTitle={assessmentData.title}
+                icon={false}
+              />
               <Link href={`/assessments/preview/${assessmentData.id}`}>
                 <Button>View</Button>
               </Link>
@@ -102,8 +117,13 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
             </div>
           )}
           <p className="text-right">
-            <strong>Last Updated:</strong>{" "}
-            {new Date(assessmentData.updatedAt).toLocaleString()}
+            <strong>Due Date:</strong>{" "}
+            {new Date(assessmentData.dueDate).toLocaleString("en-GB", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "2-digit",
+              hour12: false,
+            })}
           </p>
         </div>
       </div>
@@ -129,7 +149,9 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
           <Card className="col-span-1 p-2">
             <h3>Latest Score</h3>
             <p className="font-bold text-2xl">
-              {results && results.length > 0 ? results[0].score?.toFixed(2) + "%" : "N/A"}
+              {results && results.length > 0
+                ? results[0].score?.toFixed(2) + "%"
+                : "N/A"}
             </p>
           </Card>
         )}

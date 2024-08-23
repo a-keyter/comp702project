@@ -85,7 +85,7 @@ export async function getTeacherAssessmentData() {
         },
       },
       orderBy: {
-        updatedAt: "desc",
+        dueDate: "asc",
       },
     });
 
@@ -156,7 +156,7 @@ export async function getClassAssessmentsTeacher(classId: string) {
         },
       },
       orderBy: {
-        updatedAt: "desc",
+        dueDate: "asc",
       },
     });
 
@@ -232,7 +232,7 @@ export async function getStudentAssessmentData() {
         },
       },
       orderBy: {
-        updatedAt: "desc",
+        dueDate: "asc",
       },
     });
 
@@ -286,7 +286,7 @@ export async function getClassAssessmentsStudent(classId: string) {
         },
       },
       orderBy: {
-        updatedAt: "desc",
+        dueDate: "asc",
       },
     });
 

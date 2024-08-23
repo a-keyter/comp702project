@@ -34,18 +34,34 @@ type AssessmentData = {
   assessmentTitle: string;
   latestScore: number;
   xAxisLabel: string;
-  submissionDate: string;
+  submissionDate: string | null;
+  dueDate: Date;
+  status: string;
 };
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
+    
+    const formatDate = (date: Date) => {
+      return date.toLocaleString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour12: false,
+      });
+    };
+
     return (
       <div className="bg-white p-4 border border-gray-300 rounded shadow">
-        <p className="font-bold">{data.assessmentTitle}</p>
+        <p className="font-bold">{data.xAxisLabel.split(' - ')[0]} - {data.assessmentTitle}</p>
         <p>Latest Score: {data.latestScore.toFixed(2)}</p>
-        <p>Date: {new Date(data.submissionDate).toLocaleDateString()}</p>
-        <p>Status: {data.status}</p>
+        <p>Due Date: {formatDate(new Date(data.dueDate))}</p>
+        <p>Status: 
+          {data.submissionDate
+            ? ` Submitted on ${formatDate(new Date(data.submissionDate))}`
+            : " Not Submitted"}
+        </p>
       </div>
     );
   }

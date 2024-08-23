@@ -7,40 +7,46 @@ import { CartesianGrid, Line, LineChart, XAxis, YAxis, Tooltip, ResponsiveContai
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { getAssessmentsByNicknameAndClass } from "@/lib/analysisUtils/getAssessmentsByNicknameAndClass";
-import { Skeleton } from "@/components/ui/skeleton";
-
+import { Skeleton } from "../ui/skeleton";
 
 type AssessmentData = {
   assessmentId: string;
   assessmentTitle: string;
   latestScore: number;
   xAxisLabel: string;
-  submissionDate: string;
+  submissionDate: string | null;
+  dueDate: Date;
+  status: string;
 };
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
+    
+    const formatDate = (date: Date) => {
+      return date.toLocaleString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour12: false,
+      });
+    };
+
     return (
       <div className="bg-white p-4 border border-gray-300 rounded shadow">
-        <p className="font-bold">{data.assessmentTitle}</p>
+        <p className="font-bold">{data.xAxisLabel.split(' - ')[0]} - {data.assessmentTitle}</p>
         <p>Latest Score: {data.latestScore.toFixed(2)}</p>
-        <p>Date: {new Date(data.submissionDate).toLocaleDateString()}</p>
-        <p>Status: {data.status}</p>
+        <p>Due Date: {formatDate(new Date(data.dueDate))}</p>
+        <p>Status: 
+          {data.submissionDate
+            ? ` Submitted on ${formatDate(new Date(data.submissionDate))}`
+            : " Not Submitted"}
+        </p>
       </div>
     );
   }
@@ -90,7 +96,6 @@ export default function SingleClassStudentAssessmentStats({
 
   return (
     <div className="grid grid-cols-6 gap-4 w-full">
-
       <Card className="col-span-6 mt-4">
         <CardHeader>
           <CardTitle className="mb-2">Assessment Scores Over Time</CardTitle>
@@ -103,7 +108,7 @@ export default function SingleClassStudentAssessmentStats({
               <LineChart data={assessmentData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="xAxisLabel" />
-                <YAxis domain={[0, 100]} /> {/* Assuming scores are out of 100 */}
+                <YAxis domain={[0, 100]} />
                 <Tooltip content={<CustomTooltip />} />
                 <Line type="monotone" dataKey="latestScore" stroke="#8884d8" activeDot={{ r: 8 }} />
               </LineChart>
@@ -125,5 +130,3 @@ export default function SingleClassStudentAssessmentStats({
     </div>
   );
 }
-
-// 
