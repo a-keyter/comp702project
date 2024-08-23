@@ -24,6 +24,7 @@ async function page() {
       columns={assessmentColumns}
       data={teacherAssessments}
       role={user.role}
+      display="All"
       tableSize="large"
       classId={null}
       classTitle={null}
@@ -36,6 +37,7 @@ async function page() {
     columns={studentAssessmentColumns}
     data={studentAssessments}
     role={user.role}
+    display="All"
     tableSize="large"
     classId={null}
     classTitle={null}

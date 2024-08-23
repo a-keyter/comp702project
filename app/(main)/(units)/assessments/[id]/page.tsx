@@ -2,7 +2,6 @@ import TeacherFeedback from "@/components/assessmentStatistics/GroupFeedback";
 import HardestQuestions from "@/components/assessmentStatistics/HardestQuestions";
 import PerformanceGraph from "@/components/assessmentStatistics/PerformanceGraph";
 import DeleteAssessmentDialog from "@/components/DeleteAssessmentDialog";
-import LateLoadQuestionFeedbackIssues from "@/components/issuesTable/LateLoadIssuesTable";
 import ReportIssueDialog from "@/components/ReportIssueDialog";
 
 import { responseColumns } from "@/components/submissionsTable/columns";
