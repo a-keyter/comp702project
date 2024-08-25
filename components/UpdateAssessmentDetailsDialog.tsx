@@ -101,9 +101,9 @@ export function UpdateAssessmentDetailsDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {icon ? (
-          <Button>
-            <Pencil />
-          </Button>
+          <button className="bg-black text-white p-1 rounded-full h-8 mx-4">
+            <Pencil className="h-5 w-5"/>
+          </button>
         ) : (
           <Button variant="outline">Edit Details</Button>
         )}

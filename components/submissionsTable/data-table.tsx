@@ -65,9 +65,9 @@ export function AllResponsesDataTable<TData, TValue>({
         <div className="flex gap-x-4 py-1 w-full max-w-md justify-end">
           <Input
             placeholder="Search students..."
-            value={(table.getColumn("user.name")?.getFilterValue() as string) ?? ""}
+            value={(table.getColumn("username")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
-              table.getColumn("user.name")?.setFilterValue(event.target.value)
+              table.getColumn("username")?.setFilterValue(event.target.value)
             }
             className="w-full"
           />

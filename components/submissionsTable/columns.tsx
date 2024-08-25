@@ -17,16 +17,14 @@ export type ResponseWithUser = {
   createdAt: Date;
   score: number | null;
   feedback: string | null;
-  user: {
-    name: string;
-    nickname: string;
-  };
+  username: string;
+  usernickname: string;
   attemptCount: number;
 };
 
 export const responseColumns: ColumnDef<ResponseWithUser>[] = [
   {
-    accessorKey: "user.name",
+    accessorKey: "username",
     header: ({ column }) => {
       return (
         <Button
@@ -40,11 +38,11 @@ export const responseColumns: ColumnDef<ResponseWithUser>[] = [
       );
     },
     cell: ({ row }) => {
-      const userNickname = row.original.user.nickname;
+      const userNickname = row.original.usernickname;
       return (
         <div className="flex items-center space-x-2">
           <Link href={`/students/${userNickname}`} className="pl-4">
-            {row.original.user.name}
+            {row.original.username}
           </Link>
         </div>
       );

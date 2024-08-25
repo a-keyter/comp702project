@@ -46,7 +46,8 @@ export async function getResultsByAssessmentId(
           createdAt: submission.createdAt,
           score: submission.score, // Use the score from the latest submission
           feedback: submission.feedback,
-          user: submission.user,
+          username: submission.user.name,
+          usernickname: submission.user.nickname,
           attemptCount: stats ? stats._count.id : 1,
         };
       }

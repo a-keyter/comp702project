@@ -48,30 +48,45 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="w-full max-w-4xl py-1">
-      <div className="flex justify-between items-center ">
-        <div className="flex flex-col gap-y-2">
-          <h2 className="text-2xl font-bold w-[25rem]">
-            {assessmentData.title}
-          </h2>
-          <p>
-            Class:{" "}
-            <Link href={`/classes/${assessmentData.class.id}`}>
-              {assessmentData.class.id.toUpperCase()} -{" "}
-              {assessmentData.class.title}
-            </Link>
-          </p>
+      <Card className="flex justify-between items-center w-full p-2">
+        <div className="flex">
+          <div>
+            <h2 className="text-2xl font-bold max-w-[25rem]">
+              {assessmentData.title}
+            </h2>
+            <p>
+              <strong>Class: </strong>
+              <Link href={`/classes/${assessmentData.class.id}`}>
+                {assessmentData.class.id.toUpperCase()} -{" "}
+                {assessmentData.class.title}
+              </Link>
+            </p>
+            <p>
+              <strong>Due Date:</strong>{" "}
+              {new Date(assessmentData.dueDate).toLocaleString("en-GB", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+              })}
+            </p>
+          </div>
+          {user.role === "TEACHER" && (
+            <UpdateAssessmentDetailsDialog
+              assessmentId={assessmentData.id}
+              currentDueDate={assessmentData.dueDate}
+              currentObjectives={assessmentData.objectives}
+              currentTitle={assessmentData.title}
+              icon={true}
+            />
+          )}
         </div>
-        <div className="flex flex-col gap-y-2">
-          {user.role === "TEACHER" && assessmentData.status === "DRAFT" && (
+        {/* THIS PESKY CONTAINER */}
+        <div className="flex flex-col justify-between">
+        {user.role === "TEACHER" && assessmentData.status === "DRAFT" && (
             <div className="flex space-x-4 justify-end">
-              <Badge>{assessmentData.status}</Badge>
-              <UpdateAssessmentDetailsDialog
-                assessmentId={assessmentData.id}
-                currentDueDate={assessmentData.dueDate}
-                currentObjectives={assessmentData.objectives}
-                currentTitle={assessmentData.title}
-                icon={false}
-              />
               <Link href={`/assessments/edit/${assessmentData.id}`}>
                 <Button className="bg-yellow-300 text-black hover:text-white">
                   Edit
@@ -84,20 +99,18 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
                 assessmentId={assessmentData.id}
                 assessmentTitle={assessmentData.title}
               />
+              <Badge>{assessmentData.status}</Badge>
             </div>
           )}
           {user.role === "TEACHER" && assessmentData.status === "LIVE" && (
             <div className="flex space-x-4 justify-end">
-              <Badge>{assessmentData.status}</Badge>
-              <UpdateAssessmentDetailsDialog
-                assessmentId={assessmentData.id}
-                currentDueDate={assessmentData.dueDate}
-                currentObjectives={assessmentData.objectives}
-                currentTitle={assessmentData.title}
-                icon={false}
-              />
               <Link href={`/assessments/preview/${assessmentData.id}`}>
                 <Button>View</Button>
+              </Link>
+              <Link href={`/assessments/edit/${assessmentData.id}`}>
+                <Button className="bg-yellow-300 text-black hover:text-white">
+                  Edit
+                </Button>
               </Link>
               <DeleteAssessmentDialog
                 className=""
@@ -106,6 +119,7 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
                 assessmentId={assessmentData.id}
                 assessmentTitle={assessmentData.title}
               />
+              <Badge>{assessmentData.status}</Badge>
             </div>
           )}
           {user.role === "STUDENT" && (
@@ -115,17 +129,19 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
               </Link>
             </div>
           )}
-          <p className="text-right">
-            <strong>Due Date:</strong>{" "}
-            {new Date(assessmentData.dueDate).toLocaleString("en-GB", {
+          <p className="text-right mt-3">
+            <strong>Last Updated:</strong>{" "}
+            {new Date(assessmentData.updatedAt).toLocaleString("en-GB", {
               day: "2-digit",
               month: "2-digit",
               year: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
               hour12: false,
             })}
           </p>
         </div>
-      </div>
+      </Card>
       <div className="grid grid-cols-6 gap-x-2 my-2">
         <Card className="col-span-4 p-2 px-2">
           <h3 className="font-semibold text-md">Assessment Objectives</h3>

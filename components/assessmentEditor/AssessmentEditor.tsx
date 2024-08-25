@@ -16,6 +16,7 @@ import { generateFalseAnswers } from "@/lib/langchainGenerations/generateFalseAn
 import { setAssessmentLive } from "@/lib/assessmentUtils/setAssessmentLive";
 import AIWarningDialog from "./AiWarningDialog";
 import NewAssessmentDialog from "./NewAssessmentDialog";
+import { Card } from "../ui/card";
 
 interface AssessmentEditorProps {
   assessmentId: string;
@@ -545,7 +546,7 @@ function AssessmentEditor({
   };
 
   return (
-    <div className="flex flex-col gap-y-2 w-full py-1">
+    <div className="flex flex-col gap-y-4 w-full py-1">
       <NewAssessmentDialog
         open={newAssessmentOptionsDialog}
         onClose={() => showNewAssessmentOptionsDialog(false)}
@@ -553,35 +554,50 @@ function AssessmentEditor({
         onGenerateMCQs={handleGenerateMCQs}
         onUploadPDF={handleUploadPDF}
       />
-      <div className="flex justify-between items-center py-2">
-        <div className="flex flex-col gap-y-2">
-          <h2 className="text-2xl font-bold w-[25rem]">{assessmentTitle}</h2>
-          <p>
-            Class: {classId.toUpperCase()} - {classTitle}
-          </p>
-        </div>
-        <div className="flex flex-col gap-y-2">
-          <div className="flex space-x-4 justify-end">
-            <Button variant="outline" onClick={handlePreview}>
-            {loading ? <div className="px-2"><LoadingSpinner/></div> : "Preview"}
-            </Button>
-            <Button variant={"destructive"} onClick={saveDraft}>
-              {loading ? <div className="px-2"><LoadingSpinner/></div> : "Close"}
-            </Button>
+      <Card className="p-2">
+        <div className="flex justify-between items-center py-2">
+          <div className="flex flex-col gap-y-2">
+            <h2 className="text-2xl font-bold w-[25rem]">{assessmentTitle}</h2>
+            <p>
+              Class: {classId.toUpperCase()} - {classTitle}
+            </p>
           </div>
-          <p className="text-right">
-            <strong>Last Updated:</strong> {assessmentUpdated}
-          </p>
+          <div className="flex flex-col gap-y-2">
+            <div className="flex space-x-4 justify-end">
+              <Button variant="outline" onClick={handlePreview}>
+                {loading ? (
+                  <div className="px-2">
+                    <LoadingSpinner />
+                  </div>
+                ) : (
+                  "Preview"
+                )}
+              </Button>
+              <Button variant={"destructive"} onClick={saveDraft}>
+                {loading ? (
+                  <div className="px-2">
+                    <LoadingSpinner />
+                  </div>
+                ) : (
+                  "Close"
+                )}
+              </Button>
+            </div>
+            <p className="text-right">
+              <strong>Last Updated:</strong> {assessmentUpdated}
+            </p>
+          </div>
         </div>
-      </div>
-      <p className="mb-2">
-        <strong>Assessment Objectives: </strong>
-        {assessmentObjectives}
-      </p>
+        <p className="mb-2">
+          <strong>Assessment Objectives: </strong>
+          {assessmentObjectives}
+        </p>
+      </Card>
+
       {assessmentItems.map((item, index) => (
-        <div
+        <Card
           key={item.id}
-          className="flex flex-col border-2 py-1 px-2 rounded-md w-full"
+          className="flex flex-col border-2 p-2 w-full"
         >
           <div className="flex justify-between items-center mb-2">
             <span className="font-bold">Item {index + 1}</span>
@@ -617,7 +633,7 @@ function AssessmentEditor({
             onGenerateAnswers={() => handleGenerateAnswers(item.id)}
             onGenerateFalseAnswers={() => handleGenerateFalseAnswers(item.id)}
           />
-        </div>
+        </Card>
       ))}
       <div className="flex gap-x-2 justify-center">
         <Button onClick={() => addItem("CONTEXT")}>Add Context</Button>

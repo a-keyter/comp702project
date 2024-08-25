@@ -3,7 +3,9 @@ import { auth } from "@clerk/nextjs/server";
 import { getUserById } from "../userUtils/getUserDetails";
 import { ResponseWithUser } from "@/components/submissionsTable/columns";
 
-export async function getStudentResultsByAssessmentId(assessmentId: string): Promise<ResponseWithUser[] | null> {
+export async function getStudentResultsByAssessmentId(
+  assessmentId: string
+): Promise<ResponseWithUser[] | null> {
   const { userId } = auth();
 
   if (!userId) {
@@ -25,25 +27,26 @@ export async function getStudentResultsByAssessmentId(assessmentId: string): Pro
         userId: userId,
       },
       orderBy: {
-        createdAt: 'desc',
+        createdAt: "desc",
       },
+    
     });
 
     // Get the total attempt count
     const totalAttempts = submissions.length;
 
     // Transform the submissions to include user information and attempt count
-    const submissionsWithUser: ResponseWithUser[] = submissions.map((submission, index) => ({
-      id: submission.id,
-      createdAt: submission.createdAt,
-      score: submission.score,
-      feedback: submission.feedback,
-      user: {
-        name: user.name,
-        nickname: user.nickname,
-      },
-      attemptCount: totalAttempts - index, // This gives the attempt number in descending order
-    }));
+    const submissionsWithUser: ResponseWithUser[] = submissions.map(
+      (submission, index) => ({
+        id: submission.id,
+        createdAt: submission.createdAt,
+        score: submission.score,
+        feedback: submission.feedback,
+        username: user.name,
+        usernickname: user.nickname,
+        attemptCount: totalAttempts - index, // This gives the attempt number in descending order
+      })
+    );
 
     return submissionsWithUser;
   } catch (error) {
