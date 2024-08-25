@@ -98,9 +98,6 @@ export const classStudentsColumns: ColumnDef<Student>[] = [
             <Link href={`/students/${student.nickname}`}>
             <DropdownMenuItem>View Profile</DropdownMenuItem>
             </Link>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Message Student</DropdownMenuItem>
-            <DropdownMenuItem>Remove from Class</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

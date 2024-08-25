@@ -23,7 +23,7 @@ export async function deleteClass(classId: string) {
     }
 
     // Check if the current user is a teacher of the class
-    if (existingClass.taughtBy.some(teacher => teacher.id !== userId)) {
+    if (!existingClass.taughtBy.some(teacher => teacher.id === userId)) {
       throw new Error("User does not have permission to delete this class");
     }
 

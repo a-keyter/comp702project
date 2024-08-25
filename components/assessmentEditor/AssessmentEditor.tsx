@@ -1,7 +1,7 @@
 "use client";
 
 import { Answer, AssessmentItem } from "@prisma/client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import ItemWrapper from "./ItemWrapper";
 import { Button } from "../ui/button";
@@ -14,6 +14,8 @@ import { generateFullMcq } from "@/lib/langchainGenerations/generateMCQ";
 import { generateAnswers } from "@/lib/langchainGenerations/generateAnswers";
 import { generateFalseAnswers } from "@/lib/langchainGenerations/generateFalseAnswers";
 import { setAssessmentLive } from "@/lib/assessmentUtils/setAssessmentLive";
+import AIWarningDialog from "./AiWarningDialog";
+import NewAssessmentDialog from "./NewAssessmentDialog";
 
 interface AssessmentEditorProps {
   assessmentId: string;
@@ -45,6 +47,115 @@ function AssessmentEditor({
   const [mcqAnswers, setMcqAnswers] = useState<Record<string, Answer[]>>(
     initialMcqAnswers || {}
   );
+  const [showAiWarning, setShowAiWarning] = useState<boolean>(false);
+  const [hasUsedAiGeneration, setHasUsedAiGeneration] = useState<boolean>(true);
+  const [newAssessmentOptionsDialog, showNewAssessmentOptionsDialog] =
+    useState<boolean>(false);
+  useEffect(() => {
+    if (initialItems?.length === 0) {
+      showNewAssessmentOptionsDialog(true);
+    }
+  }, [initialItems]);
+
+  const handleCreateFromScratch = () => {
+    showNewAssessmentOptionsDialog(false);
+    setHasUsedAiGeneration(false);
+    addItem("MCQ");
+  };
+
+  const handleGenerateMCQs = async () => {
+    showNewAssessmentOptionsDialog(false);
+
+    const generateMCQs = async (count: number) => {
+      let existingQuestions: string[] = [];
+
+      for (let i = 0; i < count; i++) {
+        // Add a new MCQ item and wait for the state to update
+        const newItemId = await new Promise<string>((resolve) => {
+          addItem("MCQ");
+          setTimeout(() => {
+            setAssessmentItems((currentItems) => {
+              const newItem = currentItems[currentItems.length - 1];
+              resolve(newItem.id);
+              return currentItems;
+            });
+          }, 0);
+        });
+
+        // Generate full MCQ for the new item
+        const result = await generateFullMcq({
+          assessmentDetails: {
+            assessmentTitle,
+            assessmentObjectives,
+            existingQuestions,
+          },
+        });
+
+        // Update the question and answers
+        await new Promise<void>((resolve) => {
+          setAssessmentItems((currentItems) =>
+            currentItems.map((item) =>
+              item.id === newItemId
+                ? { ...item, content: result.question }
+                : item
+            )
+          );
+
+          setMcqAnswers((currentAnswers) => ({
+            ...currentAnswers,
+            [newItemId]: [
+              {
+                id: uuidv4(),
+                content: result.correctAnswer,
+                isCorrect: true,
+                assessmentItemId: newItemId,
+              },
+              {
+                id: uuidv4(),
+                content: result.falseAnswer1,
+                isCorrect: false,
+                assessmentItemId: newItemId,
+              },
+              {
+                id: uuidv4(),
+                content: result.falseAnswer2,
+                isCorrect: false,
+                assessmentItemId: newItemId,
+              },
+              {
+                id: uuidv4(),
+                content: result.falseAnswer3,
+                isCorrect: false,
+                assessmentItemId: newItemId,
+              },
+              {
+                id: uuidv4(),
+                content: result.falseAnswer4,
+                isCorrect: false,
+                assessmentItemId: newItemId,
+              },
+            ],
+          }));
+
+          setTimeout(resolve, 0);
+        });
+
+        // Add the new question to existingQuestions
+        existingQuestions.push(result.question);
+      }
+    };
+
+    try {
+      await generateMCQs(10);
+    } catch (error) {
+      console.error("Error generating MCQs:", error);
+    }
+  };
+
+  const handleUploadPDF = () => {
+    showNewAssessmentOptionsDialog(false);
+    // Add logic to handle PDF upload and MCQ creation
+  };
 
   const createDefaultTextItem = (): AssessmentItem => ({
     id: uuidv4(),
@@ -226,6 +337,12 @@ function AssessmentEditor({
 
   const handleGenerateFullMcq = async (itemId: string) => {
     try {
+      // Show AI content warning
+      if (!hasUsedAiGeneration) {
+        setHasUsedAiGeneration(true);
+        setShowAiWarning(true);
+      }
+
       // Extract existing questions
       const existingQuestions = assessmentItems
         .filter((item) => item.type === "MCQ" && item.content.trim() !== "")
@@ -239,48 +356,56 @@ function AssessmentEditor({
         },
       });
 
-      // Update the question
-      updateAssessmentItem(itemId, { content: result.question });
+      // Update the question and answers atomically
+      return new Promise<void>((resolve) => {
+        setAssessmentItems((currentItems) =>
+          currentItems.map((item) =>
+            item.id === itemId ? { ...item, content: result.question } : item
+          )
+        );
 
-      // Update the answers
-      if (mcqAnswers[itemId]) {
-        const newAnswers = [
-          {
-            id: mcqAnswers[itemId][0].id,
-            content: result.correctAnswer,
-            isCorrect: true,
-          },
-          {
-            id: mcqAnswers[itemId][1].id,
-            content: result.falseAnswer1,
-            isCorrect: false,
-          },
-          {
-            id: mcqAnswers[itemId][2].id,
-            content: result.falseAnswer2,
-            isCorrect: false,
-          },
-          {
-            id: mcqAnswers[itemId][3].id,
-            content: result.falseAnswer3,
-            isCorrect: false,
-          },
-          {
-            id: mcqAnswers[itemId][4].id,
-            content: result.falseAnswer4,
-            isCorrect: false,
-          },
-        ];
+        setMcqAnswers((currentAnswers) => ({
+          ...currentAnswers,
+          [itemId]: [
+            {
+              id: uuidv4(),
+              content: result.correctAnswer,
+              isCorrect: true,
+              assessmentItemId: itemId,
+            },
+            {
+              id: uuidv4(),
+              content: result.falseAnswer1,
+              isCorrect: false,
+              assessmentItemId: itemId,
+            },
+            {
+              id: uuidv4(),
+              content: result.falseAnswer2,
+              isCorrect: false,
+              assessmentItemId: itemId,
+            },
+            {
+              id: uuidv4(),
+              content: result.falseAnswer3,
+              isCorrect: false,
+              assessmentItemId: itemId,
+            },
+            {
+              id: uuidv4(),
+              content: result.falseAnswer4,
+              isCorrect: false,
+              assessmentItemId: itemId,
+            },
+          ],
+        }));
 
-        newAnswers.forEach((answer) => {
-          updateMcqAnswer(itemId, answer.id, {
-            content: answer.content,
-            isCorrect: answer.isCorrect,
-          });
-        });
-      }
+        // Use setTimeout to ensure state updates are processed
+        setTimeout(resolve, 0);
+      });
     } catch (error) {
       console.error("Error generating MCQ:", error);
+      throw error;
     }
   };
 
@@ -295,6 +420,12 @@ function AssessmentEditor({
     }
 
     try {
+      // Show AI content warning
+      if (!hasUsedAiGeneration) {
+        setHasUsedAiGeneration(true);
+        setShowAiWarning(true);
+      }
+
       const result = await generateAnswers({
         props: {
           question: item.content,
@@ -363,6 +494,11 @@ function AssessmentEditor({
     }
 
     try {
+      // Show AI content warning
+      if (!hasUsedAiGeneration) {
+        setHasUsedAiGeneration(true);
+        setShowAiWarning(true);
+      }
       const result = await generateFalseAnswers({
         props: {
           question: item.content,
@@ -410,6 +546,13 @@ function AssessmentEditor({
 
   return (
     <div className="flex flex-col gap-y-2 w-full py-1">
+      <NewAssessmentDialog
+        open={newAssessmentOptionsDialog}
+        onClose={() => showNewAssessmentOptionsDialog(false)}
+        onCreateFromScratch={handleCreateFromScratch}
+        onGenerateMCQs={handleGenerateMCQs}
+        onUploadPDF={handleUploadPDF}
+      />
       <div className="flex justify-between items-center py-2">
         <div className="flex flex-col gap-y-2">
           <h2 className="text-2xl font-bold w-[25rem]">{assessmentTitle}</h2>
@@ -419,12 +562,12 @@ function AssessmentEditor({
         </div>
         <div className="flex flex-col gap-y-2">
           <div className="flex space-x-4 justify-end">
-            <Button onClick={handlePreview}>Preview</Button>
-            <Link href={`/assessments/${assessmentId}`}>
-              <Button className="bg-yellow-300 text-black hover:text-white">
-                Close Editor
-              </Button>
-            </Link>
+            <Button variant="outline" onClick={handlePreview}>
+            {loading ? <div className="px-2"><LoadingSpinner/></div> : "Preview"}
+            </Button>
+            <Button variant={"destructive"} onClick={saveDraft}>
+              {loading ? <div className="px-2"><LoadingSpinner/></div> : "Close"}
+            </Button>
           </div>
           <p className="text-right">
             <strong>Last Updated:</strong> {assessmentUpdated}
@@ -497,14 +640,20 @@ function AssessmentEditor({
           onClick={saveLive}
           className="bg-green-300 hover:bg-green-600 text-black hover:text-white"
         >
-          Publish 
+          Publish
           {publishLoading ? (
             <div className="pl-4">
               <LoadingSpinner />
             </div>
-          ): " Assessment"}
+          ) : (
+            " Assessment"
+          )}
         </Button>
       </div>
+      <AIWarningDialog
+        open={showAiWarning}
+        onClose={() => setShowAiWarning(false)}
+      />
     </div>
   );
 }

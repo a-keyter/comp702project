@@ -1,9 +1,9 @@
 "use server";
-
+//
 import { z } from "zod";
 import { model } from "../initModel";
 
-type McqProps = {
+type GenerateMcqProps = {
   assessmentTitle: string;
   assessmentObjectives: string;
   existingQuestions: string[];
@@ -21,7 +21,7 @@ type McqResult = {
 export async function generateFullMcq({
   assessmentDetails,
 }: {
-  assessmentDetails: McqProps;
+  assessmentDetails: GenerateMcqProps;
 }): Promise<McqResult> {
   const fullMcq = z.object({
     question: z
@@ -48,10 +48,21 @@ export async function generateFullMcq({
     name: "Multiple-Choice-Question",
   });
 
+  const modelPrompt = `Generate a Multiple Choice Question for an assessment titled ${
+    assessmentDetails.assessmentTitle
+  }. The objectives of the asssessment are: ${
+    assessmentDetails.assessmentObjectives
+  }. ${
+    assessmentDetails.existingQuestions.length > 0
+      ? "The question MUST BE DIFFERENT FROM " +
+        assessmentDetails.existingQuestions
+      : ""
+  }`;
 
-  const response = await structuredLlm.invoke(
-    `Generate a Multiple Choice Question for an assessment titled ${assessmentDetails.assessmentTitle}. The objectives of the asssessment are: ${assessmentDetails.assessmentObjectives}. The question must be semantically different from ${assessmentDetails.existingQuestions}`
-  );
+  // Debug only.
+  // console.log(modelPrompt);
+
+  const response = await structuredLlm.invoke(modelPrompt);
 
   return response;
 }

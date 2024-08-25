@@ -103,7 +103,7 @@ model Assessment {
 model TeacherFeedback {
   id               String     @id @default(uuid())
   content          String
-  assessment       Assessment @relation(fields: [assessmentId], references: [id])
+  assessment       Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
   assessmentId     String     @unique
   submissionCount  Int
   lastSubmission   Submission @relation(fields: [lastSubmissionId], references: [id])
@@ -151,11 +151,11 @@ model Response {
   createdAt        DateTime       @default(now()) @map(name: "created_at")
   submission       Submission     @relation(fields: [submissionId], references: [id], onDelete: Cascade)
   submissionId     String
-  assessmentItem   AssessmentItem @relation(fields: [assessmentItemId], references: [id])
+  assessmentItem   AssessmentItem @relation(fields: [assessmentItemId], references: [id], onDelete: Cascade)
   assessmentItemId String
   user             User           @relation("UserResponses", fields: [userId], references: [id])
   userId           String
-  givenAnswer      Answer         @relation(fields: [givenAnswerId], references: [id])
+  givenAnswer      Answer         @relation(fields: [givenAnswerId], references: [id], onDelete: Cascade)
   givenAnswerId    String
   isCorrect        Boolean
 }

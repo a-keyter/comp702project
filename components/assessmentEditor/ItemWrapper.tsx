@@ -1,8 +1,8 @@
+"use client"
+
 import { Answer, AssessmentItem } from "@prisma/client";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect, useRef, ChangeEvent } from "react";
+import { useEffect, useRef, ChangeEvent } from "react";
 
 import {
   DropdownMenu,
@@ -11,7 +11,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Sparkle } from "lucide-react";
 
 interface ItemWrapperProps {
   item: AssessmentItem;

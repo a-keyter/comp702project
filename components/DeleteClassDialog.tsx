@@ -23,7 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import LoadingSpinner from "./LoadingSpinner";
 import { deleteClass } from "@/lib/classUtils/deleteClass";
 
@@ -37,7 +37,6 @@ function DeleteClassDialog({
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const FormSchema = z.object({
     confirmClassId: z
@@ -76,7 +75,7 @@ function DeleteClassDialog({
       setOpen(false);
 
       // Redirect to a different page after deletion
-      router.push("/classes");
+      redirect("/dashboard")
     } catch (err) {
       setLoading(false);
       console.error("Error deleting class:", err);
