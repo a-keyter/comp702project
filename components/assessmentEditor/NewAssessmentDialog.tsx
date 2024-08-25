@@ -27,32 +27,35 @@ const NewAssessmentDialog: React.FC<NewAssessmentDialogProps> = ({
 }) => {
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[450px]">
         <DialogHeader>
           <DialogTitle>Create New Assessment</DialogTitle>
           <DialogDescription>
             Choose how you&apos;d like to start creating your assessment.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid grid-cols-3 gap-4 py-4">
+        <div className="grid grid-cols-2 gap-4 py-4">
           <button
             className="hover:bg-slate-400 p-4 rounded-lg border-slate-300 border-2"
             onClick={onGenerateMCQs}
           >
             <div className="flex flex-col gap-y-4 items-center">
               <Sparkle />
-              <p>Use GPT-4.0 to generate MCQs*</p>
+              <p>Use GPT-4.0 to generate MCQs</p>
             </div>
           </button>
-          <button
+
+          {/* TODO - Enable user to upload PDF and generate MCQs */}
+          {/* <button
             className="hover:bg-slate-400 p-4 rounded-lg border-slate-300 border-2"
             onClick={onUploadPDF}
           >
             <div className="flex flex-col gap-y-4 items-center">
               <UploadCloud />
-              <p>Use a PDF & AI to generate MCQs*</p>
+              <p>Use a PDF & AI to generate MCQs</p>
             </div>
-          </button>
+          </button> */}
+
           <button
             className="hover:bg-slate-400 p-4 rounded-lg border-slate-300 border-2"
             onClick={onCreateFromScratch}

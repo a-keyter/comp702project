@@ -8,7 +8,6 @@ import { Button } from "../ui/button";
 import { saveAssessmentItems } from "@/lib/assessmentUtils/saveAssessmentItems";
 import { useRouter } from "next/navigation";
 import LoadingSpinner from "../LoadingSpinner";
-import Link from "next/link";
 import { Trash } from "lucide-react";
 import { generateFullMcq } from "@/lib/langchainGenerations/generateMCQ";
 import { generateAnswers } from "@/lib/langchainGenerations/generateAnswers";
@@ -595,10 +594,7 @@ function AssessmentEditor({
       </Card>
 
       {assessmentItems.map((item, index) => (
-        <Card
-          key={item.id}
-          className="flex flex-col border-2 p-2 w-full"
-        >
+        <Card key={item.id} className="flex flex-col border-2 p-2 w-full">
           <div className="flex justify-between items-center mb-2">
             <span className="font-bold">Item {index + 1}</span>
             <div className="flex gap-x-2">

@@ -1,4 +1,3 @@
-// ResponseDataTable.tsx
 "use client";
 
 import * as React from "react";

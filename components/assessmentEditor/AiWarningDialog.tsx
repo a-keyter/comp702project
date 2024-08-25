@@ -10,7 +10,7 @@ interface AIWarningDialogProps {
 const AIWarningDialog: React.FC<AIWarningDialogProps> = ({ open, onClose }) => {
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className='sm:max-w-[450px]'>
         <DialogHeader>
           <DialogTitle>AI-Generated Content Warning</DialogTitle>
         </DialogHeader>
