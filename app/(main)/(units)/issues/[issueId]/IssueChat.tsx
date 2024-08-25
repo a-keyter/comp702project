@@ -136,12 +136,12 @@ export default function IssueChat({
                     {userName === message.sender.name &&
                       message === messages[0] && (
                         <div className="flex gap-x-2">
-                          <button
+                          {/* <button
                             title="Edit Message"
                             className="bg-blue-300 p-1 rounded-lg"
                           >
                             <Pencil className="h-4 w-4" />
-                          </button>
+                          </button> */}
                         </div>
                       )}
                   </div>
