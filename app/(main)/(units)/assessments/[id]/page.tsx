@@ -107,11 +107,11 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
               <Link href={`/assessments/preview/${assessmentData.id}`}>
                 <Button>View</Button>
               </Link>
-              <Link href={`/assessments/edit/${assessmentData.id}`}>
+              {/* <Link href={`/assessments/edit/${assessmentData.id}`}>
                 <Button className="bg-yellow-300 text-black hover:text-white">
                   Edit
                 </Button>
-              </Link>
+              </Link> */}
               <DeleteAssessmentDialog
                 className=""
                 content="Delete"
@@ -207,6 +207,7 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
               ? results[0].feedback
               : "No Feedback Available."}
           </p>
+          {results.length > 0 && <p className="text-sm text-center">AI Generated Feedback may be inacurate.</p>}
         </Card>
       )}
 

@@ -83,6 +83,7 @@ function ResultsDisplay({
           />
         </div>
         <p>{feedback ? feedback : "No Feedback Available."}</p>
+        {feedback && <p className="text-sm text-center">AI Generated Feedback may be inacurate.</p>}
       </Card>
       <div className="space-y-4">
         {responses.map((response, index) => (
