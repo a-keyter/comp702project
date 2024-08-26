@@ -76,13 +76,13 @@ export default function TeacherFeedback({
     return (
       <div className="w-full flex flex-col space-y-3">
         <h2 className="font-semibold text-xl">AI Generated Feedback</h2>
-        <Skeleton className="h-20 w-full" />
+        <Skeleton className="h-[250px] w-full" />
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col space-y-2">
       <h2 className="font-semibold text-xl">AI Generated Feedback</h2>
       <p>{feedbackContent}</p>
     </div>

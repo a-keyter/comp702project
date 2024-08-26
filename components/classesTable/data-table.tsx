@@ -32,7 +32,6 @@ import { Input } from "../ui/input";
 import CreateClassDialog from "../CreateClassDialog";
 import Link from "next/link";
 import JoinClassDialog from "../JoinClassDialog";
-import { Link2 } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

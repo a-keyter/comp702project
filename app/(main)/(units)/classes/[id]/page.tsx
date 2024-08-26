@@ -19,6 +19,8 @@ async function ClassPage({ params }: { params: { id: string } }) {
      redirect("/dashboard");
   }
 
+  // console.log("Current Member Count: " + classData.memberCount)
+
   const user = await getUserDetails();
   const userRole = user?.role;
 
@@ -86,6 +88,7 @@ async function ClassPage({ params }: { params: { id: string } }) {
         <TeacherViewSelect
           classId={classData.id}
           classTitle={classData.title}
+          classMemberCount={classData.memberCount}
         />
       )}
 

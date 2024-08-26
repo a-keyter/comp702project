@@ -62,7 +62,7 @@ function HardestQuestions({ assessmentId }: { assessmentId: string }) {
   if (loading)
     return (
       <div className="flex flex-col gap-y-4">
-        <Skeleton className="h-32 w-full"/>
+        <Skeleton className="h-[250px] w-full"/>
       </div>
     );
   if (error) return <div>Error: {error}</div>;
@@ -91,7 +91,7 @@ function HardestQuestions({ assessmentId }: { assessmentId: string }) {
                 {Object.entries(question.incorrect_answers).map(
                   ([answer, percentage], i) => (
                     <li key={i} className="mb-1 text-red-600">
-                      {answer}: {percentage}%
+                      {answer} ({percentage}%)
                     </li>
                   )
                 )}

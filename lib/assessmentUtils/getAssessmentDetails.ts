@@ -217,6 +217,78 @@ export async function getClassAssessmentsTeacher(classId: string) {
   }
 }
 
+export async function getLiveClassAssessmentsTeacher(classId: string) {
+  const { userId } = auth();
+
+  if (!userId) {
+    return null;
+  }
+
+  try {
+    const assessments = await prisma.assessment.findMany({
+      where: {
+        class: { taughtBy: { some: { id: userId } } },
+        classId: classId, // Filter by classId
+        status: "LIVE",
+      },
+      include: {
+        submissions: {
+          orderBy: {
+            createdAt: "desc",
+          },
+          select: {
+            userId: true,
+            score: true,
+          },
+        },
+        class: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
+      },
+      orderBy: {
+        dueDate: "asc",
+      },
+    });
+
+    const assessmentsWithStats = assessments.map((assessment) => {
+      const uniqueUserSubmissions = new Map();
+
+      // Get the most recent submission for each unique user
+      assessment.submissions.forEach((submission) => {
+        if (!uniqueUserSubmissions.has(submission.userId)) {
+          uniqueUserSubmissions.set(submission.userId, submission.score);
+        }
+      });
+
+      const submissionCount = uniqueUserSubmissions.size;
+      let averageScore: number | string = "N/A";
+
+      if (submissionCount > 0) {
+        const totalScore = Array.from(uniqueUserSubmissions.values()).reduce(
+          (sum, score) => sum + (score || 0),
+          0
+        );
+        averageScore = (totalScore / submissionCount).toFixed(2);
+      }
+
+      return {
+        ...assessment,
+        submissionCount,
+        averageScore,
+        submissions: undefined,
+      };
+    });
+
+    return assessmentsWithStats;
+  } catch (error) {
+    console.error("Error fetching class assessments data:", error);
+    throw error;
+  }
+}
+
 export async function getStudentAssessmentData() {
   const { userId } = auth();
   if (!userId) {

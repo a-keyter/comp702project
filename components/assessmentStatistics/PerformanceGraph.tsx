@@ -13,6 +13,7 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  ResponsiveContainer,
 } from "recharts";
 import { Skeleton } from "../ui/skeleton";
 
@@ -37,7 +38,7 @@ function PerformanceGraph({ assessmentId }: { assessmentId: string }) {
   }, [assessmentId]);
 
   if (isLoading) {
-    return <Skeleton className="h-[400px]"/>;
+    return <Skeleton className="h-[300px]" />;
   }
 
   if (!isLoading && data.length === 0) {
@@ -61,16 +62,19 @@ function PerformanceGraph({ assessmentId }: { assessmentId: string }) {
   };
 
   return (
-    <>
+    <ResponsiveContainer width="100%" height={300}>
+
       <BarChart
-        height={300}
-        width={400}
         data={data}
         margin={{ top: 20, right: 0, bottom: 20, left: 0 }}
       >
         <CartesianGrid />
-        <XAxis dataKey="questionNumber" />
-        {/* <YAxis interval={1} label={{ value: "Submissions", angle: -90 }} /> */}
+        <XAxis
+          dataKey="questionNumber"
+          interval={0}
+          type="category"
+          tick={{ fontSize: 12 }}
+        />{" "}
         <Tooltip content={<CustomTooltip />} />
         <Legend />
         <Bar
@@ -86,7 +90,7 @@ function PerformanceGraph({ assessmentId }: { assessmentId: string }) {
           fill="#f69697"
         />
       </BarChart>
-    </>
+    </ResponsiveContainer>
   );
 }
 

@@ -1,3 +1,4 @@
+import LateLoadAssessmentsGraph from "@/components/assessmentsTable/LateLoadAssessmentsGraph";
 import LateLoadTeacherAssessmentTable from "@/components/assessmentsTable/LateLoadTeacherAssessmentTable";
 import LateLoadStudentsByClassTable from "@/components/studentsTable/LateLoadStudentsByClassTable";
 import { Card } from "@/components/ui/card";
@@ -6,11 +7,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 export default function TeacherViewSelect({
   classId,
   classTitle,
+  classMemberCount,
 }: {
   classId: string;
   classTitle: string;
+  classMemberCount: number;
 }) {
-  // console.log("TeacherViewSelect props:", { classId, classTitle });
+  // console.log("TeacherViewSelect props:", { classId, classTitle, classMemberCount });
 
   return (
     <Tabs defaultValue="assessments" className="w-full">
@@ -21,9 +24,9 @@ export default function TeacherViewSelect({
         <TabsTrigger value="students" className="col-span-1">
           Students
         </TabsTrigger>
-        {/* <TabsTrigger value="results" className="col-span-1">
-          Performance
-        </TabsTrigger> */}
+        <TabsTrigger value="results" className="col-span-1">
+          Statistics
+        </TabsTrigger>
       </TabsList>
       <TabsContent value="assessments">
         <Card className="w-full p-2">
@@ -41,11 +44,9 @@ export default function TeacherViewSelect({
           />
         </Card>
       </TabsContent>
-      {/* <TabsContent value="results">
-        <Card className="w-full p-2">
-          Assessment Graph goes here.
-        </Card>
-      </TabsContent> */}
+      <TabsContent value="results">
+        <LateLoadAssessmentsGraph classId={classId} classMemberCount={classMemberCount} />
+      </TabsContent>
     </Tabs>
   );
 }
