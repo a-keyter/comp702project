@@ -8,18 +8,19 @@ async function PreviewAssessmentPage({ params }: { params: { id: string } }) {
   const assessmentData = await getAssessmentById(params.id);
 
   if (!assessmentData) {
-    notFound();
+    redirect("/dashboard")
   }
+  
   const assessmentItems = await loadAssessmentItems(params.id);
 
   const user = await getUserDetails();
 
   if (!user) {
-    return redirect("/onboard");
+    redirect("/onboard");
   }
 
   if (user.role === "STUDENT") {
-    return redirect(`/assessments/${params.id}`);
+    redirect(`/assessments/${params.id}`);
   }
 
   return (

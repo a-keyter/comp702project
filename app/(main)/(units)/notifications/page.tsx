@@ -1,6 +1,5 @@
 import { Card } from "@/components/ui/card";
 import { getUserNotifications } from "@/lib/notificationUtils/getUserNotifications";
-import Link from "next/link";
 import { NotificationType } from "@prisma/client";
 import NotificationItemWrapper from "./NotificationItemWrapper";
 import { clearUnreadNotifications } from "@/lib/notificationUtils/clearNotifications";

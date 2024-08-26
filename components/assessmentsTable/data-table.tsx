@@ -144,7 +144,7 @@ export function AssessmentDataTable<TData, TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+                No assessments found.
               </TableCell>
             </TableRow>
           )}

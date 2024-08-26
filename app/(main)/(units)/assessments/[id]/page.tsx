@@ -18,6 +18,7 @@ import { getStudentResultsByAssessmentId } from "@/lib/assessmentUtils/getStuden
 import { getUserDetails } from "@/lib/userUtils/getUserDetails";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { AssessmentViewSelect } from "./AssessmentViewSelect";
 
 async function AssessmentPage({ params }: { params: { id: string } }) {
   const assessmentData = await getAssessmentById(params.id);
@@ -83,7 +84,6 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
             />
           )}
         </div>
-        {/* THIS PESKY CONTAINER */}
         <div className="flex flex-col justify-between">
         {user.role === "TEACHER" && assessmentData.status === "DRAFT" && (
             <div className="flex space-x-4 justify-end">
@@ -107,11 +107,6 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
               <Link href={`/assessments/preview/${assessmentData.id}`}>
                 <Button>View</Button>
               </Link>
-              {/* <Link href={`/assessments/edit/${assessmentData.id}`}>
-                <Button className="bg-yellow-300 text-black hover:text-white">
-                  Edit
-                </Button>
-              </Link> */}
               <DeleteAssessmentDialog
                 className=""
                 content="Delete"
@@ -172,26 +167,28 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
         )}
       </div>
 
-      {results && (
-        <div className="w-full mt-2">
-          {user.role === "TEACHER" ? (
-            <AllResponsesDataTable
-              columns={responseColumns}
-              data={results}
-              assessmentTitle={assessmentData.title}
-            />
-          ) : (
-            <StudentDataTable
+      {results && user.role === "TEACHER" && 
+      <AssessmentViewSelect
+        results={results}
+        assessmentId={assessmentData.id}
+        assessmentTitle={assessmentData.title}
+        averageScore={averageScore}
+        latestSubmissionId={assessmentData.submissions[0].id}
+        membersCount={assessmentData.class._count.members}
+        submissionCount={submissionCount}
+      />  
+      }
+
+      {results && user.role === "STUDENT" && (
+        <div className="flex flex-col gap-y-4">
+        <div className="w-full">
+          <StudentDataTable
               columns={studentColumns}
               data={results}
               assessmentTitle={assessmentData.title}
             />
-          )}
         </div>
-      )}
-
-      {results && user.role === "STUDENT" && (
-        <Card className="p-2 mt-2">
+        <Card className="p-2">
           <div className="flex justify-between items-end py-2 mb-2 border-b-2">
             <h3 className="font-bold text-xl ">Feedback</h3>
             {results.length > 0 && (
@@ -207,46 +204,8 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
               ? results[0].feedback
               : "No Feedback Available."}
           </p>
-          {results.length > 0 && <p className="text-sm text-center">AI Generated Feedback may be inacurate.</p>}
+          {results.length > 0 && <p className="text-sm text-center pt-1 mt-1 border-t-2">AI Generated Feedback may be inacurate.</p>}
         </Card>
-      )}
-
-      {assessmentData.submissions.length > 0 && user.role === "TEACHER" && (
-        <div className="mt-4">
-          <div>
-            <h2 className="font-semibold text-2xl text-center">
-              Assessment Analysis
-            </h2>
-          </div>
-          <div>
-            <Card className="p-2 mt-2">
-              <TeacherFeedback
-                assessmentId={assessmentData.id}
-                averageScore={averageScore}
-                membersCount={assessmentData.class._count.members}
-                latestSubmissionId={assessmentData.submissions[0].id}
-                submissionCount={submissionCount}
-              />
-            </Card>
-          </div>
-          <div className="grid grid-cols-6 gap-x-2 mt-2">
-            <Card className="w-full p-4 col-span-3 flex flex-col">
-              <h2 className="text-xl font-semibold">Assessment Performance</h2>
-              <div className="items-center justify-center">
-                <PerformanceGraph assessmentId={assessmentData.id} />
-              </div>
-              {results && results?.length > 0 && (
-                <p className="text-center">Total Responses: {results.length}</p>
-              )}
-            </Card>
-
-            <Card className="col-span-3 p-2">
-              <h3 className="text-xl font-semibold">
-                Most Challenging Questions
-              </h3>
-              <HardestQuestions assessmentId={params.id} />
-            </Card>
-          </div>
         </div>
       )}
     </div>

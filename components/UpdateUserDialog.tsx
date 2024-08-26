@@ -83,7 +83,7 @@ function UpdateUserDialog({ user }: { user: SafeUser }) {
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
           <DialogDescription>
-            Make changes to your profile here. Click save when you are done.
+            Make changes to your profile here. <br /> Click save when you are done.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -114,7 +114,7 @@ function UpdateUserDialog({ user }: { user: SafeUser }) {
                     <Input {...field} />
                   </FormControl>
                   <FormDescription>
-                    This is your public display name.
+                    This is used to create a link to your profile. <br />(Alphanumerical characters Only)
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

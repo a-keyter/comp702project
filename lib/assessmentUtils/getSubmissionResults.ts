@@ -26,10 +26,10 @@ export interface SubmissionResult {
 }
 
 export async function getSubmissionResults(submissionId: string): Promise<SubmissionResult | null> {
-  const { userId } = auth()
+  const { userId } = auth();
   
   if (!userId) {
-    return null
+    return null;
   }
 
   try {
@@ -38,8 +38,19 @@ export async function getSubmissionResults(submissionId: string): Promise<Submis
       include: {
         assessment: { 
           include: { 
-            class: true,
-            createdBy: true
+            class: {
+              include: {
+                taughtBy: {
+                  where: { id: userId },
+                  select: { id: true },
+                },
+                members: {
+                  where: { id: userId },
+                  select: { id: true },
+                },
+              },
+            },
+            createdBy: true,
           } 
         },
         responses: {
@@ -56,17 +67,8 @@ export async function getSubmissionResults(submissionId: string): Promise<Submis
       return null;
     }
 
-    // Check if the current user is the creator of the class or a member of the class
-    const classMembers = await prisma.class.findUnique({
-      where: { id: submission.assessment.classId },
-      include: { 
-        taughtBy: true,
-        members: true }
-    });
-
-
-    const isTeacher = classMembers?.taughtBy.some(teacher => teacher.id === userId) || false;
-    const isMember = classMembers?.members.some(member => member.id === userId) || false;
+    const isTeacher = submission.assessment.class.taughtBy.length > 0;
+    const isMember = submission.assessment.class.members.length > 0;
 
     if (!isTeacher && !isMember) {
       console.error('User is not authorized to view these results');

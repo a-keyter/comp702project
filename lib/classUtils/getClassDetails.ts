@@ -4,6 +4,7 @@ import { Class } from "@prisma/client";
 import { prisma } from "../initPrisma";
 import { getUserById, SafeUser } from "../userUtils/getUserDetails";
 import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 export type SafeClass = {
   id: string;
@@ -22,6 +23,12 @@ export type ClassWithCreator = {
 export async function getClassById(
   classId: string
 ): Promise<(Class & { memberCount: number }) | null> {
+  const { userId } = auth();
+
+  if (!userId) {
+    redirect('/'); // Redirect to login if no user is authenticated
+  }
+
   try {
     const classData = await prisma.class.findUnique({
       where: {
@@ -31,10 +38,23 @@ export async function getClassById(
         _count: {
           select: { members: true },
         },
+        taughtBy: {
+          where: { id: userId },
+          select: { id: true },
+        },
+        members: {
+          where: { id: userId },
+          select: { id: true },
+        },
       },
     });
 
     if (!classData) {
+      return null;
+    }
+
+    // Check if the user is neither teaching nor a member of the class
+    if (classData.taughtBy.length === 0 && classData.members.length === 0) {
       return null;
     }
 
@@ -66,49 +86,6 @@ export async function getClassTitleById(
     return classData ? classData.title : null;
   } catch (error) {
     console.error("Error fetching class title:", error);
-    throw error;
-  } finally {
-    await prisma.$disconnect();
-  }
-}
-
-export async function getClassWithCreator(classCode: string) {
-  try {
-    // Fetch the class data
-    const classData = await prisma.class.findUnique({
-      where: {
-        id: classCode.toLowerCase(), // Ensure we're using lowercase for consistency
-      },
-      // Buggy Taught By
-      include: {
-        taughtBy: true,
-      },
-    });
-
-    if (!classData) {
-      return null; // Class not found
-    }
-
-    // Fetch the creator's details using the createdById
-    const teacherDetails = await getUserById(classData.taughtBy[0]?.id);
-
-    if (!teacherDetails) {
-      return null; // Creator not found.
-    }
-
-    return {
-      class: {
-        id: classData.id,
-        title: classData.title,
-        description: classData.description,
-        createdAt: classData.createdAt,
-        updatedAt: classData.updatedAt,
-      },
-      // Buggy Taught By
-      teacherDetails,
-    };
-  } catch (error) {
-    console.error("Error fetching class with creator:", error);
     throw error;
   } finally {
     await prisma.$disconnect();

@@ -6,23 +6,24 @@ import { getStudentsByClassWithStats } from "@/lib/studentUtils/getStudentsByCla
 import { getUserDetails } from "@/lib/userUtils/getUserDetails";
 import { redirect } from "next/navigation";
 
-
 async function ClassStudentsPage({ params }: { params: { id: string } }) {
   const user = await getUserDetails();
-  const classData = await getClassById(params.id)
-  const classStudentsData = await getStudentsByClassWithStats(params.id);
 
   if (!user) {
     return redirect("/onboard");
   }
 
+  if (user.role !== "TEACHER") {
+    return redirect(`/classes/${params.id}`);
+  }
+
+  const classData = await getClassById(params.id)
+
   if (!classData) {
     return redirect("/dashboard")
   }
 
-  if (user.role !== "TEACHER") {
-    return redirect(`/classes/${params.id}`);
-  }
+  const classStudentsData = await getStudentsByClassWithStats(params.id);
 
   return (
     <div className="w-full max-w-4xl">

@@ -6,7 +6,7 @@ import UpdateClassDialog from "@/components/UpdateClassDialog";
 import { getClassById } from "@/lib/classUtils/getClassDetails";
 import { getUserDetails } from "@/lib/userUtils/getUserDetails";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import LeaveClassDialog from "./LeaveClassDialog";
 import { getAssessmentCount } from "@/lib/assessmentUtils/getAssessmentCount";
 import TeacherViewSelect from "./TeacherViewSelect";
@@ -16,7 +16,7 @@ async function ClassPage({ params }: { params: { id: string } }) {
   const classData = await getClassById(params.id);
 
   if (!classData) {
-    notFound();
+     redirect("/dashboard");
   }
 
   const user = await getUserDetails();

@@ -1,8 +1,13 @@
 import ResultsDisplay from "@/components/assessmentAttempt/ResultsDisplay";
 import { getSubmissionResults } from "@/lib/assessmentUtils/getSubmissionResults";
+import { redirect } from "next/navigation";
 
 async function AssessmentResultsPage({ params }: { params: { id: string } }) {
   const results = await getSubmissionResults(params.id);
+
+  if (!results) {
+    redirect("/dashboard")
+  }
 
   return (
     <div className="w-full max-w-4xl">

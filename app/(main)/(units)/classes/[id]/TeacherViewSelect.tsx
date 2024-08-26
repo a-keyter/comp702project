@@ -21,9 +21,9 @@ export default function TeacherViewSelect({
         <TabsTrigger value="students" className="col-span-1">
           Students
         </TabsTrigger>
-        <TabsTrigger value="results" className="col-span-1">
+        {/* <TabsTrigger value="results" className="col-span-1">
           Performance
-        </TabsTrigger>
+        </TabsTrigger> */}
       </TabsList>
       <TabsContent value="assessments">
         <Card className="w-full p-2">
@@ -41,13 +41,11 @@ export default function TeacherViewSelect({
           />
         </Card>
       </TabsContent>
-      <TabsContent value="results">
+      {/* <TabsContent value="results">
         <Card className="w-full p-2">
-          {/*  */}
           Assessment Graph goes here.
-          {/*  */}
         </Card>
-      </TabsContent>
+      </TabsContent> */}
     </Tabs>
   );
 }

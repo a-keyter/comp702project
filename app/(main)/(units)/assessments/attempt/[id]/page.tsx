@@ -10,6 +10,12 @@ async function AttemptAssessmentPage({ params }: { params: { id: string } }) {
   if (!assessmentData) {
     notFound();
   }
+
+  if (assessmentData.status === "DRAFT") {
+    redirect("/dashboard")
+  }
+
+
   const assessmentItems = await loadAssessmentItems(params.id);
 
   const user = await getUserDetails();

@@ -59,6 +59,7 @@ export type SafeUser = {
   name: string;
   nickname: string;
   role: string;
+  email: string;
 };
 
 // GET CURRENT USER DETAILS
@@ -80,6 +81,7 @@ export async function getUserDetails(): Promise<SafeUser | null> {
     name: user.name,
     nickname: user.nickname,
     role: user.role,
+    email: user.email,
   };
 }
 

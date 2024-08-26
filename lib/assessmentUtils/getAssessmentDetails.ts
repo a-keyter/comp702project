@@ -2,8 +2,15 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "../initPrisma";
+import { redirect } from "next/navigation";
 
 export async function getAssessmentById(id: string) {
+  const { userId } = auth();
+
+  if (!userId) {
+    redirect('/'); // Redirect to login if no user is authenticated
+  }
+
   try {
     const assessment = await prisma.assessment.findUnique({
       where: { id },
@@ -13,6 +20,14 @@ export async function getAssessmentById(id: string) {
           include: {
             _count: {
               select: { members: true },
+            },
+            taughtBy: {
+              where: { id: userId },
+              select: { id: true },
+            },
+            members: {
+              where: { id: userId },
+              select: { id: true },
             },
           },
         },
@@ -38,6 +53,10 @@ export async function getAssessmentById(id: string) {
 
     if (!assessment) {
       return null;
+    }
+
+    if (assessment.class.taughtBy.length === 0 && assessment.class.members.length === 0) {
+      redirect('/dashboard'); // Redirect to dashboard if user doesn't have access to assessment.
     }
 
     return {

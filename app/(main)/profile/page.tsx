@@ -14,7 +14,7 @@ export default async function ProfilePage() {
   const classes = await getUserClasses();
 
   return (
-    <div className="flex flex-col w-full max-w-4xl gap-y-2">
+    <div className="flex flex-col w-full max-w-4xl gap-y-4">
       <UserDetails user={user} />
       {classes && (
         <ClassDataTable

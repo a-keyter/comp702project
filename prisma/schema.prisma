@@ -44,6 +44,7 @@ enum NotificationType {
   FEEDBACK_ISSUE_RAISED
   QUESTION_ISSUE_RAISED
   NEW_ISSUE_MESSAGE
+  CLASS_REMOVAL
 }
 
 model User {

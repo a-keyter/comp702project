@@ -18,6 +18,10 @@ async function page() {
 
   const classes = await getUserClasses();
 
+  if (!classes){
+    redirect("/dashboard")
+  }
+
   const teacherAssessments = await getTeacherAssessmentData();
   const studentAssessments = await getStudentAssessmentData();
 
