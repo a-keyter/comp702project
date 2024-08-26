@@ -19,7 +19,7 @@ interface AssessmentViewSelectProps {
   averageScore: number;
   submissionCount: number;
   membersCount: number;
-  latestSubmissionId: string;
+  latestSubmissionId: string | null;
 }
 
 export function AssessmentViewSelect({
@@ -29,23 +29,23 @@ export function AssessmentViewSelect({
 ) {
   return (
     <Tabs defaultValue="submissions" className="w-full">
-      <TabsList className="grid w-full grid-cols-8">
+      <TabsList className="grid w-full grid-cols-6">
         <TabsTrigger value="submissions" className="col-span-1">
           Submissions
         </TabsTrigger>
         <TabsTrigger
           value="analysis"
-          className="col-span-1"
+          className="col-span-1 flex items-center"
           disabled={results.length === 0}
         >
-          AI Feedback {results.length === 0 && <Lock />}
+          AI Feedback {results.length === 0 && <Lock className="h-6 w-6 pl-2"/>}
         </TabsTrigger>
         <TabsTrigger
           value="statistics"
-          className="col-span-1"
+          className="col-span-1 flex items-center"
           disabled={results.length === 0}
         >
-          Statistics {results.length === 0 && <Lock />}
+          Statistics {results.length === 0 && <Lock className="h-6 w-6 pl-2"/>}
         </TabsTrigger>
       </TabsList>
       <TabsContent value="submissions">
@@ -63,7 +63,7 @@ export function AssessmentViewSelect({
             assessmentId={assessmentId}
             averageScore={averageScore}
             membersCount={membersCount}
-            latestSubmissionId={latestSubmissionId}
+            latestSubmissionId={latestSubmissionId!}
             submissionCount={submissionCount}
           />
         </Card>

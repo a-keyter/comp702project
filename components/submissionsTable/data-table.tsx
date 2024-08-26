@@ -58,7 +58,7 @@ export function AllResponsesDataTable<TData, TValue>({
   return (
     <Card className="rounded-md border flex flex-col gap-y-1 px-2 pt-1 h-full">
       <div className="flex justify-between items-center">
-        <h2 className="font-semibold text-xl">
+        <h2 className="font-semibold text-xl pl-2">
         Submissions
         </h2>
         <div className="flex gap-x-4 py-1 w-full max-w-md justify-end">

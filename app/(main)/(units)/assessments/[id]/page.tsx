@@ -1,11 +1,6 @@
-import TeacherFeedback from "@/components/assessmentStatistics/GroupFeedback";
-import HardestQuestions from "@/components/assessmentStatistics/HardestQuestions";
-import PerformanceGraph from "@/components/assessmentStatistics/PerformanceGraph";
 import DeleteAssessmentDialog from "@/components/DeleteAssessmentDialog";
 import ReportIssueDialog from "@/components/ReportIssueDialog";
 
-import { responseColumns } from "@/components/submissionsTable/columns";
-import { AllResponsesDataTable } from "@/components/submissionsTable/data-table";
 import { studentColumns } from "@/components/submissionsTable/student-columns";
 import { StudentDataTable } from "@/components/submissionsTable/student-data-table";
 import { Badge } from "@/components/ui/badge";
@@ -173,7 +168,7 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
         assessmentId={assessmentData.id}
         assessmentTitle={assessmentData.title}
         averageScore={averageScore}
-        latestSubmissionId={assessmentData.submissions[0].id}
+        latestSubmissionId={assessmentData.submissions[0]?.id || null}
         membersCount={assessmentData.class._count.members}
         submissionCount={submissionCount}
       />  
