@@ -1,13 +1,11 @@
 "use client"
 
 import React, { useState, useEffect } from "react";
-import { TrendingUp } from "lucide-react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -42,10 +40,10 @@ const CustomTooltip = ({ active, payload }: any) => {
         <p className="font-bold">{data.xAxisLabel.split(' - ')[0]} - {data.assessmentTitle}</p>
         <p>Latest Score: {data.latestScore.toFixed(2)}</p>
         <p>Due Date: {formatDate(new Date(data.dueDate))}</p>
-        <p>Status: 
+        <p>
           {data.submissionDate
-            ? ` Submitted on ${formatDate(new Date(data.submissionDate))}`
-            : " Not Submitted"}
+            ? `Submitted: ${formatDate((data.submissionDate))}`
+            : "Status: Not Submitted"}
         </p>
       </div>
     );
@@ -81,22 +79,10 @@ export default function SingleClassStudentAssessmentStats({
     fetchAssessmentData();
   }, [studentNickname, classId]);
 
-  const getAverageScore = () => {
-    if (assessmentData.length === 0) return 0;
-    const sum = assessmentData.reduce((acc, curr) => acc + curr.latestScore, 0);
-    return (sum / assessmentData.length).toFixed(2);
-  };
-
-  const getTrendPercentage = () => {
-    if (assessmentData.length < 2) return 0;
-    const firstScore = assessmentData[0].latestScore;
-    const lastScore = assessmentData[assessmentData.length - 1].latestScore;
-    return (((lastScore - firstScore) / firstScore) * 100).toFixed(1);
-  };
+  if (loading) return <Skeleton className="w-full h-80"/>
 
   return (
-    <div className="grid grid-cols-6 gap-4 w-full">
-      <Card className="col-span-6 mt-4">
+      <div className="w-full p-2">
         <CardHeader>
           <CardTitle className="mb-2">Assessment Scores Over Time</CardTitle>
         </CardHeader>
@@ -117,16 +103,6 @@ export default function SingleClassStudentAssessmentStats({
             <p>No assessment data available for this class</p>
           )}
         </CardContent>
-        <CardFooter className="flex-col items-start gap-2 text-sm">
-          <div className="flex gap-2 font-medium leading-none">
-            Trending {Number(getTrendPercentage()) >= 0 ? "up" : "down"} by {Math.abs(Number(getTrendPercentage()))}% 
-            <TrendingUp className={`h-4 w-4 ${Number(getTrendPercentage()) >= 0 ? 'text-green-500' : 'text-red-500'}`} />
-          </div>
-          <div className="leading-none text-muted-foreground">
-            Average score: {getAverageScore()}
-          </div>
-        </CardFooter>
-      </Card>
-    </div>
+      </div>
   );
 }

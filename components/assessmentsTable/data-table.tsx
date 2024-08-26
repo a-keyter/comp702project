@@ -68,7 +68,7 @@ export function AssessmentDataTable<TData, TValue>({
     initialState: {
       pagination: {
         pageIndex: 0,
-        pageSize: tableSize === "small" ? 4 : 12, //custom default page size
+        pageSize: tableSize === "small" ? 5 : 12, //custom default page size
       },
     },
     onSortingChange: setSorting,
@@ -82,7 +82,7 @@ export function AssessmentDataTable<TData, TValue>({
   });
 
   return (
-    <Card className="rounded-md border flex flex-col gap-y-1 px-2 pt-1 h-full">
+    <div className="flex flex-col gap-y-1 h-full">
       <div className="flex justify-between items-center">
         <h2 className="font-semibold text-xl pl-2">
           {display} Assessments
@@ -170,6 +170,6 @@ export function AssessmentDataTable<TData, TValue>({
           Next
         </Button>
       </div>
-    </Card>
+    </div>
   );
 }

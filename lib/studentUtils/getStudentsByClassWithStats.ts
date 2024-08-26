@@ -5,6 +5,7 @@ import { prisma } from "../initPrisma";
 export type Student = {
   name: string;
   nickname: string;
+  classId: string;
   assessmentsCompleted: string;
   averageGrade: number;
 };
@@ -65,6 +66,7 @@ export async function getStudentsByClassWithStats(
         return {
           name: student.name,
           nickname: student.nickname,
+          classId: classId,
           assessmentsCompleted: `${assessmentsCompleted} out of ${totalAssessments}`,
           averageGrade: Number(averageGrade.toFixed(2)),
         };

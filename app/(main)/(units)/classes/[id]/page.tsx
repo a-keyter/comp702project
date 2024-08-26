@@ -1,26 +1,16 @@
 import AddStudentsDialog from "@/components/AddStudentsDialog";
-import { AssessmentDataTable } from "@/components/assessmentsTable/data-table";
-import { oneClassAssessmentColumns } from "@/components/assessmentsTable/oneClassAssessmentColumns";
-import { oneClassStudentAssessmentColumns } from "@/components/assessmentsTableStudent/oneClassAssessmentColumnsStudent";
 import DeleteClassDialog from "@/components/DeleteClassDialog";
-import LateLoadStudentAssessmentStats from "@/app/(main)/(units)/students/[nickname]/LateLoadStudentAssessmentStats";
-import { classStudentsColumns } from "@/components/studentsTable/columns";
-import { ClassStudentsDataTable } from "@/components/studentsTable/data-table";
-import LateLoadStudentsByClassTable from "@/components/studentsTable/LateLoadStudentsByClassTable";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import UpdateClassDialog from "@/components/UpdateClassDialog";
-import {
-  getClassAssessmentsStudent,
-  getClassAssessmentsTeacher,
-} from "@/lib/assessmentUtils/getAssessmentDetails";
+
 import { getClassById } from "@/lib/classUtils/getClassDetails";
-import { getUserById, getUserDetails } from "@/lib/userUtils/getUserDetails";
-import { Plus } from "lucide-react";
+import { getUserDetails } from "@/lib/userUtils/getUserDetails";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import SingleClassStudentAssessmentStats from "@/components/assessmentStatistics/SingleClassStudentAssessmentStats";
-import CreateAssessmentDialog from "@/components/CreateAssessmentDialog";
+import LeaveClassDialog from "./LeaveClassDialog";
+import { getAssessmentCount } from "@/lib/assessmentUtils/getAssessmentCount";
+import TeacherViewSelect from "./TeacherViewSelect";
+import StudentViewSelect from "./StudentViewSelect";
 
 async function ClassPage({ params }: { params: { id: string } }) {
   const classData = await getClassById(params.id);
@@ -36,16 +26,7 @@ async function ClassPage({ params }: { params: { id: string } }) {
     return redirect("/onboard");
   }
 
-  const teacherAssessments = await getClassAssessmentsTeacher(params.id);
-  const studentAssessments = await getClassAssessmentsStudent(params.id);
-
-  let numberOfAssessments;
-
-  if (user.role === "TEACHER") {
-    numberOfAssessments = teacherAssessments?.length;
-  } else {
-    numberOfAssessments = studentAssessments?.length;
-  }
+  const assessmentCount = await getAssessmentCount(params.id);
 
   return (
     <div className="w-full max-w-4xl mt-2 flex flex-col">
@@ -59,6 +40,14 @@ async function ClassPage({ params }: { params: { id: string } }) {
             <DeleteClassDialog
               classId={classData.id}
               classTitle={classData.title}
+            />
+          </div>
+        )}
+        {user.role === "STUDENT" && (
+          <div>
+            <LeaveClassDialog
+              studentNickname={user.nickname}
+              classId={params.id}
             />
           </div>
         )}
@@ -87,49 +76,25 @@ async function ClassPage({ params }: { params: { id: string } }) {
         </Card>
         <Card className="col-span-1 p-2">
           <div className="flex justify-between">
-          <h3>Assessments</h3>
+            <h3>Assessments</h3>
           </div>
-          <p className="font-bold text-2xl">{numberOfAssessments}</p>
+          <p className="font-bold text-2xl">{assessmentCount}</p>
         </Card>
       </div>
-      {teacherAssessments && user.role === "TEACHER" && (
-        <AssessmentDataTable
-          columns={oneClassAssessmentColumns}
-          data={teacherAssessments}
-          role={user.role}
-          tableSize="small"
-          display="All"
+
+      {classData && user.role === "TEACHER" && (
+        <TeacherViewSelect
           classId={classData.id}
           classTitle={classData.title}
-          classes={null}
         />
       )}
 
-      {studentAssessments && user.role === "STUDENT" && (
-        <AssessmentDataTable
-          columns={oneClassStudentAssessmentColumns}
-          data={studentAssessments}
-          role={user.role}
-          display="All"
-          tableSize="small"
-          classId={null}
-          classTitle={null}
-          classes={null}
-        />
-      )}
-      {userRole === "STUDENT" && (
-        <SingleClassStudentAssessmentStats
+      {classData && user.role === "STUDENT" && (
+        <StudentViewSelect
           studentNickname={user.nickname}
-          classId={params.id}
+          classId={classData.id}
+          classTitle={classData.title}
         />
-      )}
-      {userRole === "TEACHER" && (
-        <Card className="w-full p-2 mt-4">
-          <LateLoadStudentsByClassTable
-            classId={params.id}
-            classTitle={classData.title}
-          />
-        </Card>
       )}
     </div>
   );

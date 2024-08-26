@@ -23,7 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import LoadingSpinner from "./LoadingSpinner";
 import { deleteClass } from "@/lib/classUtils/deleteClass";
 

@@ -61,7 +61,7 @@ export async function getAssessmentsByNicknameAndClass(
         month: "2-digit",
         hour12: false,
       });
-      const xAxisLabel = `A${index + 1} - due ${dueDate}`
+      const xAxisLabel = `A${index + 1} - ${dueDate}`
 
       return {
         assessmentId: assessment.id,

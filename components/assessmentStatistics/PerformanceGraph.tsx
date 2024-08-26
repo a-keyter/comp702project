@@ -28,7 +28,6 @@ function PerformanceGraph({ assessmentId }: { assessmentId: string }) {
         setData(result.questionStats);
       } catch (error) {
         console.error("Error fetching question stats:", error);
-        // You might want to set an error state here and display it to the user
       } finally {
         setIsLoading(false);
       }
