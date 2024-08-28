@@ -114,7 +114,7 @@ function UpdateUserDialog({ user }: { user: SafeUser }) {
                     <Input {...field} />
                   </FormControl>
                   <FormDescription>
-                    This is used to create a link to your profile. <br />(Alphanumerical characters Only)
+                    This is used to create a link to your profile. <br />(Alphanumerical characters only)
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

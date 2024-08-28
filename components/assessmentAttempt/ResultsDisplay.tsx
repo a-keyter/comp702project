@@ -67,7 +67,7 @@ function ResultsDisplay({
           </p>
         </div>
       </Card>
-      <Card className="p-4">
+      <Card className="p-2">
         <p className="text-xl font-semibold">Score: {score.toFixed(2)}%</p>
         <p>
           Correct Answers: {correctAnswers} out of {totalQuestions}
@@ -82,8 +82,8 @@ function ResultsDisplay({
             issueObject={feedback!}
           />
         </div>
-        <p>{feedback ? feedback : "No Feedback Available."}</p>
-        {feedback && <p className="text-sm text-center">AI Generated Feedback may be inacurate.</p>}
+        <p className="py-1">{feedback ? feedback : "No Feedback Available."}</p>
+        {feedback && <p className="text-sm text-center mt-2 py-2 border-t-2">AI Generated Feedback may be inacurate.</p>}
       </Card>
       <div className="space-y-4">
         {responses.map((response, index) => (

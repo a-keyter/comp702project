@@ -31,7 +31,7 @@ async function IndividualStudentPage({
   const studentData = await getUserByNickname(params.nickname);
 
   const studentClassData = await getStudentClassesByNickname(
-    params.nickname, // student to fetch data
+    params.nickname, // Student to fetch data
     userId // security check for teacher permission
   );
 

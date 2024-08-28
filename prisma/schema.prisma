@@ -206,7 +206,7 @@ model Notification {
   type         NotificationType
   recipient    User             @relation("UserNotifications", fields: [recipientId], references: [id], onDelete: Cascade)
   recipientId  String
-  sender       User             @relation("NotificationSender", fields: [senderId], references: [id], onDelete: SetNull)
+  sender       User             @relation("NotificationSender", fields: [senderId], references: [id], onDelete: Cascade)
   senderId     String
   class        Class?           @relation("ClassNotifications", fields: [classId], references: [id], onDelete: Cascade)
   classId      String?

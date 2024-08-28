@@ -1,22 +1,32 @@
 "use client";
 
-import { Answer, AssessmentItem } from "@prisma/client";
+// React / Next Imports
 import { useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
-import ItemWrapper from "./ItemWrapper";
+
+// Component Imports
 import { Button } from "../ui/button";
+import { Card } from "../ui/card";
+import { Trash } from "lucide-react";
+
+import ItemWrapper from "./ItemWrapper";
+import LoadingSpinner from "../LoadingSpinner";
+import AIWarningDialog from "./AiWarningDialog";
+import NewAssessmentDialog from "./NewAssessmentDialog";
+
+// Type Imports
+import { Answer, AssessmentItem } from "@prisma/client";
+
+// Function Imports
+import { v4 as uuidv4 } from "uuid";
+
 import { saveAssessmentItems } from "@/lib/assessmentUtils/saveAssessmentItems";
 import { useRouter } from "next/navigation";
-import LoadingSpinner from "../LoadingSpinner";
-import { Trash } from "lucide-react";
 import { generateFullMcq } from "@/lib/langchainGenerations/generateMCQ";
 import { generateAnswers } from "@/lib/langchainGenerations/generateAnswers";
 import { generateFalseAnswers } from "@/lib/langchainGenerations/generateFalseAnswers";
 import { setAssessmentLive } from "@/lib/assessmentUtils/setAssessmentLive";
-import AIWarningDialog from "./AiWarningDialog";
-import NewAssessmentDialog from "./NewAssessmentDialog";
-import { Card } from "../ui/card";
 
+// Define the arguments that will be passed to the component
 interface AssessmentEditorProps {
   assessmentId: string;
   classId: string;
@@ -28,6 +38,7 @@ interface AssessmentEditorProps {
   initialMcqAnswers?: Record<string, Answer[]>;
 }
 
+// React Functional Component
 function AssessmentEditor({
   assessmentId,
   assessmentTitle,
@@ -57,106 +68,7 @@ function AssessmentEditor({
     }
   }, [initialItems]);
 
-  const handleCreateFromScratch = () => {
-    showNewAssessmentOptionsDialog(false);
-    setHasUsedAiGeneration(false);
-    addItem("MCQ");
-  };
-
-  const handleGenerateMCQs = async () => {
-    showNewAssessmentOptionsDialog(false);
-
-    const generateMCQs = async (count: number) => {
-      let existingQuestions: string[] = [];
-
-      for (let i = 0; i < count; i++) {
-        // Add a new MCQ item and wait for the state to update
-        const newItemId = await new Promise<string>((resolve) => {
-          addItem("MCQ");
-          setTimeout(() => {
-            setAssessmentItems((currentItems) => {
-              const newItem = currentItems[currentItems.length - 1];
-              resolve(newItem.id);
-              return currentItems;
-            });
-          }, 0);
-        });
-
-        // Generate full MCQ for the new item
-        const result = await generateFullMcq({
-          assessmentDetails: {
-            assessmentTitle,
-            assessmentObjectives,
-            existingQuestions,
-          },
-        });
-
-        // Update the question and answers
-        await new Promise<void>((resolve) => {
-          setAssessmentItems((currentItems) =>
-            currentItems.map((item) =>
-              item.id === newItemId
-                ? { ...item, content: result.question }
-                : item
-            )
-          );
-
-          setMcqAnswers((currentAnswers) => ({
-            ...currentAnswers,
-            [newItemId]: [
-              {
-                id: uuidv4(),
-                content: result.correctAnswer,
-                isCorrect: true,
-                assessmentItemId: newItemId,
-              },
-              {
-                id: uuidv4(),
-                content: result.falseAnswer1,
-                isCorrect: false,
-                assessmentItemId: newItemId,
-              },
-              {
-                id: uuidv4(),
-                content: result.falseAnswer2,
-                isCorrect: false,
-                assessmentItemId: newItemId,
-              },
-              {
-                id: uuidv4(),
-                content: result.falseAnswer3,
-                isCorrect: false,
-                assessmentItemId: newItemId,
-              },
-              {
-                id: uuidv4(),
-                content: result.falseAnswer4,
-                isCorrect: false,
-                assessmentItemId: newItemId,
-              },
-            ],
-          }));
-
-          setTimeout(resolve, 0);
-        });
-
-        // Add the new question to existingQuestions
-        existingQuestions.push(result.question);
-      }
-    };
-
-    try {
-      await generateMCQs(10);
-    } catch (error) {
-      console.error("Error generating MCQs:", error);
-    }
-  };
-
-  const handleUploadPDF = () => {
-    showNewAssessmentOptionsDialog(false);
-    // Add logic to handle PDF upload and MCQ creation
-  };
-
+  // Default Data Structures 
   const createDefaultTextItem = (): AssessmentItem => ({
     id: uuidv4(),
     index: assessmentItems.length,
@@ -206,6 +118,7 @@ function AssessmentEditor({
     },
   ];
 
+  // Interactive Functionality (Add / Delete / Move Items)
   const addItem = (type: "CONTEXT" | "MCQ") => {
     setAssessmentItems((currentItems) => {
       const newItem =
@@ -220,30 +133,6 @@ function AssessmentEditor({
 
       return [...currentItems, newItem];
     });
-  };
-
-  const updateAssessmentItem = (
-    id: string,
-    updates: Partial<AssessmentItem>
-  ) => {
-    setAssessmentItems((currentItems) =>
-      currentItems.map((item) =>
-        item.id === id ? { ...item, ...updates } : item
-      )
-    );
-  };
-
-  const updateMcqAnswer = (
-    itemId: string,
-    answerId: string,
-    updates: Partial<Answer>
-  ) => {
-    setMcqAnswers((currentAnswers) => ({
-      ...currentAnswers,
-      [itemId]: (currentAnswers[itemId] || []).map((answer) =>
-        answer.id === answerId ? { ...answer, ...updates } : answer
-      ),
-    }));
   };
 
   const moveItem = (index: number, direction: "up" | "down") => {
@@ -286,55 +175,32 @@ function AssessmentEditor({
     }
   };
 
-  const saveDraft = async () => {
-    setLoading(true);
-    const result = await saveAssessmentItems(
-      assessmentId,
-      assessmentItems,
-      mcqAnswers
+  // Functions to update Item and Answer Contents
+  const updateAssessmentItem = (
+    id: string,
+    updates: Partial<AssessmentItem>
+  ) => {
+    setAssessmentItems((currentItems) =>
+      currentItems.map((item) =>
+        item.id === id ? { ...item, ...updates } : item
+      )
     );
-    if (result.success) {
-      setLoading(false);
-      router.push(`/assessments/${assessmentId}`);
-    } else {
-      setLoading(false);
-      alert("Failed to save assessment items. Please try again.");
-    }
   };
 
-  const saveLive = async () => {
-    setPublishLoading(true);
-    const result = await saveAssessmentItems(
-      assessmentId,
-      assessmentItems,
-      mcqAnswers
-    );
-    const setLive = await setAssessmentLive(assessmentId);
-    if (result.success && setLive) {
-      setPublishLoading(false);
-      router.push(`/assessments/${assessmentId}`);
-    } else {
-      setPublishLoading(false);
-      alert("Failed to save assessment items. Please try again.");
-    }
+  const updateMcqAnswer = (
+    itemId: string,
+    answerId: string,
+    updates: Partial<Answer>
+  ) => {
+    setMcqAnswers((currentAnswers) => ({
+      ...currentAnswers,
+      [itemId]: (currentAnswers[itemId] || []).map((answer) =>
+        answer.id === answerId ? { ...answer, ...updates } : answer
+      ),
+    }));
   };
 
-  const handlePreview = async () => {
-    setLoading(true);
-    const result = await saveAssessmentItems(
-      assessmentId,
-      assessmentItems,
-      mcqAnswers
-    );
-    if (result.success) {
-      setLoading(false);
-      router.push(`/assessments/preview/${assessmentId}`);
-    } else {
-      setLoading(false);
-      alert("Failed to save assessment items. Please try again.");
-    }
-  };
-
+  // AI QUESTION GENERATION
   const handleGenerateFullMcq = async (itemId: string) => {
     try {
       // Show AI content warning
@@ -544,6 +410,153 @@ function AssessmentEditor({
     }
   };
 
+  // FUNCTIONS FOR HANDLING NEW ASSESSMENT CREATION
+  const handleCreateFromScratch = () => {
+    showNewAssessmentOptionsDialog(false);
+    setHasUsedAiGeneration(false);
+    addItem("MCQ");
+  };
+
+  const handleGenerateMCQs = async () => {
+    showNewAssessmentOptionsDialog(false);
+
+    const generateMCQs = async (count: number) => {
+      let existingQuestions: string[] = [];
+
+      for (let i = 0; i < count; i++) {
+        // Add a new MCQ item and wait for the state to update
+        const newItemId = await new Promise<string>((resolve) => {
+          addItem("MCQ");
+          setTimeout(() => {
+            setAssessmentItems((currentItems) => {
+              const newItem = currentItems[currentItems.length - 1];
+              resolve(newItem.id);
+              return currentItems;
+            });
+          }, 0);
+        });
+
+        // Generate full MCQ for the new item
+        const result = await generateFullMcq({
+          assessmentDetails: {
+            assessmentTitle,
+            assessmentObjectives,
+            existingQuestions,
+          },
+        });
+
+        // Update the question and answers
+        await new Promise<void>((resolve) => {
+          setAssessmentItems((currentItems) =>
+            currentItems.map((item) =>
+              item.id === newItemId
+                ? { ...item, content: result.question }
+                : item
+            )
+          );
+
+          setMcqAnswers((currentAnswers) => ({
+            ...currentAnswers,
+            [newItemId]: [
+              {
+                id: uuidv4(),
+                content: result.correctAnswer,
+                isCorrect: true,
+                assessmentItemId: newItemId,
+              },
+              {
+                id: uuidv4(),
+                content: result.falseAnswer1,
+                isCorrect: false,
+                assessmentItemId: newItemId,
+              },
+              {
+                id: uuidv4(),
+                content: result.falseAnswer2,
+                isCorrect: false,
+                assessmentItemId: newItemId,
+              },
+              {
+                id: uuidv4(),
+                content: result.falseAnswer3,
+                isCorrect: false,
+                assessmentItemId: newItemId,
+              },
+              {
+                id: uuidv4(),
+                content: result.falseAnswer4,
+                isCorrect: false,
+                assessmentItemId: newItemId,
+              },
+            ],
+          }));
+
+          setTimeout(resolve, 0);
+        });
+
+        // Add the new question to existingQuestions
+        existingQuestions.push(result.question);
+      }
+    };
+
+    try {
+      await generateMCQs(5);
+    } catch (error) {
+      console.error("Error generating MCQs:", error);
+    }
+  };
+
+  // Functions for Handling the Saving / Publishing of Assessments
+  const saveDraft = async () => {
+    setLoading(true);
+    const result = await saveAssessmentItems(
+      assessmentId,
+      assessmentItems,
+      mcqAnswers
+    );
+    if (result.success) {
+      setLoading(false);
+      router.push(`/assessments/${assessmentId}`);
+    } else {
+      setLoading(false);
+      alert("Failed to save assessment items. Please try again.");
+    }
+  };
+
+  const saveLive = async () => {
+    setPublishLoading(true);
+    const result = await saveAssessmentItems(
+      assessmentId,
+      assessmentItems,
+      mcqAnswers
+    );
+    const setLive = await setAssessmentLive(assessmentId);
+    if (result.success && setLive) {
+      setPublishLoading(false);
+      router.push(`/assessments/${assessmentId}`);
+    } else {
+      setPublishLoading(false);
+      alert("Failed to save assessment items. Please try again.");
+    }
+  };
+
+  const handlePreview = async () => {
+    setLoading(true);
+    const result = await saveAssessmentItems(
+      assessmentId,
+      assessmentItems,
+      mcqAnswers
+    );
+    if (result.success) {
+      setLoading(false);
+      router.push(`/assessments/preview/${assessmentId}`);
+    } else {
+      setLoading(false);
+      alert("Failed to save assessment items. Please try again.");
+    }
+  };
+
+  // RETURN STATMENTS
   return (
     <div className="flex flex-col gap-y-4 w-full py-1">
       <NewAssessmentDialog
@@ -551,7 +564,10 @@ function AssessmentEditor({
         onClose={() => showNewAssessmentOptionsDialog(false)}
         onCreateFromScratch={handleCreateFromScratch}
         onGenerateMCQs={handleGenerateMCQs}
-        onUploadPDF={handleUploadPDF}
+      />
+      <AIWarningDialog
+        open={showAiWarning}
+        onClose={() => setShowAiWarning(false)}
       />
       <Card className="p-2">
         <div className="flex justify-between items-center py-2">
@@ -592,7 +608,8 @@ function AssessmentEditor({
           {assessmentObjectives}
         </p>
       </Card>
-
+      
+      {/* MAP OVER ASSESSMENT ITEMS */}
       {assessmentItems.map((item, index) => (
         <Card key={item.id} className="flex flex-col border-2 p-2 w-full">
           <div className="flex justify-between items-center mb-2">
@@ -662,10 +679,6 @@ function AssessmentEditor({
           )}
         </Button>
       </div>
-      <AIWarningDialog
-        open={showAiWarning}
-        onClose={() => setShowAiWarning(false)}
-      />
     </div>
   );
 }

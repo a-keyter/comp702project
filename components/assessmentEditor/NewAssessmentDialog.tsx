@@ -8,14 +8,13 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Pencil, Sparkle, Upload, UploadCloud } from "lucide-react";
+import { Pencil, Sparkle } from "lucide-react";
 
 interface NewAssessmentDialogProps {
   open: boolean;
   onClose: () => void;
   onCreateFromScratch: () => void;
   onGenerateMCQs: () => void;
-  onUploadPDF: () => void;
 }
 
 const NewAssessmentDialog: React.FC<NewAssessmentDialogProps> = ({
@@ -23,7 +22,6 @@ const NewAssessmentDialog: React.FC<NewAssessmentDialogProps> = ({
   onClose,
   onCreateFromScratch,
   onGenerateMCQs,
-  onUploadPDF,
 }) => {
   return (
     <Dialog open={open} onOpenChange={onClose}>
