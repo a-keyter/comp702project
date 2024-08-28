@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Pencil, Send, Trash } from "lucide-react";
+import { Send } from "lucide-react";
 import { fetchIssueMessages } from "@/lib/issueUtils/messageUtils/fetchMessagesByIssueId";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -12,6 +12,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Skeleton } from "@/components/ui/skeleton";
 import { sendNewMessage } from "@/lib/issueUtils/messageUtils/sendMessage";
 import LoadingSpinner from "@/components/LoadingSpinner";
+
+
+import { $Enums } from "@prisma/client";
 
 type IssueMessage = {
   id: string;
@@ -25,8 +28,10 @@ type IssueMessage = {
 
 type IssueChatProps = {
   issueId: string;
+  issueStatus: $Enums.IssueStatus;
   userRole: string;
   userName: string;
+
 };
 
 const messageSchema = z.object({
@@ -40,6 +45,7 @@ type MessageFormData = z.infer<typeof messageSchema>;
 
 export default function IssueChat({
   issueId,
+  issueStatus,
   userRole,
   userName,
 }: IssueChatProps) {
@@ -131,20 +137,6 @@ export default function IssueChat({
                       {new Date(message.createdAt).toLocaleString()}
                     </span>
                   </p>
-                  <div className="flex flex-col items-end">
-                    {/* TODO - ADD EDIT MESSAGE FUNCTIONALITY */}
-                    {userName === message.sender.name &&
-                      message === messages[0] && (
-                        <div className="flex gap-x-2">
-                          {/* <button
-                            title="Edit Message"
-                            className="bg-blue-300 p-1 rounded-lg"
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </button> */}
-                        </div>
-                      )}
-                  </div>
                 </div>
                 <p>{message.content}</p>
               </div>

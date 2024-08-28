@@ -1,13 +1,8 @@
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { fetchIssueById } from "@/lib/issueUtils/fetchIssueById";
-import { Send } from "lucide-react";
 import IssueDetailsCard from "./IssueDetailsCard";
 import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { getUserById } from "@/lib/userUtils/getUserDetails";
-import { Skeleton } from "@/components/ui/skeleton";
 import IssueChat from "./IssueChat";
 
 export default async function IssuePage({
@@ -40,6 +35,7 @@ export default async function IssuePage({
       {issueData.type !== "CLASS_JOIN_REQUEST" && (
         <IssueChat
           issueId={params.issueId}
+          issueStatus={issueData.status}
           userName={user.name}
           userRole={user.role}
         />

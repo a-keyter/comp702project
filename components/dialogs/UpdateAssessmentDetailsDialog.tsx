@@ -26,9 +26,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import LoadingSpinner from "./LoadingSpinner";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Calendar } from "./ui/calendar";
+import LoadingSpinner from "../LoadingSpinner";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Calendar } from "../ui/calendar";
 import { CalendarIcon, Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { updateAssessmentDetails } from "@/lib/assessmentUtils/updateAssessmentDetails";

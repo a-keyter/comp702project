@@ -1,4 +1,4 @@
-import DeleteAssessmentDialog from "@/components/DeleteAssessmentDialog";
+import DeleteAssessmentDialog from "@/components/dialogs/DeleteAssessmentDialog";
 import ReportIssueDialog from "@/components/ReportIssueDialog";
 
 import { studentColumns } from "@/components/submissionsTable/student-columns";
@@ -6,7 +6,7 @@ import { StudentDataTable } from "@/components/submissionsTable/student-data-tab
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { UpdateAssessmentDetailsDialog } from "@/components/UpdateAssessmentDetailsDialog";
+import { UpdateAssessmentDetailsDialog } from "@/components/dialogs/UpdateAssessmentDetailsDialog";
 import { getAssessmentById } from "@/lib/assessmentUtils/getAssessmentDetails";
 import { getResultsByAssessmentId } from "@/lib/assessmentUtils/getAssessmentSubmissions";
 import { getStudentResultsByAssessmentId } from "@/lib/assessmentUtils/getStudentResultsByAssessmentId";

@@ -34,18 +34,18 @@ export function AssessmentViewSelect({
           Submissions
         </TabsTrigger>
         <TabsTrigger
-          value="analysis"
-          className="col-span-1 flex items-center"
-          disabled={results.length === 0}
-        >
-          AI Feedback {results.length === 0 && <Lock className="h-6 w-6 pl-2"/>}
-        </TabsTrigger>
-        <TabsTrigger
           value="statistics"
           className="col-span-1 flex items-center"
           disabled={results.length === 0}
         >
           Statistics {results.length === 0 && <Lock className="h-6 w-6 pl-2"/>}
+        </TabsTrigger>
+        <TabsTrigger
+          value="analysis"
+          className="col-span-1 flex items-center"
+          disabled={results.length === 0}
+        >
+          AI Feedback {results.length === 0 && <Lock className="h-6 w-6 pl-2"/>}
         </TabsTrigger>
       </TabsList>
       <TabsContent value="submissions">
@@ -54,17 +54,6 @@ export function AssessmentViewSelect({
             columns={responseColumns}
             data={results}
             assessmentTitle={assessmentTitle}
-          />
-        </Card>
-      </TabsContent>
-      <TabsContent value="analysis">
-        <Card className="p-2 mt-2">
-          <TeacherFeedback
-            assessmentId={assessmentId}
-            averageScore={averageScore}
-            membersCount={membersCount}
-            latestSubmissionId={latestSubmissionId!}
-            submissionCount={submissionCount}
           />
         </Card>
       </TabsContent>
@@ -88,6 +77,17 @@ export function AssessmentViewSelect({
             <HardestQuestions assessmentId={assessmentId} />
           </Card>
         </div>
+      </TabsContent>
+      <TabsContent value="analysis">
+        <Card className="p-2 mt-2">
+          <TeacherFeedback
+            assessmentId={assessmentId}
+            averageScore={averageScore}
+            membersCount={membersCount}
+            latestSubmissionId={latestSubmissionId!}
+            submissionCount={submissionCount}
+          />
+        </Card>
       </TabsContent>
     </Tabs>
   );

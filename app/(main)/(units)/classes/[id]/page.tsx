@@ -1,7 +1,7 @@
-import AddStudentsDialog from "@/components/AddStudentsDialog";
-import DeleteClassDialog from "@/components/DeleteClassDialog";
+import AddStudentsDialog from "@/components/dialogs/AddStudentsDialog";
+import DeleteClassDialog from "@/components/dialogs/DeleteClassDialog";
 import { Card } from "@/components/ui/card";
-import UpdateClassDialog from "@/components/UpdateClassDialog";
+import UpdateClassDialog from "@/components/dialogs/UpdateClassDialog";
 
 import { getClassById } from "@/lib/classUtils/getClassDetails";
 import { getUserDetails } from "@/lib/userUtils/getUserDetails";

@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import LoadingSpinner from "./LoadingSpinner";
+import LoadingSpinner from "../LoadingSpinner";
 import { createNewAssessment } from "@/lib/assessmentUtils/createNewAssessment";
 
 import {
@@ -39,9 +39,9 @@ import {
 } from "@/components/ui/select";
 import { SafeClass } from "@/lib/classUtils/getClassDetails";
 import { cn } from "@/lib/utils";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { CalendarIcon, Plus } from "lucide-react";
-import { Calendar } from "./ui/calendar";
+import { Calendar } from "../ui/calendar";
 
 const FormSchema = z.object({
   classId: z

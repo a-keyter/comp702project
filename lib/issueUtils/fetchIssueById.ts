@@ -1,11 +1,12 @@
 "use server"
 
+import { $Enums } from "@prisma/client";
 import { prisma } from "../initPrisma";
 
 type Issue = {
   id: string;
   type: string;
-  status: string;
+  status: $Enums.IssueStatus;
   createdAt: Date;
   updatedAt: Date;
   raisedBy: {

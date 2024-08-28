@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import LoadingSpinner from "./LoadingSpinner";
+import LoadingSpinner from "../LoadingSpinner";
 
 import {
   Select,
@@ -37,7 +37,7 @@ import {
 } from "@/components/ui/select";
 import { SafeClass } from "@/lib/classUtils/getClassDetails";
 import { Plus } from "lucide-react";
-import { toast } from "./ui/use-toast";
+import { toast } from "../ui/use-toast";
 import bulkAddStudentsToClass from "@/lib/teacherUtils/bulkAddStudents";
 
 const FormSchema = z.object({

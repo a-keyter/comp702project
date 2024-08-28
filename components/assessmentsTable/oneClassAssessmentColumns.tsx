@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { Assessment } from "@prisma/client";
-import DeleteAssessmentDialog from "../DeleteAssessmentDialog";
+import DeleteAssessmentDialog from "../dialogs/DeleteAssessmentDialog";
 import { Badge } from "../ui/badge";
 
 type AssessmentWithStats = Assessment & {

@@ -25,10 +25,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import LoadingSpinner from "./LoadingSpinner";
+import LoadingSpinner from "../LoadingSpinner";
 import { Link2 } from "lucide-react";
 import { joinClassRequest } from "@/lib/issueUtils/joinClassRequest";
-import { useToast } from "./ui/use-toast";
+import { useToast } from "../ui/use-toast";
 
 const FormSchema = z.object({
   classCode: z

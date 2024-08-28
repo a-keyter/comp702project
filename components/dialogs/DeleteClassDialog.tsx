@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { redirect } from "next/navigation";
-import LoadingSpinner from "./LoadingSpinner";
+import LoadingSpinner from "../LoadingSpinner";
 import { deleteClass } from "@/lib/classUtils/deleteClass";
 
 function DeleteClassDialog({

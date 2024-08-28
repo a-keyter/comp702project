@@ -27,7 +27,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { updateUserDetails } from "@/lib/userUtils/updateUserDetails";
 import { useRouter } from "next/navigation";
-import LoadingSpinner from "./LoadingSpinner";
+import LoadingSpinner from "../LoadingSpinner";
 
 const FormSchema = z.object({
   name: z.string().min(2, {

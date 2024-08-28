@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import Link from "next/link";
-import AddStudentsDialog from "../AddStudentsDialog";
+import AddStudentsDialog from "../dialogs/AddStudentsDialog";
 
 interface DataTableProps<TData, TValue> {
   classId: string;

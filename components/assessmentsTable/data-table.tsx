@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/table";
 import { Card } from "../ui/card";
 import { Input } from "../ui/input";
-import CreateAssessmentDialog from "../CreateAssessmentDialog";
+import CreateAssessmentDialog from "../dialogs/CreateAssessmentDialog";
 import { SafeClass } from "@/lib/classUtils/getClassDetails";
 import { Filter } from "lucide-react";
 
