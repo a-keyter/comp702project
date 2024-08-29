@@ -55,19 +55,12 @@ export async function getAssessmentsByNicknameAndClass(
     const assessmentData = liveAssessments.map((assessment, index) => {
       const submission = submissionMap.get(assessment.id);
 
-      // Calculate the x-axis label based on the assessment's due date
-      const dueDate = assessment.dueDate.toLocaleString("en-GB", {
-        day: "2-digit",
-        month: "2-digit",
-        hour12: false,
-      });
-      const xAxisLabel = `A${index + 1} - ${dueDate}`
+
 
       return {
         assessmentId: assessment.id,
         assessmentTitle: assessment.title,
         latestScore: submission?.score ?? 0,
-        xAxisLabel: xAxisLabel,
         submissionDate: submission?.createdAt?.toLocaleDateString() ?? null,
         dueDate: assessment.dueDate,
         status: submission ? "Submitted" : "Not submitted",
