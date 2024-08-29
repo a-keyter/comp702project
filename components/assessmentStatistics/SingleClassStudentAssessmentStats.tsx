@@ -40,11 +40,7 @@ const CustomTooltip = ({ active, payload }: any) => {
     return (
       <div className="bg-white p-4 border border-gray-300 rounded shadow">
         <p className="font-bold">
-          {data.dueDate.toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-          })}{" "}
-          - {data.assessmentTitle}
+          {data.assessmentTitle}
         </p>
         <p>Latest Score: {data.latestScore.toFixed(2)}</p>
         <p>Due Date: {formatDate(new Date(data.dueDate))}</p>
@@ -101,7 +97,7 @@ export default function SingleClassStudentAssessmentStats({
         {loading ? (
           <Skeleton className="h-full" />
         ) : assessmentData.length > 0 ? (
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={250}>
             <LineChart
               data={assessmentData}
               margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
