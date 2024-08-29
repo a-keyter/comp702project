@@ -14,7 +14,7 @@ export async function updateClassDetails(classId: string, updatedData: { title: 
       // First, fetch the class to ensure it exists and the user has permission to update it
       const existingClass = await prisma.class.findUnique({
         where: { id: classId },
-        // CHECK IF THE USER TEACHES THE CLASS
+        // Include Teacher Data
         include: { taughtBy: true }
       });
   

@@ -71,7 +71,6 @@ export async function getAssessmentById(id: string) {
 }
 
 export async function getTeacherAssessmentData() {
-  const currentDate = new Date()
   const { userId } = auth();
   if (!userId) {
     return null;
