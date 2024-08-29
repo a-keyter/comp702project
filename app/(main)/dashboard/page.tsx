@@ -6,8 +6,8 @@ import { redirect } from "next/navigation";
 import { AssessmentDataTable } from "@/components/assessmentsTable/data-table";
 import { assessmentColumns } from "@/components/assessmentsTable/columns";
 import {
-  getStudentAssessmentData,
-  getTeacherAssessmentData,
+  getUpcomingStudentAssessmentData,
+  getUpcomingTeacherAssessmentData,
 } from "@/lib/assessmentUtils/getAssessmentDetails";
 import { studentAssessmentColumns } from "@/components/assessmentsTableStudent/columns";
 import { Card } from "@/components/ui/card";
@@ -19,8 +19,8 @@ export default async function Dashboard() {
   }
 
   const classes = await getUserClasses();
-  const teacherAssessments = await getTeacherAssessmentData();
-  const studentAssessments = await getStudentAssessmentData();
+  const teacherAssessments = await getUpcomingTeacherAssessmentData();
+  const studentAssessments = await getUpcomingStudentAssessmentData();
 
   return (
     <div className="w-full max-w-4xl flex flex-col flex-grow space-y-4">

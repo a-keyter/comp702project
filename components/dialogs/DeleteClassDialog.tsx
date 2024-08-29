@@ -75,7 +75,7 @@ function DeleteClassDialog({
       setOpen(false);
 
       // Redirect to a different page after deletion
-      redirect("/dashboard")
+      window.location.replace("/dashboard")
     } catch (err) {
       setLoading(false);
       console.error("Error deleting class:", err);

@@ -107,7 +107,7 @@ model TeacherFeedback {
   assessment       Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
   assessmentId     String     @unique
   submissionCount  Int
-  lastSubmission   Submission @relation(fields: [lastSubmissionId], references: [id])
+  lastSubmission   Submission @relation(fields: [lastSubmissionId], references: [id], onDelete: Cascade)
   lastSubmissionId String     @unique
   createdAt        DateTime   @default(now()) @map(name: "created_at")
 }

@@ -75,14 +75,14 @@ export default function LateLoadAssessmentsGraph({
       fetchAssessments();
     }, [classId]);
   
-    // Sort assessments by date
+    // Sort assessments by due date
     const sortedAssessments = [...teacherAssessments].sort(
-      (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
+      (a, b) => a.dueDate.getTime() - b.dueDate.getTime()
     );
   
     // Prepare data for the chart
     const chartData = sortedAssessments.map((assessment) => ({
-      date: assessment.createdAt,
+      dueDate: assessment.dueDate,
       averageScore: parseFloat(assessment.averageScore),
       completionPercentage: (assessment.submissionCount / classMemberCount) * 100,
       title: assessment.title,
@@ -91,21 +91,19 @@ export default function LateLoadAssessmentsGraph({
   
     const CustomTooltip = ({ active, payload, label }: any) => {
       if (active && payload && payload.length) {
+        const averageScore = isNaN(payload[0].value) ? 0 : payload[0].value;
+        const completionRate = isNaN(payload[1].value) ? 0 : payload[1].value;
+    
         return (
           <div className="custom-tooltip bg-white p-4 border border-gray-200 rounded shadow">
             <p className="label font-bold">{`${payload[0].payload.title}`}</p>
-            <p className="date">{`Due date: ${new Date(
-              label
-            ).toLocaleDateString()}`}</p>
-            <p className="average-score">{`Average Score: ${payload[0].value.toFixed(
-              2
-            )}%`}</p>
-            <p className="completion-rate">{`Completion Rate: ${payload[1].value.toFixed(
-              2
-            )}%`}</p>
+            <p className="date">{`Due date: ${new Date(label).toLocaleDateString()}`}</p>
+            <p className="average-score">{`Average Score: ${averageScore.toFixed(2)}%`}</p>
+            <p className="completion-rate">{`Completion Rate: ${completionRate.toFixed(2)}%`}</p>
           </div>
         );
       }
+    
       return null;
     };
   
@@ -135,7 +133,7 @@ export default function LateLoadAssessmentsGraph({
             >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
-                dataKey="date"
+                dataKey="dueDate"
                 tickFormatter={(value) =>
                   new Date(value).toLocaleDateString("en-US", {
                     month: "short",
