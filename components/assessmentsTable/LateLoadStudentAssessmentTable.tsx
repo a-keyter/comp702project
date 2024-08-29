@@ -43,7 +43,6 @@ export default function LateLoadStudentAssessmentTable({
         setLoading(false);
       }
     }
-
     fetchAssessments();
   }, [classId]);
 

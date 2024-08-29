@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer";
 import LandingNav from "@/components/LandingNav";
+import Image from "next/image";
 import Link from "next/link";
 
 // Heavily modified version of a V0 landing page design
@@ -20,7 +21,7 @@ export default function Home() {
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                    Revolutionize Learning with Ambi-learn
+                    Revolutionize Teaching with Ambi-learn
                   </h1>
                   <p className="max-w-[600px] text-muted-foreground md:text-xl">
                     Ambi-learn&apos;s innovative MCQ platform delivers
@@ -46,10 +47,19 @@ export default function Home() {
                   </Link>
                 </div>
               </div>
+              <div className="w-full flex justify-center">
+                <Image
+                  alt="A screenshot of the assessment creation tool"
+                  src={"/editor.png"}
+                  width={500}
+                  height={500}
+                  className="border-2 border-slate-700 p-2 rounded-lg"
+                />
+              </div>
             </div>
           </div>
         </section>
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-muted">
+        <section className="w-full py-12 md:py-24 lg:py-24 bg-muted">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
@@ -60,7 +70,7 @@ export default function Home() {
                   Unlock the Power of Bi-Directional Feedback
                 </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Ambi-learn&apops;s MCQ platform provides real-time insights to
+                  Ambi-learn&apos;s MCQ platform provides real-time insights to
                   both teachers and students, fostering a dynamic learning
                   environment that adapts to individual needs and classroom
                   trends.
@@ -73,24 +83,24 @@ export default function Home() {
                   <li>
                     <div className="grid gap-1">
                       <h3 className="text-xl font-bold">
-                        Bi-Directional Feedback
+                        AI Powered Assessments
                       </h3>
                       <p className="text-muted-foreground">
-                        Our platform provides instant feedback to students on
-                        their performance and gives teachers valuable insights
-                        into class-wide understanding.
+                        Use Large Language Models like GPT-4, Mistral Large and
+                        Google's Gemini to rapidly create assessments that test
+                        knowledge retension among your students.
                       </p>
                     </div>
                   </li>
                   <li>
                     <div className="grid gap-1">
                       <h3 className="text-xl font-bold">
-                        Adaptive Learning Paths
+                        Bi-Directional Feedback
                       </h3>
                       <p className="text-muted-foreground">
-                        Ambi-learn&apops;s algorithms adjust question difficulty
-                        based on individual student performance, ensuring
-                        optimal challenge and growth.
+                        Our platform provides instant feedback to students on
+                        their performance and gives teachers valuable insights
+                        into class-wide understanding.
                       </p>
                     </div>
                   </li>
@@ -108,6 +118,15 @@ export default function Home() {
                   </li>
                 </ul>
               </div>
+              <div className="w-full flex justify-center">
+                <Image
+                  alt="A screenshot of the assessment creation tool"
+                  src={"/editor.png"}
+                  width={500}
+                  height={500}
+                  className="border-2 border-slate-700 p-2 rounded-lg"
+                />
+              </div>
             </div>
           </div>
         </section>
@@ -120,7 +139,7 @@ export default function Home() {
                   Support
                 </div>
                 <h2 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
-                  We&apops;re Here to Help You Succeed
+                  We&apos;re Here to Help You Succeed
                 </h2>
                 <Link
                   href="#"

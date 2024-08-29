@@ -27,11 +27,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Card } from "../ui/card";
 import { Input } from "../ui/input";
 import CreateAssessmentDialog from "../dialogs/CreateAssessmentDialog";
 import { SafeClass } from "@/lib/classUtils/getClassDetails";
-import { Filter } from "lucide-react";
+import { FilterIcon } from "lucide-react";
+
+import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
+
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+type Checked = DropdownMenuCheckboxItemProps["checked"];
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -50,7 +62,7 @@ export function AssessmentDataTable<TData, TValue>({
 }: DataTableProps<TData, TValue> & {
   role: string;
   tableSize: string;
-  display: "Upcoming" | "All"
+  display: "Upcoming" | "All";
   classId: string | null;
   classTitle: string | null;
   classes: SafeClass[] | null;
@@ -68,7 +80,7 @@ export function AssessmentDataTable<TData, TValue>({
     initialState: {
       pagination: {
         pageIndex: 0,
-        pageSize: tableSize === "small" ? 5 : 12, //custom default page size
+        pageSize: tableSize === "small" ? 5 : 12,
       },
     },
     onSortingChange: setSorting,
@@ -81,12 +93,11 @@ export function AssessmentDataTable<TData, TValue>({
     },
   });
 
+
   return (
     <div className="flex flex-col gap-y-1 h-full">
       <div className="flex justify-between items-center">
-        <h2 className="font-semibold text-xl pl-2">
-          {display} Assessments
-        </h2>
+        <h2 className="font-semibold text-xl pl-2">{display} Assessments</h2>
         <div className="flex gap-x-4 py-1 w-full max-w-md justify-end">
           <Input
             name="Assessment Search Bar"
@@ -105,6 +116,7 @@ export function AssessmentDataTable<TData, TValue>({
               variant="text"
             />
           )}
+
         </div>
       </div>
 

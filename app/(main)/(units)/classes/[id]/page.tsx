@@ -19,8 +19,6 @@ async function ClassPage({ params }: { params: { id: string } }) {
      redirect("/dashboard");
   }
 
-  // console.log("Current Member Count: " + classData.memberCount)
-
   const user = await getUserDetails();
   const userRole = user?.role;
 

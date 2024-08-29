@@ -295,10 +295,12 @@ export async function getStudentAssessmentData() {
     return null;
   }
   try {
+    const currentDate = new Date()
     const assessments = await prisma.assessment.findMany({
       where: {
         class: { members: { some: { id: userId } } },
         status: "LIVE",
+        dueDate: {gt: currentDate}
       },
       include: {
         submissions: {
@@ -344,7 +346,6 @@ export async function getStudentAssessmentData() {
 
 export async function getClassAssessmentsStudent(classId: string) {
   const { userId } = auth();
-  const currentDate = new Date();
 
   if (!userId) {
     return null;
@@ -355,7 +356,6 @@ export async function getClassAssessmentsStudent(classId: string) {
         classId: classId,
         class: { members: { some: { id: userId } } },
         status: "LIVE",
-        dueDate: {gt: currentDate }
       },
       include: {
         submissions: {
