@@ -86,11 +86,11 @@ function DeleteClassDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="destructive">Delete Class</Button>
+        <Button variant="destructive" data-id="delete-class-dialog-btn">Delete Class</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Delete Class</DialogTitle>
+          <DialogTitle  data-id="delete-class-dialog-title">Delete Class</DialogTitle>
           <DialogDescription>
             Are you sure you want to delete the class {classTitle}? This action
             cannot be undone.
@@ -136,7 +136,7 @@ function DeleteClassDialog({
               >
                 Cancel
               </Button>
-              <Button type="submit" variant="destructive">
+              <Button type="submit" variant="destructive" data-id="delete-class-btn">
                 Delete Class
                 {loading && (
                   <div className="pl-4">

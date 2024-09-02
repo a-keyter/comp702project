@@ -61,6 +61,10 @@ export default async function Dashboard() {
           />
         </Card>
       )}
+      <div
+        data-testid="server-render-complete"
+        style={{ display: "none" }}
+      ></div>
     </div>
   );
 }

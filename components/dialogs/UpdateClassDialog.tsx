@@ -76,11 +76,11 @@ function UpdateClassDialog({ classData }: { classData: SafeClass }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="default">Edit Class</Button>
+        <Button variant="default" data-id="edit-class-btn">Edit Class</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit Class</DialogTitle>
+          <DialogTitle data-id="edit-class-dialog-title">Edit Class</DialogTitle>
           <DialogDescription>
             Make changes to your class here. Click save when you are done.
           </DialogDescription>

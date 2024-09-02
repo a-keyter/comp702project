@@ -16,7 +16,7 @@ async function ClassPage({ params }: { params: { id: string } }) {
   const classData = await getClassById(params.id);
 
   if (!classData) {
-     redirect("/dashboard");
+    redirect("/dashboard");
   }
 
   const user = await getUserDetails();
@@ -97,6 +97,7 @@ async function ClassPage({ params }: { params: { id: string } }) {
           classTitle={classData.title}
         />
       )}
+      <div data-testid="class-page-loaded" hidden></div>
     </div>
   );
 }

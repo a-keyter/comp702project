@@ -73,7 +73,7 @@ export function ClassDataTable<TData, TValue>({
   return (
     <Card className="rounded-md border flex flex-col gap-y-1 px-2 pt-1 h-full">
       <div className="flex justify-between items-center">
-        <Link href="/classes" className="font-semibold text-xl pl-2">
+        <Link href="/classes" className="font-semibold text-xl pl-2" data-id="class-table-title">
           Classes
         </Link>
         <div className="flex gap-x-4 py-1 w-full max-w-md justify-end">

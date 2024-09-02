@@ -94,7 +94,7 @@ function CreateClassDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-      <Button><Plus className="pr-2"/> New </Button>
+      <Button data-id="create-class-btn"><Plus className="pr-2"/> New </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

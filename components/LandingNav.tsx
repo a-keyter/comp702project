@@ -11,12 +11,12 @@ function LandingNav() {
       <div title="nav buttons" className="flex gap-x-8">
         <SignedOut>
           <Button variant={"default"}>
-            <SignInButton forceRedirectUrl={"/dashboard"}/>
+            <SignInButton forceRedirectUrl={"/dashboard"} data-id="sign-in-button"/>
           </Button>
         </SignedOut>
         <SignedIn>
           <Link href={"/dashboard"}>
-            <Button variant={"ghost"}>Dashboard</Button>
+            <Button variant={"ghost"} data-id="dashboard-button">Dashboard</Button>
           </Link>
         </SignedIn>
       </div>

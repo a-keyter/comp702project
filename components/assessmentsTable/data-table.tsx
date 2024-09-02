@@ -97,7 +97,7 @@ export function AssessmentDataTable<TData, TValue>({
   return (
     <div className="flex flex-col gap-y-1 h-full">
       <div className="flex justify-between items-center">
-        <h2 className="font-semibold text-xl pl-2">{display} Assessments</h2>
+        <h2 className="font-semibold text-xl pl-2" data-id="assessment-table-title">{display} Assessments</h2>
         <div className="flex gap-x-4 py-1 w-full max-w-md justify-end">
           <Input
             name="Assessment Search Bar"

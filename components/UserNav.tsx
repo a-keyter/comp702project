@@ -78,7 +78,7 @@ async function UserNav() {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant={"ghost"} className="flex flex-col px-2">
+            <Button variant={"ghost"} className="flex flex-col px-2" data-id="profile-drop-btn">
               <div>
                 <User />
               </div>
@@ -100,7 +100,7 @@ async function UserNav() {
             </DropdownMenuItem>
             <DropdownMenuItem>
               <SignOutButton redirectUrl={"/"}>
-                <button className="w-full text-left">Sign out</button>
+                <button className="w-full text-left" data-id="sign-out-btn">Sign out</button>
               </SignOutButton>
             </DropdownMenuItem>
           </DropdownMenuContent>
