@@ -99,7 +99,7 @@ export function ClassStudentsDataTable<TData, TValue>({
         </div>
       </div>
       <div>
-        <Table>
+        <Table data-id="student-table">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>

@@ -151,7 +151,7 @@ function AddStudentsDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {variant === "icon" ? (
-          <button title="Add Students" className="rounded-full p-1 bg-black">
+          <button title="Add Students" className="rounded-full p-1 bg-black" data-id="add-students-dialog-btn">
             <Plus className="h-5 w-5 text-white" />
           </button>
         ) : (
@@ -250,7 +250,7 @@ function AddStudentsDialog({
               </div>
             </div>
             <div className="flex justify-end">
-              <Button type="submit">
+              <Button type="submit" data-id="add-students-btn">
                 Add Students
                 {loading && (
                   <div className="pl-4">

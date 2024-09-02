@@ -72,7 +72,7 @@ async function ClassPage({ params }: { params: { id: string } }) {
           ) : (
             <h3>Students</h3>
           )}
-          <p className="font-bold text-2xl">{classData.memberCount}</p>
+          <p className="font-bold text-2xl" data-id="student-count">{classData.memberCount}</p>
         </Card>
         <Card className="col-span-1 p-2">
           <div className="flex justify-between">

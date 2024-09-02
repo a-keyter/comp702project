@@ -120,11 +120,11 @@ function CreateAssessmentDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
       {variant === "icon" ? (
-          <button title="New Assessment" className="rounded-full p-1 bg-black">
+          <button title="New Assessment" className="rounded-full p-1 bg-black" data-id="new-assessment-dialog">
             <Plus className="h-5 w-5 text-white" />
           </button>
         ) : (
-          <Button><Plus className="pr-2"/> New </Button>
+          <Button data-id="new-assessment-dialog"><Plus className="pr-2"/> New </Button>
         )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -206,6 +206,7 @@ function CreateAssessmentDialog({
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
+                        data-id="date-picker"
                           variant={"outline"}
                           className={cn(
                             "w-[full] pl-3 text-left font-normal",

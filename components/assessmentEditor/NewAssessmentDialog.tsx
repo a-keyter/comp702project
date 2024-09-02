@@ -34,6 +34,7 @@ const NewAssessmentDialog: React.FC<NewAssessmentDialogProps> = ({
         </DialogHeader>
         <div className="grid grid-cols-2 gap-4 py-4">
           <button
+            data-id="ai-generate-mcqs"
             className="hover:bg-slate-400 p-4 rounded-lg border-slate-300 border-2"
             onClick={onGenerateMCQs}
           >

@@ -668,6 +668,7 @@ function AssessmentEditor({
         <Button
           onClick={saveLive}
           className="bg-green-300 hover:bg-green-600 text-black hover:text-white"
+          data-id="publish-assessment"
         >
           Publish
           {publishLoading ? (
