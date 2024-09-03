@@ -5,7 +5,11 @@ describe("Assessment Tests", () => {
   const newAssessmentObjectives =
     "Students will understand the parts of a flower and how they enable the plant to grow.";
 
-  const studentEmails = ["student1@test.com", "student2@test.com", "student3@test.com"]
+  const studentEmails = [
+    "student1@test.com",
+    "student2@test.com",
+    "student3@test.com",
+  ];
 
   beforeEach(() => {
     // Initialise Cypress at Home / Landing Page
@@ -81,7 +85,7 @@ describe("Assessment Tests", () => {
 
       studentEmails.forEach((studentEmail) => {
         cy.contains(studentEmail).should("be.visible");
-      })
+      });
 
       // Submit the form
       cy.get('[data-id="add-students-btn"]').click();
@@ -148,10 +152,23 @@ describe("Assessment Tests", () => {
       // Click the publish assessment button
       cy.get('[data-id="publish-assessment"]').should("be.visible").click();
 
-      // Await assessment page load
-      cy.get('[data-id="assessment-page-loaded"]', { timeout: 10000 }).should(
-        "exist"
-      )
+      // Intercept the POST request for saving assessment items
+      cy.intercept("POST", "/assessments/edit/*").as("saveAssessment");
+
+      // Wait for the save request to complete
+      cy.wait("@saveAssessment", { timeout: 30000 }).then((interception) => {
+        // Check if the save was successful
+        expect(interception.response!.statusCode).to.equal(200);
+      });
+
+      // Get the current URL before the redirect
+      let originalUrl;
+      cy.url().then((url) => {
+        originalUrl = url;
+
+        // Wait for the URL to change
+        cy.url().should("not.eq", originalUrl, { timeout: 30000 });
+      });
 
       // Check that the assessment title is present on the page
       cy.contains(newAssessmentTitle).should("be.visible");
@@ -183,61 +200,84 @@ describe("Assessment Tests", () => {
     });
   });
 
-//   describe("Assessment Submission", () => {
-//     // Write a for each loop
-//     // Login as a student
-//     // Check Notifications - notified of new class & assessment
-//   });
+
+  describe("Assessment Submission", () => {
+    it(`Receive Assessment Notification?`, () => {
+      cy.clerkSignIn({
+        strategy: "password",
+        identifier: studentEmails[0],
+        password: "S3cur3P4ss",
+      });
+
+      cy.visit("/dashboard");
+      // Wait for server-side rendering to complete
+      cy.get('[data-testid="server-render-complete"]', {
+        timeout: 10000,
+      }).should("exist");
+
+      cy.get('[data-id="notification-count"]').contains("2");
+      cy.get('[data-id="notification-count"]').click();
+
+      let originalUrl;
+      cy.url().then((url) => {
+        originalUrl = url;
+
+        // Wait for the URL to change
+        cy.url().should("not.eq", originalUrl, { timeout: 30000 });
+      });
+    });
+
+    // Check Notifications - notified of new class & assessment
+  });
 
   describe("Cleanup / Class Deletion", () => {
     beforeEach(() => {
-        // Log in and navigate to dashboard before each test in this block
-        cy.clerkSignIn({
-          strategy: "password",
-          identifier: "teacher1@test.com",
-          password: "teacher1",
-        });
-        cy.visit("/dashboard");
-        // Wait for server-side rendering to complete
-        cy.get('[data-testid="server-render-complete"]', {
-          timeout: 10000,
-        }).should("exist");
+      // Log in and navigate to dashboard before each test in this block
+      cy.clerkSignIn({
+        strategy: "password",
+        identifier: "teacher1@test.com",
+        password: "teacher1",
       });
-      
-    it("Can delete an existing class", () => {
-        // Navigate to the class page
-        cy.visit(`/classes/${randomClassCode}`);
-  
-        // Wait for the class page to load
-        cy.get('[data-testid="class-page-loaded"]', { timeout: 10000 }).should(
-          "exist"
-        );
-  
-        // Click the "Delete Class" button
-        cy.get('[data-id="delete-class-dialog-btn"]').click();
-  
-        // Verify the delete dialog is open using the new data attribute
-        cy.get('[data-id="delete-class-dialog-title"]').should("be.visible");
-  
-        // Fill in the confirmation details
-        cy.get('input[name="confirmClassId"]').type(randomClassCode);
-        cy.get('input[name="confirmPhrase"]').type("delete-this-class");
-  
-        // Submit the form
-        cy.get('[data-id="delete-class-btn"]').click();
-  
-        // Wait for the deletion process to complete and redirect to dashboard
-        cy.url().should("include", "/dashboard", { timeout: 10000 });
-  
-        // Wait for the dashboard to load
-        cy.get('[data-testid="server-render-complete"]', {
-          timeout: 10000,
-        }).should("exist");
-  
-        // Verify the deleted class no longer appears in the class list
-        cy.get('[data-id="class-table-title"]').should("contain", "Classes");
-        cy.contains("Updated Test Class").should("not.exist");
-      });
-  })
+      cy.visit("/dashboard");
+      // Wait for server-side rendering to complete
+      cy.get('[data-testid="server-render-complete"]', {
+        timeout: 10000,
+      }).should("exist");
+    });
 
+    it("Can delete an existing class", () => {
+      // Navigate to the class page
+      cy.visit(`/classes/${randomClassCode}`);
+
+      // Wait for the class page to load
+      cy.get('[data-testid="class-page-loaded"]', { timeout: 10000 }).should(
+        "exist"
+      );
+
+      // Click the "Delete Class" button
+      cy.get('[data-id="delete-class-dialog-btn"]').click();
+
+      // Verify the delete dialog is open using the new data attribute
+      cy.get('[data-id="delete-class-dialog-title"]').should("be.visible");
+
+      // Fill in the confirmation details
+      cy.get('input[name="confirmClassId"]').type(randomClassCode);
+      cy.get('input[name="confirmPhrase"]').type("delete-this-class");
+
+      // Submit the form
+      cy.get('[data-id="delete-class-btn"]').click();
+
+      // Wait for the deletion process to complete and redirect to dashboard
+      cy.url().should("include", "/dashboard", { timeout: 10000 });
+
+      // Wait for the dashboard to load
+      cy.get('[data-testid="server-render-complete"]', {
+        timeout: 10000,
+      }).should("exist");
+
+      // Verify the deleted class no longer appears in the class list
+      cy.get('[data-id="class-table-title"]').should("contain", "Classes");
+      cy.contains("Updated Test Class").should("not.exist");
+    });
+  });
 });

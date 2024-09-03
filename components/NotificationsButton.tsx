@@ -20,6 +20,8 @@ function NotificationsButton() {
 
     // Fetch immediately when component mounts
     fetchNotificationCount();
+    
+    // Initiially I set this to recurring fetch, but I later removed this
 
     // Set up an interval to fetch every 60 seconds
     // const intervalId = setInterval(fetchNotificationCount, 10000);
@@ -48,6 +50,7 @@ function NotificationsButton() {
         <Bell />
         {notificationCount > 0 && (
           <div
+          data-id="notification-count"
             className={`rounded-full text-sm bg-orange-400 py-[0.1rem] ${
               notificationCount === 1
                 ? "px-2"

@@ -80,7 +80,7 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
           )}
         </div>
         <div className="flex flex-col justify-between">
-        {user.role === "TEACHER" && assessmentData.status === "DRAFT" && (
+          {user.role === "TEACHER" && assessmentData.status === "DRAFT" && (
             <div className="flex space-x-4 justify-end">
               <Link href={`/assessments/edit/${assessmentData.id}`}>
                 <Button className="bg-yellow-300 text-black hover:text-white">
@@ -162,47 +162,50 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
         )}
       </div>
 
-      {results && user.role === "TEACHER" && 
-      <AssessmentViewSelect
-        results={results}
-        assessmentId={assessmentData.id}
-        assessmentTitle={assessmentData.title}
-        averageScore={averageScore}
-        latestSubmissionId={assessmentData.submissions[0]?.id || null}
-        membersCount={assessmentData.class._count.members}
-        submissionCount={submissionCount}
-      />  
-      }
+      {results && user.role === "TEACHER" && (
+        <AssessmentViewSelect
+          results={results}
+          assessmentId={assessmentData.id}
+          assessmentTitle={assessmentData.title}
+          averageScore={averageScore}
+          latestSubmissionId={assessmentData.submissions[0]?.id || null}
+          membersCount={assessmentData.class._count.members}
+          submissionCount={submissionCount}
+        />
+      )}
 
       {results && user.role === "STUDENT" && (
         <div className="flex flex-col gap-y-4">
-        <div className="w-full">
-          <StudentDataTable
+          <div className="w-full">
+            <StudentDataTable
               columns={studentColumns}
               data={results}
               assessmentTitle={assessmentData.title}
             />
-        </div>
-        <Card className="p-2">
-          <div className="flex justify-between items-end py-2 mb-2 border-b-2">
-            <h3 className="font-bold text-xl ">Feedback</h3>
-            {results.length > 0 && (
-              <ReportIssueDialog
-                issueItemId={results[0].id}
-                issueType="Feedback"
-                issueObject={results[0].feedback}
-              />
-            )}
           </div>
-          <p>
-            {results.length > 0
-              ? results[0].feedback
-              : "No Feedback Available."}
-          </p>
-          {results.length > 0 && <p className="text-sm text-center pt-1 mt-1 border-t-2">AI Generated Feedback may be inacurate.</p>}
-        </Card>
-        <div data-id="assessment-page-loaded" hidden></div>
-
+          <Card className="p-2">
+            <div className="flex justify-between items-end py-2 mb-2 border-b-2">
+              <h3 className="font-bold text-xl ">Feedback</h3>
+              {results.length > 0 && (
+                <ReportIssueDialog
+                  issueItemId={results[0].id}
+                  issueType="Feedback"
+                  issueObject={results[0].feedback}
+                />
+              )}
+            </div>
+            <p>
+              {results.length > 0
+                ? results[0].feedback
+                : "No Feedback Available."}
+            </p>
+            {results.length > 0 && (
+              <p className="text-sm text-center pt-1 mt-1 border-t-2">
+                AI Generated Feedback may be inacurate.
+              </p>
+            )}
+          </Card>
+          <div data-id="assess-page-loaded" style={{ display: "none" }}></div>
         </div>
       )}
     </div>

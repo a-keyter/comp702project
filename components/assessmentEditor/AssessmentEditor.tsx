@@ -515,8 +515,8 @@ function AssessmentEditor({
       mcqAnswers
     );
     if (result.success) {
-      setLoading(false);
       router.push(`/assessments/${assessmentId}`);
+      setLoading(false);
     } else {
       setLoading(false);
       alert("Failed to save assessment items. Please try again.");
@@ -532,8 +532,8 @@ function AssessmentEditor({
     );
     const setLive = await setAssessmentLive(assessmentId);
     if (result.success && setLive) {
-      setPublishLoading(false);
       router.push(`/assessments/${assessmentId}`);
+      setPublishLoading(false);
     } else {
       setPublishLoading(false);
       alert("Failed to save assessment items. Please try again.");
@@ -548,8 +548,8 @@ function AssessmentEditor({
       mcqAnswers
     );
     if (result.success) {
-      setLoading(false);
       router.push(`/assessments/preview/${assessmentId}`);
+      setLoading(false);
     } else {
       setLoading(false);
       alert("Failed to save assessment items. Please try again.");
