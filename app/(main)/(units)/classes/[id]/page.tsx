@@ -99,7 +99,7 @@ async function ClassPage({ params }: { params: { id: string } }) {
           classTitle={classData.title}
         />
       )}
-      <div data-testid="class-page-loaded" style={{ display: "none" }}></div>
+      <div data-id="class-page-loaded" style={{ display: "none" }}></div>
     </div>
   );
 }

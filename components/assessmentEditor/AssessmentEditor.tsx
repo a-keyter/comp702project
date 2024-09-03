@@ -1,7 +1,7 @@
 "use client";
 
 // React / Next Imports
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // Component Imports
 import { Button } from "../ui/button";
@@ -62,13 +62,16 @@ function AssessmentEditor({
   const [hasUsedAiGeneration, setHasUsedAiGeneration] = useState<boolean>(true);
   const [newAssessmentOptionsDialog, showNewAssessmentOptionsDialog] =
     useState<boolean>(false);
+
+  const lastItemRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (initialItems?.length === 0) {
       showNewAssessmentOptionsDialog(true);
     }
   }, [initialItems]);
 
-  // Default Data Structures 
+  // Default Data Structures
   const createDefaultTextItem = (): AssessmentItem => ({
     id: uuidv4(),
     index: assessmentItems.length,
@@ -130,6 +133,11 @@ function AssessmentEditor({
           [newItem.id]: createDefaultMcqAnswers(newItem.id),
         }));
       }
+
+      // Scroll to the new item after it's added
+      setTimeout(() => {
+        lastItemRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
 
       return [...currentItems, newItem];
     });
@@ -608,10 +616,14 @@ function AssessmentEditor({
           {assessmentObjectives}
         </p>
       </Card>
-      
+
       {/* MAP OVER ASSESSMENT ITEMS */}
       {assessmentItems.map((item, index) => (
-        <Card key={item.id} className="flex flex-col border-2 p-2 w-full">
+        <Card
+          key={item.id}
+          className="flex flex-col border-2 p-2 w-full"
+          ref={index === assessmentItems.length - 1 ? lastItemRef : null}
+        >
           <div className="flex justify-between items-center mb-2">
             <span className="font-bold">Item {index + 1}</span>
             <div className="flex gap-x-2">

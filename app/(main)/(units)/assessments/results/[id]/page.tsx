@@ -6,7 +6,7 @@ async function AssessmentResultsPage({ params }: { params: { id: string } }) {
   const results = await getSubmissionResults(params.id);
 
   if (!results) {
-    redirect("/dashboard")
+    redirect("/dashboard");
   }
 
   return (
@@ -28,6 +28,7 @@ async function AssessmentResultsPage({ params }: { params: { id: string } }) {
           feedback={results.feedback}
         />
       )}
+      <div data-id="results-render-complete" style={{ display: "none" }}></div>
     </div>
   );
 }

@@ -76,7 +76,7 @@ function CreateAssessmentDialog({
   classId: string | null;
   classTitle: string | null;
   classes: SafeClass[] | null;
-  variant: "icon" | "text"
+  variant: "icon" | "text";
 }) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -89,7 +89,11 @@ function CreateAssessmentDialog({
       classId: classId ? classId : "",
       title: "",
       objectives: "",
-      dueDate: setHours(setMinutes(new Date(), 0), 17), // Set default to today at 5 PM
+      dueDate: (() => {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        return setHours(setMinutes(tomorrow, 0), 17);
+      })(),
     },
   });
 
@@ -107,7 +111,6 @@ function CreateAssessmentDialog({
       // Close the dialog if successful
       setLoading(false);
       setOpen(false);
-
     } catch (err) {
       setLoading(false);
       console.error("Error creating new assessment:", err);
@@ -120,12 +123,18 @@ function CreateAssessmentDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-      {variant === "icon" ? (
-          <button title="New Assessment" className="rounded-full p-1 bg-black" data-id="new-assessment-dialog">
+        {variant === "icon" ? (
+          <button
+            title="New Assessment"
+            className="rounded-full p-1 bg-black"
+            data-id="new-assessment-dialog"
+          >
             <Plus className="h-5 w-5 text-white" />
           </button>
         ) : (
-          <Button data-id="new-assessment-dialog"><Plus className="pr-2"/> New </Button>
+          <Button data-id="new-assessment-dialog">
+            <Plus className="pr-2" /> New{" "}
+          </Button>
         )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -207,7 +216,7 @@ function CreateAssessmentDialog({
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                        data-id="date-picker"
+                          data-id="date-picker"
                           variant={"outline"}
                           className={cn(
                             "w-[full] pl-3 text-left font-normal",
@@ -224,22 +233,23 @@ function CreateAssessmentDialog({
                       </FormControl>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={(date) => {
-                        if (date) {
-                          const dateAt5PM = setHours(setMinutes(date, 0), 17);
-                          field.onChange(dateAt5PM);
-                        }
-                      }}
-                      disabled={(date) => date < new Date()}
-                      initialFocus
-                    />
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={(date) => {
+                          if (date) {
+                            const dateAt5PM = setHours(setMinutes(date, 0), 17);
+                            field.onChange(dateAt5PM);
+                          }
+                        }}
+                        disabled={(date) => date < new Date()}
+                        initialFocus
+                      />
                     </PopoverContent>
                   </Popover>
                   <FormDescription>
-                  Set the due date for the assessment. The time will default to 5:00 PM.
+                    Set the due date for the assessment. The time will default
+                    to 5:00 PM.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

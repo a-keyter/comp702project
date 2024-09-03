@@ -35,6 +35,10 @@ async function AttemptAssessmentPage({ params }: { params: { id: string } }) {
         items={assessmentItems.assessmentItems || []}
         mcqAnswers={assessmentItems.mcqAnswers || {}}
       />
+      <div
+        data-id="attempt-render-complete"
+        style={{ display: "none" }}
+      ></div>
     </div>
   );
 }

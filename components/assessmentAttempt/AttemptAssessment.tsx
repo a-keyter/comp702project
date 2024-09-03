@@ -76,9 +76,8 @@ function AttemptAssessment({
       if (!finalResult.success) {
         throw new Error(finalResult.error || "Failed to finalize submission");
       }
-  
-      setLoading(false);
       router.push(`/assessments/results/${submissionId}`);
+      setLoading(false);
     } catch (error) {
       setLoading(false);
       console.error("Error submitting assessment:", error);
@@ -104,6 +103,7 @@ function AttemptAssessment({
       </Card>
       {items.map((item, index) => (
         <Card
+          data-id={`question-${index}`}
           key={item.id}
           className="flex flex-col border-2 p-3 rounded-md w-full"
         >
@@ -116,9 +116,9 @@ function AttemptAssessment({
         </Card>
       ))}
       <div className="flex justify-end">
-      <Button onClick={handleSubmit} className="mt-4">
-        Submit Assessment
-        {loading && <div className="ml-2"><LoadingSpinner/></div>}
+      <Button onClick={handleSubmit} className="mt-4" data-id="submit-assessment">
+        Submit
+        {loading ? <div className="ml-2"><LoadingSpinner/></div> : " Assessment"}
       </Button>
       </div>
     </div>
