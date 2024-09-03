@@ -11,12 +11,13 @@ import {
 } from "@/lib/assessmentUtils/getAssessmentDetails";
 import { studentAssessmentColumns } from "@/components/assessmentsTableStudent/columns";
 import { Card } from "@/components/ui/card";
+import RedirectToOnboarding from "./RedirectToOnboarding";
 
 export default async function Dashboard() {
   const user = await getUserDetails();
   if (!user) {
-    return redirect("/onboard");
-  }
+    return <RedirectToOnboarding/>
+  } 
 
   const classes = await getUserClasses();
   const teacherAssessments = await getUpcomingTeacherAssessmentData();

@@ -4,6 +4,7 @@ describe("E2E Functionality", () => {
     cy.visit("/");
   });
 
+
   // describe("Authentication", () => {
   //   it("Can log in and out as teacher", () => {
   //     // Verify the sign-in button is visible
@@ -272,7 +273,9 @@ describe("E2E Functionality", () => {
       }
 
       // Check that the last mcq answers have been generated.
-      cy.get('textarea').last().should('not.have.value', '', { timeout: 10000 });
+      cy.get("textarea")
+        .last()
+        .should("not.have.value", "", { timeout: 10000 });
 
       // Click the publish assessment button
       cy.get('[data-id="publish-assessment"]').should("be.visible").click();

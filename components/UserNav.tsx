@@ -88,17 +88,17 @@ async function UserNav() {
           <DropdownMenuContent>
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href={"/profile"} className="w-full">
+            <DropdownMenuItem asChild>
+              <Link href={"/profile"} className="w-full" data-id="user-profile-btn">
                 Profile
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem asChild>
               <Link href={"/dashboard"} className="w-full">
                 Dashboard
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem asChild>
               <SignOutButton redirectUrl={"/"}>
                 <button className="w-full text-left" data-id="sign-out-btn">Sign out</button>
               </SignOutButton>

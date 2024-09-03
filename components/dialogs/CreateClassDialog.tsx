@@ -70,19 +70,19 @@ function CreateClassDialog() {
       setError(null);
       setLoading(true);
 
-      // Call the createNewClass function (to be implemented)
+      // Call the createNewClass function
       await createNewClass(data);
 
       // Close the dialog if successful
       setLoading(false);
-      setOpen(false);
 
       // Reload the page to show the new class
       router.push(`/classes/${data.classCode.toLowerCase()}`);
+      setOpen(false);
     } catch (err) {
       setLoading(false);
       console.error("Error creating new class:", err);
-      setError("An error occurred while creating the class. Please try again.");
+      setError("An error occurred while creating the class: " + err);
     }
   }
 

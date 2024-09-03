@@ -24,6 +24,10 @@ export default async function ProfilePage() {
           tableSize="small"
         />
       )}
+      <div
+        data-id="server-render-complete"
+        style={{ display: "none" }}
+      ></div>
     </div>
   );
 }

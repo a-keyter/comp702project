@@ -201,6 +201,8 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
           </p>
           {results.length > 0 && <p className="text-sm text-center pt-1 mt-1 border-t-2">AI Generated Feedback may be inacurate.</p>}
         </Card>
+        <div data-id="assessment-page-loaded" hidden></div>
+
         </div>
       )}
     </div>

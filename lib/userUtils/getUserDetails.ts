@@ -3,6 +3,8 @@
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "../initPrisma";
 import { User } from "@prisma/client";
+import { Navigation } from "lucide-react";
+import { redirect } from "next/navigation";
 
 // Util for fetching User - NEVER PASS THE USER ID TO CLIENT
 export async function getUserById(id: string): Promise<User | null> {
@@ -73,7 +75,7 @@ export async function getUserDetails(): Promise<SafeUser | null> {
   const user = await getUserById(userId);
 
   if (!user) {
-    return null;
+    return null
   }
 
   // Only return safe, non-sensitive user information

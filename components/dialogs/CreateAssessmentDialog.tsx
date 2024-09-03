@@ -101,12 +101,13 @@ function CreateAssessmentDialog({
       // Call the createNewClass function
       const assessCode = await createNewAssessment(data);
 
+      // Reload the page to show the new class
+      router.push(`/assessments/edit/${assessCode}`);
+
       // Close the dialog if successful
       setLoading(false);
       setOpen(false);
 
-      // Reload the page to show the new class
-      router.push(`/assessments/edit/${assessCode}`);
     } catch (err) {
       setLoading(false);
       console.error("Error creating new assessment:", err);
