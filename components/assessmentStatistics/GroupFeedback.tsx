@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { createTeacherFeedback } from "@/lib/analysisUtils/createTeacherFeedback";
 import { getTeacherFeedback } from "@/lib/analysisUtils/getTeacherFeedback";

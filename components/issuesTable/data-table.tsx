@@ -28,14 +28,12 @@ import { QuestionFeedbackIssue } from "./columns";
 interface DataTableProps {
   data: QuestionFeedbackIssue[];
   columns: ColumnDef<QuestionFeedbackIssue>[];
-  userRole: string;
   size: "SMALL" | "LARGE"
 }
 
 export function QuestionFeedbackIssuesDataTable({
   columns,
   data,
-  userRole,
   size,
 }: DataTableProps) {
   const [sorting, setSorting] = useState<SortingState>([])

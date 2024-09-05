@@ -1,3 +1,5 @@
+"use server"
+
 import { prisma } from "@/lib/initPrisma";
 import { auth } from "@clerk/nextjs/server";
 
@@ -15,10 +17,17 @@ export async function getUserNotifications() {
       where: {
         recipientId: userId,
       },
-      include: {        
+      select: {
+        id: true,
+        type: true,
+        classId: true,
+        assessmentId: true,
+        issueId: true,
+        is_unread: true,
+        createdAt: true,
+        updatedAt: true,
         sender: {
           select: {
-            id: true,
             name: true,
           },
         },
@@ -46,7 +55,7 @@ export async function getUserNotifications() {
       },
     });
 
-    return {success: true, notifications};
+    return { success: true, notifications };
   } catch (error) {
     console.error("Failed to fetch user notifications:", error);
     return { success: false, error: "Failed to fetch notifications" };

@@ -29,7 +29,6 @@ import {
 } from "@/components/ui/table";
 import { Card } from "../ui/card";
 import { Input } from "../ui/input";
-import Link from "next/link";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -39,10 +38,9 @@ interface DataTableProps<TData, TValue> {
 export function SingleStudentClassDataTable<TData, TValue>({
   columns,
   data,
-  role,
   studentName,
   tableSize,
-}: DataTableProps<TData, TValue> & { role: string; studentName: string, tableSize: string }) {
+}: DataTableProps<TData, TValue> & { studentName: string, tableSize: string }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []

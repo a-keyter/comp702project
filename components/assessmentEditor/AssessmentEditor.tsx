@@ -177,8 +177,9 @@ function AssessmentEditor({
     const deletedItem = assessmentItems[index];
     if (deletedItem.type === "MCQ") {
       setMcqAnswers((currentAnswers) => {
-        const { [deletedItem.id]: _, ...remainingAnswers } = currentAnswers;
-        return remainingAnswers;
+        const updatedAnswers = { ...currentAnswers };
+        delete updatedAnswers[deletedItem.id];
+        return updatedAnswers;
       });
     }
   };

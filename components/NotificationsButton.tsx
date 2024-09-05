@@ -3,9 +3,8 @@
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { Bell } from "lucide-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getUserNotificationCount } from "@/lib/notificationUtils/getNotificationCount";
-import { clearUnreadNotifications } from "@/lib/notificationUtils/clearNotifications";
 import Link from "next/link";
 
 function NotificationsButton() {

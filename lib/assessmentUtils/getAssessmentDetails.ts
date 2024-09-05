@@ -369,7 +369,6 @@ export async function getStudentAssessmentData() {
     return null;
   }
   try {
-    const currentDate = new Date()
     const assessments = await prisma.assessment.findMany({
       where: {
         class: { members: { some: { id: userId } } },

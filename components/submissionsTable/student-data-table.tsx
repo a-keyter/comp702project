@@ -25,13 +25,11 @@ import { Card } from "@/components/ui/card";
 interface StudentDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  assessmentTitle: string;
 }
 
 export function StudentDataTable<TData, TValue>({
   columns,
   data,
-  assessmentTitle,
 }: StudentDataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
 

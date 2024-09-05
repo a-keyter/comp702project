@@ -15,7 +15,6 @@ import { Lock } from "lucide-react";
 interface AssessmentViewSelectProps {
   results: ResponseWithUser[];
   assessmentId: string;
-  assessmentTitle: string;
   averageScore: number;
   submissionCount: number;
   membersCount: number;
@@ -23,7 +22,7 @@ interface AssessmentViewSelectProps {
 }
 
 export function AssessmentViewSelect({
-  results, assessmentId, assessmentTitle, averageScore, submissionCount, membersCount, latestSubmissionId,
+  results, assessmentId, averageScore, submissionCount, membersCount, latestSubmissionId,
 }:
    AssessmentViewSelectProps
 ) {
@@ -53,7 +52,6 @@ export function AssessmentViewSelect({
           <AllResponsesDataTable
             columns={responseColumns}
             data={results}
-            assessmentTitle={assessmentTitle}
           />
         </Card>
       </TabsContent>

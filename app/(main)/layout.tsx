@@ -1,7 +1,7 @@
 import Footer from "@/components/Footer";
 import UserNav from "@/components/UserNav";
 import { Metadata } from "next";
-import { Suspense } from "react";
+import React, { Suspense } from "react";
 import Loading from "./loading";
 
 export const metadata: Metadata = {

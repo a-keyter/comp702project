@@ -1,6 +1,6 @@
 import ResultItemWrapper from "./ResultItemWrapper";
 import Link from "next/link";
-import { ArrowLeftSquare, RecycleIcon, SkipBack } from "lucide-react";
+import { ArrowLeftSquare, RecycleIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { SubmittedResponse } from "@/lib/assessmentUtils/getSubmissionResults";
 import ReportIssueDialog from "../ReportIssueDialog";

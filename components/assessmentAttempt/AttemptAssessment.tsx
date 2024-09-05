@@ -110,7 +110,7 @@ function AttemptAssessment({
           <AttemptItemWrapper
             item={item}
             answers={item.type === "MCQ" ? mcqAnswers[item.id] : undefined}
-            selectedAnswerId={responses[item.id]}
+            selectedAnswerId={responses[item.id] || null} // Provide a fallback value of null
             onSelect={(answerId) => handleResponseChange(item.id, answerId)}
           />
         </Card>

@@ -55,6 +55,7 @@ export async function saveAssessmentItems(
             // console.log(`Updated item ${item.id}`);
           } else {
             // Create new item
+            // eslint-disable-next-line no-unused-vars
             dbItem = await tx.assessmentItem.create({
               data: {
                 id: item.id,

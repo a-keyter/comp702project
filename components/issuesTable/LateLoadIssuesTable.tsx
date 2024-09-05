@@ -65,7 +65,6 @@ export default function LateLoadQuestionFeedbackIssues({
     <QuestionFeedbackIssuesDataTable
       data={issues}
       columns={userRole === "TEACHER" ? questionFeedbackIssueColumns : studentQuestionFeedbackIssueColumns}
-      userRole={userRole}
       size={size}
     />
   );

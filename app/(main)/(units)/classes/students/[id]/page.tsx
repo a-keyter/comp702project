@@ -1,4 +1,4 @@
-import { classStudentsColumns, Student } from "@/components/studentsTable/columns";
+import { classStudentsColumns } from "@/components/studentsTable/columns";
 import { ClassStudentsDataTable } from "@/components/studentsTable/data-table";
 import { Card } from "@/components/ui/card";
 import { getClassById } from "@/lib/classUtils/getClassDetails";

@@ -27,13 +27,11 @@ import { Input } from "@/components/ui/input";
 interface ResponseDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  assessmentTitle: string;
 }
 
 export function AllResponsesDataTable<TData, TValue>({
   columns,
   data,
-  assessmentTitle,
 }: ResponseDataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(

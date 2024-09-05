@@ -1,8 +1,10 @@
 import PreviewDisplay from "@/components/assessmentPreview/PreviewDisplay";
+
 import { getAssessmentById } from "@/lib/assessmentUtils/getAssessmentDetails";
 import { loadAssessmentItems } from "@/lib/assessmentUtils/getAssessmentItems";
 import { getUserDetails } from "@/lib/userUtils/getUserDetails";
-import { notFound, redirect } from "next/navigation";
+
+import { redirect } from "next/navigation";
 
 async function PreviewAssessmentPage({ params }: { params: { id: string } }) {
   const assessmentData = await getAssessmentById(params.id);

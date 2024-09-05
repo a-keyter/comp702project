@@ -55,7 +55,7 @@ function PreviewDisplay({
         </p>
       </Card>
       
-      {items.map((item, index) => (
+      {items.map((item) => (
         <Card
           key={item.id}
           className="flex flex-col border-2 p-2 rounded-md w-full"

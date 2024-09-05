@@ -1,15 +1,17 @@
+"use client"
+
+import React, { useEffect, useState } from 'react';
 import { Card } from "@/components/ui/card";
 import { getUserNotifications } from "@/lib/notificationUtils/getUserNotifications";
+import { clearUnreadNotifications } from "@/lib/notificationUtils/clearNotifications";
 import { NotificationType } from "@prisma/client";
 import NotificationItemWrapper from "./NotificationItemWrapper";
-import { clearUnreadNotifications } from "@/lib/notificationUtils/clearNotifications";
+import LoadingSpinner from '@/components/LoadingSpinner';
 
-// Define the shape of a Notification
+// Updated Notification interface
 export interface Notification {
   id: string;
   type: NotificationType;
-  recipientId: string;
-  senderId: string;
   classId: string | null;
   assessmentId: string | null;
   issueId: string | null;
@@ -17,7 +19,6 @@ export interface Notification {
   createdAt: Date;
   updatedAt: Date;
   sender: {
-    id: string;
     name: string;
   };
   issue: {
@@ -34,10 +35,45 @@ export interface Notification {
   } | null;
 }
 
-async function NotificationsPage() {
-  const { success, notifications, error } = await getUserNotifications();
+function NotificationsPage() {
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  if (!success || !notifications || notifications.length === 0) {
+  useEffect(() => {
+    async function fetchNotifications() {
+      try {
+        const { success, notifications: fetchedNotifications, error: fetchError } = await getUserNotifications();
+        
+        if (success && fetchedNotifications) {
+          setNotifications(fetchedNotifications);
+          await clearUnreadNotifications();
+        } else {
+          setError(fetchError || "Failed to fetch notifications");
+        }
+      } catch (err) {
+        setError("An error occurred while fetching notifications");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchNotifications();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <Card className="flex-1 w-full max-w-4xl">
+        <div className="flex flex-col overflow-y-auto">
+          <div className="bg-blue-100 w-full h-20 border-b-2 border-gray-600 flex items-center justify-center">
+            Loading... <div className='pl-3'><LoadingSpinner/></div>
+          </div>
+        </div>
+      </Card>
+    );
+  }
+
+  if (error || notifications.length === 0) {
     return (
       <Card className="flex-1 w-full max-w-4xl">
         <div className="flex flex-col overflow-y-auto">
@@ -48,9 +84,6 @@ async function NotificationsPage() {
       </Card>
     );
   }
-
-  // Clear unread notifications
-  await clearUnreadNotifications();
 
   return (
     <Card className="flex-1 w-full max-w-4xl">
@@ -65,7 +98,5 @@ async function NotificationsPage() {
     </Card>
   );
 }
-
-
 
 export default NotificationsPage;

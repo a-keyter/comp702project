@@ -39,6 +39,5 @@ export async function setAssessmentLive(assessmentId: string) {
     } catch (error) {
         console.error(`Error setting assessment ${assessmentId} live:`, error);
         throw error;
-        return null;
     }
 }

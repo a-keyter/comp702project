@@ -1,8 +1,7 @@
 import LateLoadQuestionFeedbackIssues from "@/components/issuesTable/LateLoadIssuesTable";
 import LateLoadJoinRequests from "@/components/joinClassTable/LateLoadJoinRequests";
 import { Card } from "@/components/ui/card";
-import { getUserById, getUserDetails } from "@/lib/userUtils/getUserDetails";
-import { auth } from "@clerk/nextjs/server";
+import { getUserDetails } from "@/lib/userUtils/getUserDetails";
 import { redirect } from "next/navigation";
 
 export default async function IssuesPage() {

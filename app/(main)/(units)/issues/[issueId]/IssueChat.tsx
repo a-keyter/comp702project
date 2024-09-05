@@ -45,7 +45,6 @@ type MessageFormData = z.infer<typeof messageSchema>;
 
 export default function IssueChat({
   issueId,
-  issueStatus,
   userRole,
   userName,
 }: IssueChatProps) {

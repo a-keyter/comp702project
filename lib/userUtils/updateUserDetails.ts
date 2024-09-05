@@ -1,9 +1,8 @@
-// lib/actions/updateUserDetails.ts
 'use server'
 
 import { z } from "zod";
 import { prisma } from "../initPrisma";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 
 const UpdateUserSchema = z.object({
   name: z.string().min(2),

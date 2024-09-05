@@ -28,22 +28,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "../ui/input";
-import CreateAssessmentDialog from "../dialogs/CreateAssessmentDialog";
+import CreateAssessmentDialog from "../assessmentDialogs/CreateAssessmentDialog";
 import { SafeClass } from "@/lib/classUtils/getClassDetails";
-import { FilterIcon } from "lucide-react";
-
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
-
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-type Checked = DropdownMenuCheckboxItemProps["checked"];
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -93,11 +79,15 @@ export function AssessmentDataTable<TData, TValue>({
     },
   });
 
-
   return (
     <div className="flex flex-col gap-y-1 h-full">
       <div className="flex justify-between items-center">
-        <h2 className="font-semibold text-xl pl-2" data-id="assessment-table-title">{display} Assessments</h2>
+        <h2
+          className="font-semibold text-xl pl-2"
+          data-id="assessment-table-title"
+        >
+          {display} Assessments
+        </h2>
         <div className="flex gap-x-4 py-1 w-full max-w-md justify-end">
           <Input
             name="Assessment Search Bar"
@@ -116,7 +106,6 @@ export function AssessmentDataTable<TData, TValue>({
               variant="text"
             />
           )}
-
         </div>
       </div>
 

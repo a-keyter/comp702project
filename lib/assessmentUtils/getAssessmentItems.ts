@@ -34,6 +34,7 @@ export async function loadAssessmentItems(assessmentId: string) {
         mcqAnswers[item.id] = item.answers as Answer[]
       }
       // Omit the answers from the item object
+      // eslint-disable-next-line no-unused-vars
       const { answers, ...itemWithoutAnswers } = item
       return itemWithoutAnswers
     })

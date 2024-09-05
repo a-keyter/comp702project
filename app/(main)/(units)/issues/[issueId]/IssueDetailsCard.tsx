@@ -1,10 +1,5 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { rejectJoinRequest } from "@/lib/issueUtils/rejectJoinRequest";
-import { addUserToClass } from "@/lib/issueUtils/addUserToClass";
-import { toast } from "@/components/ui/use-toast";
-import { redirect } from "next/navigation";
-import { Ban, Plus } from "lucide-react";
 import JoinRequestActions from "./JoinRequestActions";
 
 type IssueDetailsCardProps = {

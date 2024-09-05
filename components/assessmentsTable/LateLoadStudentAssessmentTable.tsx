@@ -1,11 +1,21 @@
 "use client"
 
-import { AssessmentDataTable } from "@/components/assessmentsTable/data-table";
-import { oneClassStudentAssessmentColumns } from "@/components/assessmentsTableStudent/oneClassAssessmentColumnsStudent";
-import { Skeleton } from "@/components/ui/skeleton";
-import { getClassAssessmentsStudent } from "@/lib/assessmentUtils/getAssessmentDetails";
-import { Assessment, Submission } from "@prisma/client";
+// React Imports
 import { useEffect, useRef, useState } from "react";
+
+// Type Imports
+import { Assessment, Submission } from "@prisma/client";
+
+// Component Imports
+import { Skeleton } from "@/components/ui/skeleton";
+import { AssessmentDataTable } from "@/components/assessmentsTable/data-table";
+import { oneClassStudentAssessmentColumns } from "./oneClassAssessmentColumnsStudent";
+
+// Util Import
+import { getClassAssessmentsStudent } from "@/lib/assessmentUtils/getAssessmentDetails";
+
+
+
 
 type AssessmentWithAttempts = Assessment & {
   attempts: number;

@@ -48,7 +48,6 @@ async function IndividualStudentPage({
           columns={classColumns}
           data={studentClassData}
           studentName={studentData?.name || ""}
-          role={user.role}
           tableSize="small"
         />
       )}

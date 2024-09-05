@@ -52,11 +52,9 @@ export async function getAssessmentsByNicknameAndClass(
     );
 
     // Combine assessment and submission data
-    const assessmentData = liveAssessments.map((assessment, index) => {
+    const assessmentData = liveAssessments.map((assessment) => {
       const submission = submissionMap.get(assessment.id);
-
-
-
+      
       return {
         assessmentId: assessment.id,
         assessmentTitle: assessment.title,

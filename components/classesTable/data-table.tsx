@@ -29,9 +29,9 @@ import {
 } from "@/components/ui/table";
 import { Card } from "../ui/card";
 import { Input } from "../ui/input";
-import CreateClassDialog from "../dialogs/CreateClassDialog";
+import CreateClassDialog from "../classDialogs/CreateClassDialog";
 import Link from "next/link";
-import JoinClassDialog from "../dialogs/JoinClassDialog";
+import JoinClassDialog from "../classDialogs/JoinClassDialog";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

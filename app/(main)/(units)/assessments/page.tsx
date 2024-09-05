@@ -1,14 +1,19 @@
+// Component Imports
+import { Card } from "@/components/ui/card";
 import { assessmentColumns } from "@/components/assessmentsTable/columns";
 import { AssessmentDataTable } from "@/components/assessmentsTable/data-table";
-import { studentAssessmentColumns } from "@/components/assessmentsTableStudent/columns";
-import { Card } from "@/components/ui/card";
+
+// Util Imports
 import {
   getStudentAssessmentData,
   getTeacherAssessmentData,
 } from "@/lib/assessmentUtils/getAssessmentDetails";
 import { getUserClasses } from "@/lib/classUtils/getClassDetails";
 import { getUserDetails } from "@/lib/userUtils/getUserDetails";
+
+// NextJS Import
 import { redirect } from "next/navigation";
+import { studentAssessmentColumns } from "@/components/assessmentsTable/studentAssessmentColumns";
 
 async function page() {
   const user = await getUserDetails();

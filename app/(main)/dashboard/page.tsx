@@ -2,16 +2,16 @@ import { classColumns } from "@/components/classesTable/columns";
 import { ClassDataTable } from "@/components/classesTable/data-table";
 import { getUserClasses } from "@/lib/classUtils/getClassDetails";
 import { getUserDetails } from "@/lib/userUtils/getUserDetails";
-import { redirect } from "next/navigation";
 import { AssessmentDataTable } from "@/components/assessmentsTable/data-table";
 import { assessmentColumns } from "@/components/assessmentsTable/columns";
 import {
   getUpcomingStudentAssessmentData,
   getUpcomingTeacherAssessmentData,
 } from "@/lib/assessmentUtils/getAssessmentDetails";
-import { studentAssessmentColumns } from "@/components/assessmentsTableStudent/columns";
+
 import { Card } from "@/components/ui/card";
 import RedirectToOnboarding from "./RedirectToOnboarding";
+import { studentAssessmentColumns } from "@/components/assessmentsTable/studentAssessmentColumns";
 
 export default async function Dashboard() {
   const user = await getUserDetails();

@@ -14,7 +14,6 @@ import {
 } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -27,11 +26,12 @@ import { ClassJoinRequest } from "./columns";
 import { addUserToClass } from "@/lib/issueUtils/addUserToClass";
 import { toast } from "../ui/use-toast";
 import { rejectJoinRequest } from "@/lib/issueUtils/rejectJoinRequest";
-import { Ban, Filter, Plus } from "lucide-react";
+import { Ban, Plus } from "lucide-react";
 
 interface DataTableProps {
   data: ClassJoinRequest[];
   columns: ColumnDef<ClassJoinRequest>[];
+  // eslint-disable-next-line no-unused-vars
   updateJoinRequests: (issueId: string) => void;
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -24,32 +24,42 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import LoadingSpinner from "../LoadingSpinner";
-import { deleteUserByNickname } from "@/lib/userUtils/deleteUserByNickname";
-import { useClerk } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
+import { deleteClass } from "@/lib/classUtils/deleteClass";
 
-// Import the deleteUserByNickname function
-const FormSchema = z.object({
-  confirmPhrase: z.string().min(1),
-});
-
-function DeleteProfileDialog({ nickname }: { nickname: string }) {
+function DeleteClassDialog({
+  classId,
+  classTitle,
+}: {
+  classId: string;
+  classTitle: string;
+}) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const { signOut } = useClerk();
 
-  const form = useForm<z.infer<typeof FormSchema>>({
+  const FormSchema = z.object({
+    confirmClassId: z
+      .string()
+      .min(1)
+      .refine((val) => val === classId, {
+        message: "Class ID does not match.",
+      }),
+    confirmPhrase: z.string().min(1),
+  });
+
+  type FormValues = z.infer<typeof FormSchema>;
+
+  const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
+      confirmClassId: "",
       confirmPhrase: "",
     },
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    if (data.confirmPhrase !== "delete-my-profile") {
-      setError("Incorrect confirmation phrase.");
+    if (data.confirmPhrase !== "delete-this-class") {
+      setError("Incorrect Confirmation Phrase.");
       return;
     }
 
@@ -57,51 +67,57 @@ function DeleteProfileDialog({ nickname }: { nickname: string }) {
       setError(null);
       setLoading(true);
 
-      // Call the deleteUserByNickname function
-      const result = await deleteUserByNickname(nickname);
+      // Call the deleteClass function (you'll need to implement this)
+      await deleteClass(classId);
 
       setLoading(false);
       setOpen(false);
 
-      router.push("/");
-
-      // Log the user out
-      await signOut();
-
+      // Redirect to a different page after deletion
+      window.location.replace("/dashboard")
     } catch (err) {
       setLoading(false);
-      console.error("Error deleting profile:", err);
-      setError(
-        "An error occurred while deleting your profile. Please try again."
-      );
+      console.error("Error deleting class:", err);
+      setError("An error occurred while deleting the class. Please try again.");
     }
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="destructive">Delete Profile</Button>
+        <Button variant="destructive" data-id="delete-class-dialog-btn">Delete Class</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Delete Profile</DialogTitle>
+          <DialogTitle  data-id="delete-class-dialog-title">Delete Class</DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete your profile? <br />
-            This action cannot be undone.
+            Are you sure you want to delete the class {classTitle}? This action
+            cannot be undone.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
+              name="confirmClassId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm the Class ID &apos;{classId}&apos;</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="Enter the class ID" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="confirmPhrase"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Confirm deletion by typing 'delete-my-profile'
-                  </FormLabel>
+                  <FormLabel>Confirm Deletion by typing &apos;delete-this-class&apos;</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder='Type "delete-my-profile"' />
+                    <Input {...field} placeholder='Type "delete-this-class"' />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -110,20 +126,17 @@ function DeleteProfileDialog({ nickname }: { nickname: string }) {
             <div className="flex justify-end space-x-2">
               <Button
                 type="button"
-                variant="outline"
-                onClick={() => {
+                variant="default"
+                onClick={(e) => {
+                  e.preventDefault();
                   form.reset();
                   setOpen(false);
                 }}
               >
                 Cancel
               </Button>
-              <Button
-                type="submit"
-                variant="destructive"
-                data-id="delete-profile-btn"
-              >
-                Delete Profile
+              <Button type="submit" variant="destructive" data-id="delete-class-btn">
+                Delete Class
                 {loading && (
                   <div className="pl-4">
                     <LoadingSpinner />
@@ -139,4 +152,4 @@ function DeleteProfileDialog({ nickname }: { nickname: string }) {
   );
 }
 
-export default DeleteProfileDialog;
+export default DeleteClassDialog;

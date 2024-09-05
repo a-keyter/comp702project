@@ -3,7 +3,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
 import { prisma } from "../initPrisma";
-import { newAssessmentNotification } from "../notificationUtils/newAssessmentNotification";
 
 const FormSchema = z.object({
     classId: z

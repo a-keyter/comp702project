@@ -15,7 +15,9 @@ import {
 interface ItemWrapperProps {
   item: AssessmentItem;
   answers?: Answer[];
+  // eslint-disable-next-line no-unused-vars
   onUpdateItem: (updates: Partial<AssessmentItem>) => void;
+  // eslint-disable-next-line no-unused-vars
   onUpdateAnswer: (answerId: string, updates: Partial<Answer>) => void;
   onGenerateFullMcq: () => void;
   onGenerateAnswers: () => void;
@@ -24,6 +26,7 @@ interface ItemWrapperProps {
 
 interface AutoResizeInputProps {
   value: string;
+  // eslint-disable-next-line no-unused-vars
   onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
   placeholder: string;
   className?: string;

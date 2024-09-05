@@ -5,7 +5,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 interface AttemptItemWrapperProps {
   item: AssessmentItem;
   answers?: Answer[];
-  selectedAnswerId: string | undefined;
+  selectedAnswerId: string | null;
+  // eslint-disable-next-line no-unused-vars
   onSelect: (answerId: string) => void;
 }
 
@@ -33,7 +34,10 @@ export default function AttemptItemWrapper({
         {randomizedAnswers.length > 0 && (
           <div className="space-y-2 pr-2">
             {randomizedAnswers.map((answer) => (
-              <div key={answer.id} className="flex items-center justify-between">
+              <div
+                key={answer.id}
+                className="flex items-center justify-between"
+              >
                 <span>{answer.content}</span>
                 <Checkbox
                   checked={selectedAnswerId === answer.id}

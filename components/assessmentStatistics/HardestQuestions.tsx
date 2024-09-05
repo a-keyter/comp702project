@@ -38,6 +38,7 @@ function HardestQuestions({ assessmentId }: { assessmentId: string }) {
             ...q,
             incorrect_answers: Object.fromEntries(
               Object.entries(q.incorrect_answers)
+                // eslint-disable-next-line no-unused-vars
                 .filter(([_, percentage]) => parseFloat(percentage) > 0)
             )
           }))

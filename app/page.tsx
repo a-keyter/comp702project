@@ -87,7 +87,7 @@ export default function Home() {
                       </h3>
                       <p className="text-muted-foreground">
                         Use Large Language Models like GPT-4, Mistral Large and
-                        Google's Gemini to rapidly create assessments that test
+                        Google&apos;s Gemini to rapidly create assessments that test
                         knowledge retension among your students.
                       </p>
                     </div>

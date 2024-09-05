@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAssessmentsByNicknameAndClass } from "@/lib/analysisUtils/getAssessmentsByNicknameAndClass";
 import { Skeleton } from "../ui/skeleton";
 
