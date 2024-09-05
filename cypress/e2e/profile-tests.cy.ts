@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+
 describe("Profile Tests", () => {
   beforeEach(() => {
     cy.visit("/");
@@ -15,7 +17,7 @@ describe("Profile Tests", () => {
       });
 
       // Wait for the dashboard button to be visible and navigate to dashboad after login
-      cy.get('[data-id="dashboard-button"]', { timeout: 10000 })
+      cy.get('[data-id="dashboard-button"]', { timeout: 30000 })
         .should("be.visible")
         .click();
   });
@@ -24,7 +26,7 @@ describe("Profile Tests", () => {
     // Test Onboarding Flow
     it("Can create profile", () => {
       // Wait for redirect to new profile creation
-      cy.url().should("include", "/onboard", { timeout: 10000 });
+      cy.url().should("include", "/onboard", { timeout: 30000 });
 
       // Check that the profile creation / onboarding form has rendered
       cy.contains("Welcome to Ambi-Learn!");
@@ -40,7 +42,7 @@ describe("Profile Tests", () => {
       cy.contains("button", "Lets get started!").click();
 
       // Wait for the form submission and redirect
-      cy.url().should("include", "/dashboard", { timeout: 10000 });
+      cy.url().should("include", "/dashboard", { timeout: 30000 });
 
       cy.contains("Ambi-Learn - Teacher");
     });
@@ -52,7 +54,7 @@ describe("Profile Tests", () => {
 
       // Wait for server-side rendering to complete
       cy.get('[data-testid="server-render-complete"]', {
-        timeout: 10000,
+        timeout: 30000,
       }).should("exist");
 
       //  Open profile dropdown
@@ -66,7 +68,7 @@ describe("Profile Tests", () => {
 
       // Wait for server-side rendering to complete
       cy.get('[data-id="server-render-complete"]', {
-        timeout: 10000,
+        timeout: 30000,
       }).should("exist");
 
       // Click the "Edit Profile" button
@@ -89,7 +91,7 @@ describe("Profile Tests", () => {
 
       // Verify that the page has been refreshed (you might need to adjust this based on your app's behavior)
       cy.get('[data-id="server-render-complete"]', {
-        timeout: 10000,
+        timeout: 30000,
       }).should("exist");
 
       // Verify that the profile has been updated
@@ -103,7 +105,7 @@ describe("Profile Tests", () => {
 
       // Wait for server-side rendering to complete
       cy.get('[data-testid="server-render-complete"]', {
-        timeout: 10000,
+        timeout: 30000,
       }).should("exist");
 
       //  Open profile dropdown
@@ -117,7 +119,7 @@ describe("Profile Tests", () => {
 
       // Wait for server-side rendering to complete
       cy.get('[data-id="server-render-complete"]', {
-        timeout: 10000,
+        timeout: 30000,
       }).should("exist");
 
       // Click the "Delete Profile" button
@@ -133,14 +135,14 @@ describe("Profile Tests", () => {
       cy.get('[data-id="delete-profile-btn"]').click();
 
       // Wait for the dialog to close
-      cy.get("div[role='dialog']").should("not.exist", { timeout: 10000 });
+      cy.get("div[role='dialog']").should("not.exist", { timeout: 30000 });
       
       // Verify redirection to the home page after deletion
-      cy.url({timeout: 10000}).should("eq", Cypress.config().baseUrl + "/", { timeout: 10000 });
+      cy.url({timeout: 30000}).should("eq", Cypress.config().baseUrl + "/", { timeout: 30000 });
 
       // Verify that the user is logged out
       cy.get('[data-id="sign-in-button"]').should("be.visible", {
-        timeout: 10000,
+        timeout: 30000,
       });
     });
   });

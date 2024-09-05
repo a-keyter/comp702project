@@ -15,41 +15,26 @@ export default function Home() {
     <main className="min-h-screen flex flex-col items-center w-full">
       <LandingNav />
       <div className="flex-1">
-        <section className="w-full py-24 xl:py-32">
-          <div className="container px-4 md:px-6">
+        <section className="w-full pt-10 pb-12 xl:pb-24">
+          <div className="container px-4 md:px-10">
             <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
               <div className="flex flex-col justify-center space-y-4">
-                <div className="space-y-2">
+                <div className="space-y-2 text-center lg:text-left">
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
                     Revolutionize Teaching with Ambi-learn
                   </h1>
-                  <p className="max-w-[600px] text-muted-foreground md:text-xl">
+                  <p className="max-w-[600px] text-muted-foreground md:text-xl mx-auto lg:mx-0">
                     Ambi-learn&apos;s innovative MCQ platform delivers
                     bi-directional feedback, empowering both teachers and
                     students to achieve better learning outcomes through
                     data-driven insights.
                   </p>
                 </div>
-                <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <Link
-                    href="/dashboard"
-                    className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-                    prefetch={false}
-                  >
-                    Start Free Trial
-                  </Link>
-                  <Link
-                    href="/dashboard"
-                    className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-8 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-                    prefetch={false}
-                  >
-                    Learn More
-                  </Link>
-                </div>
               </div>
-              <div className="w-full flex justify-center">
+              <div className="w-full flex justify-center lg:justify-end">
                 <Image
                   alt="A screenshot of the assessment creation tool"
+                  priority
                   src={"/editor.png"}
                   width={500}
                   height={500}
@@ -79,7 +64,7 @@ export default function Home() {
             </div>
             <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-12">
               <div className="flex flex-col justify-center space-y-4">
-                <ul className="grid gap-6">
+                <ul className="grid gap-6 text-center lg:text-left">
                   <li>
                     <div className="grid gap-1">
                       <h3 className="text-xl font-bold">
@@ -121,8 +106,9 @@ export default function Home() {
               <div className="w-full flex justify-center">
                 <Image
                   alt="A screenshot of the assessment creation tool"
-                  src={"/editor.png"}
-                  width={500}
+                  src={"/results-screenshot.png"}
+
+                  width={800}
                   height={500}
                   className="border-2 border-slate-700 p-2 rounded-lg"
                 />

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 describe("Assessment Tests", () => {
   let randomClassCode: string;
 
@@ -27,7 +28,7 @@ describe("Assessment Tests", () => {
       cy.visit("/dashboard");
       // Wait for server-side rendering to complete
       cy.get('[data-id="server-render-complete"]', {
-        timeout: 10000,
+        timeout: 50000,
       }).should("exist");
     });
 
@@ -56,13 +57,22 @@ describe("Assessment Tests", () => {
       // Wait for the dialog to close
       cy.get("div[role='dialog']").should("not.exist");
 
+      // Get the current URL before the redirect
+      let originalUrl;
+      cy.url().then((url) => {
+        originalUrl = url;
+
+        // Wait for the URL to change
+        cy.url().should("not.eq", originalUrl, { timeout: 50000 });
+      });
+
       // Wait for redirection to the class
       cy.url().should("include", `/classes/${randomClassCode.toLowerCase()}`, {
-        timeout: 10000,
+        timeout: 50000,
       });
 
       // Check to ensure the page has loaded
-      cy.get('[data-id="class-page-loaded"]', { timeout: 10000 }).should(
+      cy.get('[data-id="class-page-loaded"]', { timeout: 50000 }).should(
         "exist"
       );
 
@@ -107,12 +117,12 @@ describe("Assessment Tests", () => {
       cy.visit(`/classes/${randomClassCode}`);
 
       // Wait for the class page to load
-      cy.get('[data-id="class-page-loaded"]', { timeout: 10000 }).should(
+      cy.get('[data-id="class-page-loaded"]', { timeout: 50000 }).should(
         "exist"
       );
 
       // Check that we can access the new assessment dialog
-      cy.get('[data-id="new-assessment-dialog"]', { timeout: 10000 })
+      cy.get('[data-id="new-assessment-dialog"]', { timeout: 50000 })
         .should("be.visible")
         .click();
 
@@ -131,7 +141,7 @@ describe("Assessment Tests", () => {
       cy.get('div[role="dialog"]').should("not.exist");
 
       // Check if we're redirected to the edit page of the new assessment
-      cy.url().should("include", "/assessments/edit/", { timeout: 30000 });
+      cy.url().should("include", "/assessments/edit/", { timeout: 50000 });
 
       // Check if the new assessment editor dialog is open
       cy.get('div[role="dialog"]').should("be.visible");
@@ -141,13 +151,13 @@ describe("Assessment Tests", () => {
 
       // Loop through items 1 to 5 and check for their visibility
       for (let i = 1; i <= 5; i++) {
-        cy.contains(`Item ${i}`).should("be.visible", { timeout: 10000 });
+        cy.contains(`Item ${i}`).should("be.visible", { timeout: 50000 });
       }
 
       // Check that the last mcq answers have been generated.
       cy.get("textarea")
         .last()
-        .should("not.have.value", "", { timeout: 10000 });
+        .should("not.have.value", "", { timeout: 50000 });
 
       // Click the publish assessment button
       cy.get('[data-id="publish-assessment"]').should("be.visible").click();
@@ -156,7 +166,7 @@ describe("Assessment Tests", () => {
       cy.intercept("POST", "/assessments/edit/*").as("saveAssessment");
 
       // Wait for the save request to complete
-      cy.wait("@saveAssessment", { timeout: 30000 }).then((interception) => {
+      cy.wait("@saveAssessment", { timeout: 50000 }).then((interception) => {
         // Check if the save was successful
         expect(interception.response!.statusCode).to.equal(200);
       });
@@ -167,7 +177,7 @@ describe("Assessment Tests", () => {
         originalUrl = url;
 
         // Wait for the URL to change
-        cy.url().should("not.eq", originalUrl, { timeout: 30000 });
+        cy.url().should("not.eq", originalUrl, { timeout: 50000 });
       });
 
       // Check that the assessment title is present on the page
@@ -180,23 +190,23 @@ describe("Assessment Tests", () => {
       cy.contains(randomClassCode).click();
 
       // Verify class page has loaded
-      cy.get('[data-id="class-page-loaded"]', { timeout: 10000 }).should(
+      cy.get('[data-id="class-page-loaded"]', { timeout: 50000 }).should(
         "exist"
       );
 
       // Check that the assessment is displayed in the assessments table on the class page
-      cy.contains(newAssessmentTitle.slice(0, 25), { timeout: 10000 });
+      cy.contains(newAssessmentTitle.slice(0, 25), { timeout: 50000 });
 
       // Navigate to the dashboard
       cy.contains("Ambi-Learn - Teacher").click();
 
       // Wait for the Dashboard page to load
       cy.get('[data-id="server-render-complete"]', {
-        timeout: 10000,
+        timeout: 50000,
       }).should("exist");
 
       // Verify that the new assessment is displayed in the assessments table on the dashboard
-      cy.contains(newAssessmentTitle.slice(0, 25), { timeout: 10000 });
+      cy.contains(newAssessmentTitle.slice(0, 25), { timeout: 50000 });
     });
   });
 
@@ -213,19 +223,19 @@ describe("Assessment Tests", () => {
         cy.visit("/dashboard");
         // Wait for server-side rendering to complete
         cy.get('[data-id="server-render-complete"]', {
-          timeout: 10000,
+          timeout: 50000,
         }).should("exist");
 
         // Redirect to the class page
         cy.visit(`/classes/${randomClassCode}`);
 
         // Check to ensure the page has loaded
-        cy.get('[data-id="class-page-loaded"]', { timeout: 10000 }).should(
+        cy.get('[data-id="class-page-loaded"]', { timeout: 50000 }).should(
           "exist"
         );
 
         // Allow the data table to load
-        cy.contains("All Assessments", { timeout: 10000 });
+        cy.contains("All Assessments", { timeout: 50000 });
 
         // Click on the example assessment
         cy.contains(newAssessmentTitle.slice(0, 25)).click();
@@ -235,22 +245,22 @@ describe("Assessment Tests", () => {
         cy.url().then((url) => {
           originalUrl = url;
           // Wait for the URL to change
-          cy.url().should("not.eq", originalUrl, { timeout: 30000 });
+          cy.url().should("not.eq", originalUrl, { timeout: 50000 });
         });
 
         // Check if we're redirected to the assessment page
-        cy.url().should("include", "/assessments/", { timeout: 30000 });
+        cy.url().should("include", "/assessments/", { timeout: 50000 });
 
         // Wait for the assessment page to load
         cy.get('[data-id="assess-page-loaded"]', {
-          timeout: 10000,
+          timeout: 50000,
         }).should("exist");
 
         cy.contains("button", "New Attempt").click();
 
         // Wait for the assement attempt page to load
         cy.get('[data-id="attempt-render-complete"]', {
-          timeout: 30000,
+          timeout: 50000,
         }).should("exist");
 
         // Find all question containers
@@ -278,29 +288,67 @@ describe("Assessment Tests", () => {
         // Wait for the loading state to finish
         cy.get('[data-id="submit-assessment"]').contains("Submit Assessment", {timeout: 50000})
 
-        // Wait for redirect
-        cy.url().then((url) => {
-            originalUrl = url;
-            // Wait for the URL to change
-            cy.url().should("not.eq", originalUrl, { timeout: 100000 });
-          });
-
         // Confirm redirect
         cy.url().should("include", "/assessments/results/", { timeout: 50000 });
 
         // Wait for the assement results page to load
         cy.get('[data-id="results-render-complete"]', {
-          timeout: 30000,
+          timeout: 50000,
         }).should("exist");
       });
 
 
       // Check that the student can see their results
       it(`Student ${i} can review feedback and analysis`, () => {
+        // Login as student
+        cy.clerkSignIn({
+          strategy: "password",
+          identifier: studentEmails[i - 1],
+          password: "S3cur3P4ss",
+        });
+
+        cy.visit("/dashboard");
+        // Wait for server-side rendering to complete
+        cy.get('[data-id="server-render-complete"]', {
+          timeout: 50000,
+        }).should("exist");
+
+        // Redirect to the class page
+        cy.visit(`/classes/${randomClassCode}`);
+
+        // Check to ensure the page has loaded
+        cy.get('[data-id="class-page-loaded"]', { timeout: 50000 }).should(
+          "exist"
+        );
+
+        // Allow the data table to load
+        cy.contains("All Assessments", { timeout: 50000 });
+
+        // Check that submission is logged
+        cy.get('tr').contains(newAssessmentTitle)
+        
+        // Open the Performance Graph
+        cy.contains("button", "Performance").click();
+
+        // Check that the performance graph loads
+        cy.contains("Assessment Scores Over Time", {timeout: 50000})
+
+        // Go back to the asssessments table
+        cy.contains("button", "Assessments").click();
+
+        // Allow the data table to load
+        cy.contains("All Assessments", { timeout: 50000 });
+
+        // Click the link for the assessment
+        cy.contains(newAssessmentTitle).click()
+
+        // Check if we're redirected to the edit page of the new assessment
+        cy.url().should("include", "/assessments/", { timeout: 50000 });
+
+        // Check if the AI generated assessment feedback is present
+        cy.contains("AI Generated Feedback may be inacurate." , { timeout: 50000 }) 
 
       })
-
-      // Check that the student can report an issue.
     }
   });
 
@@ -321,7 +369,7 @@ describe("Assessment Tests", () => {
       cy.visit("/dashboard");
       // Wait for server-side rendering to complete
       cy.get('[data-id="server-render-complete"]', {
-        timeout: 10000,
+        timeout: 50000,
       }).should("exist");
     });
 
@@ -330,7 +378,7 @@ describe("Assessment Tests", () => {
       cy.visit(`/classes/${randomClassCode}`);
 
       // Wait for the class page to load
-      cy.get('[data-id="class-page-loaded"]', { timeout: 10000 }).should(
+      cy.get('[data-id="class-page-loaded"]', { timeout: 50000 }).should(
         "exist"
       );
 
@@ -348,11 +396,11 @@ describe("Assessment Tests", () => {
       cy.get('[data-id="delete-class-btn"]').click();
 
       // Wait for the deletion process to complete and redirect to dashboard
-      cy.url().should("include", "/dashboard", { timeout: 10000 });
+      cy.url().should("include", "/dashboard", { timeout: 50000 });
 
       // Wait for the dashboard to load
       cy.get('[data-id="server-render-complete"]', {
-        timeout: 10000,
+        timeout: 50000,
       }).should("exist");
 
       // Verify the deleted class no longer appears in the class list

@@ -68,7 +68,7 @@ export function AssessmentViewSelect({
               </p>
             )}
           </Card>
-          <Card className="col-span-3 p-2">
+          <Card className="w-full p-4 col-span-3">
             <h3 className="text-xl font-semibold">
               Most Challenging Questions
             </h3>
