@@ -44,6 +44,7 @@ function NotificationsButton() {
       variant="ghost"
       className="flex flex-col px-2"
       onClick={handleClick}
+      data-id="notifications-btn"
     >
       <div className="flex">
         <Bell />

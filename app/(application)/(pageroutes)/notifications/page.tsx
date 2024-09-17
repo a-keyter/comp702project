@@ -95,6 +95,7 @@ function NotificationsPage() {
           />
         ))}
       </div>
+      <div data-id="notifications-page-loaded" style={{ display: "none" }}></div>
     </Card>
   );
 }

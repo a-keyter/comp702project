@@ -114,7 +114,7 @@ export default function ReportIssueDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button title={`Report Issue with ${issueType.toLowerCase()}`} variant="default" className="rounded-full">
+        <Button data-id="report-feedback-btn"title={`Report Issue with ${issueType.toLowerCase()}`} variant="default" className="rounded-full">
           <TriangleAlert />
         </Button>
       </DialogTrigger>
