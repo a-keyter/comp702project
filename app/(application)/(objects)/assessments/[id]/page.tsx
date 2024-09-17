@@ -199,7 +199,7 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
             </p>
             {results.length > 0 && (
               <p className="text-sm text-center pt-1 mt-1 border-t-2">
-                AI Generated Feedback may be inacurate.
+                AI Generated Feedback may not be 100% accurate.
               </p>
             )}
           </Card>

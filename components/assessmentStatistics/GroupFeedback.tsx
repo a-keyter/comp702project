@@ -85,6 +85,8 @@ export default function TeacherFeedback({
     <div className="flex flex-col space-y-2">
       <h2 className="font-semibold text-xl">AI Generated Feedback</h2>
       <p>{feedbackContent}</p>
+      <hr />
+      <p className="text-center text-sm">AI generated feedback may not be 100% accurate.</p>
     </div>
   );
 }
