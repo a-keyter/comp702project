@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowLeftSquare, RecycleIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { SubmittedResponse } from "@/lib/assessmentUtils/getSubmissionResults";
-import ReportIssueDialog from "../ReportIssueDialog";
+import ReportIssueDialog from "@/components/issuesDialog/ReportIssueDialog";
 import { Card } from "../ui/card";
 
 interface ResultsDisplayProps {

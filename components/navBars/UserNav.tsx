@@ -1,7 +1,7 @@
 "use server";
 
 import Link from "next/link";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { Clipboard, Home, StopCircle, User, Users } from "lucide-react";
 
 import {
@@ -16,7 +16,7 @@ import { SignOutButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import { getUserById } from "@/lib/userUtils/getUserDetails";
 import { redirect } from "next/navigation";
-import NotificationsButton from "./NotificationsButton";
+import NotificationsButton from "@/components/notifications/NotificationsButton";
 
 async function UserNav() {
   const { userId } = auth();

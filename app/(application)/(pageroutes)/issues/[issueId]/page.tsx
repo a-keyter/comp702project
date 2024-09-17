@@ -1,9 +1,9 @@
 import { fetchIssueById } from "@/lib/issueUtils/fetchIssueById";
-import IssueDetailsCard from "./IssueDetailsCard";
+import IssueDetailsCard from "@/components/issues/IssueDetailsCard";
 import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { getUserById } from "@/lib/userUtils/getUserDetails";
-import IssueChat from "./IssueChat";
+import IssueChat from "@/components/issues/IssueChat";
 
 export default async function IssuePage({
   params,

@@ -7,7 +7,7 @@ import { getClassById } from "@/lib/classUtils/getClassDetails";
 import { getUserDetails } from "@/lib/userUtils/getUserDetails";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import LeaveClassDialog from "./LeaveClassDialog";
+import LeaveClassDialog from "@/components/classDialogs/LeaveClassDialog";
 import { getAssessmentCount } from "@/lib/assessmentUtils/getAssessmentCount";
 import TeacherViewSelect from "./TeacherViewSelect";
 import StudentViewSelect from "./StudentViewSelect";

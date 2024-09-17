@@ -1,8 +1,10 @@
 import Link from "next/link";
 
-import { Notification } from "./page";
 import { NotificationType } from "@prisma/client";
+import { Notification } from "@/app/(application)/(pageroutes)/notifications/page";
 import RemoveNotificationButton from "./RemoveNotificationButton";
+
+
 
 export default function NotificationItemWrapper({
     notification,

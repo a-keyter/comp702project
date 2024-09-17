@@ -1,6 +1,6 @@
 import { classColumns } from "@/components/classesTable/columns";
 import { ClassDataTable } from "@/components/classesTable/data-table";
-import UserDetails from "@/components/UserDetails";
+import UserDetails from "@/components/profileDialogs/UserDetails";
 import { getUserClasses } from "@/lib/classUtils/getClassDetails";
 import { getUserDetails } from "@/lib/userUtils/getUserDetails";
 import { redirect } from "next/navigation";

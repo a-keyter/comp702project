@@ -1,9 +1,9 @@
 "use client";
 
 import { Card, CardTitle } from "@/components/ui/card";
-import UpdateUserDialog from "./profileDialogs/UpdateUserDialog";
+import UpdateUserDialog from "./UpdateUserDialog";
 import { SafeUser } from "@/lib/userUtils/getUserDetails";
-import DeleteProfileDialog from "./profileDialogs/DeleteProfileDialog";
+import DeleteProfileDialog from "./DeleteProfileDialog";
 
 function UserDetails({ user }: { user: SafeUser }) {
   return (

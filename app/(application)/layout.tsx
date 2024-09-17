@@ -1,5 +1,5 @@
 import Footer from "@/components/Footer";
-import UserNav from "@/components/UserNav";
+import UserNav from "@/components/navBars/UserNav";
 import { Metadata } from "next";
 import React, { Suspense } from "react";
 import Loading from "./loading";

@@ -1,5 +1,5 @@
 import Footer from "@/components/Footer";
-import LandingNav from "@/components/LandingNav";
+import LandingNav from "@/components/navBars/LandingNav";
 import Image from "next/image";
 import Link from "next/link";
 

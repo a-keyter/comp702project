@@ -1,5 +1,4 @@
 import DeleteAssessmentDialog from "@/components/assessmentDialogs/DeleteAssessmentDialog";
-import ReportIssueDialog from "@/components/ReportIssueDialog";
 
 import { studentColumns } from "@/components/submissionsTable/student-columns";
 import { StudentDataTable } from "@/components/submissionsTable/student-data-table";
@@ -13,7 +12,8 @@ import { getStudentResultsByAssessmentId } from "@/lib/assessmentUtils/getStuden
 import { getUserDetails } from "@/lib/userUtils/getUserDetails";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { AssessmentViewSelect } from "./AssessmentViewSelect";
+import { AssessmentViewSelect } from "@/components/assessmentStatistics/AssessmentViewSelect";
+import ReportIssueDialog from "@/components/issuesDialog/ReportIssueDialog";
 
 async function AssessmentPage({ params }: { params: { id: string } }) {
   const assessmentData = await getAssessmentById(params.id);

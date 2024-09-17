@@ -1,5 +1,5 @@
 import { SubmittedResponse } from "@/lib/assessmentUtils/getSubmissionResults";
-import ReportIssueDialog from "../ReportIssueDialog";
+import ReportIssueDialog from "@/components/issuesDialog/ReportIssueDialog";
 
 
 interface ResultItemWrapperProps {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { Bell } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { getUserNotificationCount } from "@/lib/notificationUtils/getNotificationCount";

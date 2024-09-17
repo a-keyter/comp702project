@@ -95,5 +95,5 @@ npm start
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
 ## Acknowledgments
-- This project was developed as part of an MSc thesis at [Your University Name].
+- This project was developed as part of an MSc thesis at University of Liverpool.
 - Special thanks to Olga Anosova for supervision and guidance.
