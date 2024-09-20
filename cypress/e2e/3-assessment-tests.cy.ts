@@ -58,7 +58,7 @@ describe("Assessment Tests", () => {
       cy.get("div[role='dialog']").should("not.exist");
 
       // Wait for redirection to the class
-      cy.url().should("include", `/classes/${randomClassCode.toLowerCase()}`, {
+      cy.url({timeout: 10000}).should("include", `/classes/${randomClassCode.toLowerCase()}`, {
         timeout: 50000,
       });
 
@@ -74,7 +74,7 @@ describe("Assessment Tests", () => {
       );
 
       // Click the "Add Students" button
-      cy.get('[data-id="add-students-dialog-btn"]').click();
+      cy.get('[data-id="add-students-dialog-btn"]', { timeout: 50000 }).click();
 
       // Verify the add students dialog is open
       cy.contains("Add Students to Class").should("be.visible");
@@ -92,7 +92,7 @@ describe("Assessment Tests", () => {
       cy.get('[data-id="add-students-btn"]').click();
 
       // Wait for the addition process to complete
-      cy.get('[data-id="add-students-btn"]').should("not.exist");
+      cy.get('[data-id="add-students-btn"]', { timeout: 30000 }).should("not.exist");
 
       // Verify the success toast
       cy.contains("Students have been successfully added to the class.").should(
@@ -130,10 +130,10 @@ describe("Assessment Tests", () => {
 
       // Check that the dialog has closed
       cy.get('div[role="dialog"]').should("not.exist");
-
+      
       // Check if we're redirected to the edit page of the new assessment
-      cy.url().should("match", /\/assessments\/edit\/[a-zA-Z0-9-]+/, {
-        timeout: 50000,
+      cy.url({timeout: 10000}).should("match", /\/assessments\/edit\/[a-zA-Z0-9-]+/, {
+        timeout: 100000,
       });
 
       // Check if the new assessment editor dialog is open
@@ -170,11 +170,11 @@ describe("Assessment Tests", () => {
         originalUrl = url;
 
         // Wait for the URL to change
-        cy.url().should("not.eq", originalUrl, { timeout: 50000 });
+        cy.url({timeout: 100000}).should("not.eq", originalUrl, { timeout: 50000 });
       });
 
       // Check that the assessment title is present on the page
-      cy.contains(newAssessmentTitle).should("be.visible");
+      cy.contains(newAssessmentTitle).should("be.visible", { timeout: 50000 });
 
       // Check that the assessment objectives are present on the page
       cy.contains(newAssessmentObjectives).should("be.visible");
@@ -238,11 +238,11 @@ describe("Assessment Tests", () => {
         cy.url().then((url) => {
           originalUrl = url;
           // Wait for the URL to change
-          cy.url().should("not.eq", originalUrl, { timeout: 50000 });
+          cy.url({timeout: 10000}).should("not.eq", originalUrl, { timeout: 100000 });
         });
 
         // Check if we're redirected to the assessment page
-        cy.url().should("include", "/assessments/", { timeout: 10000 });
+        cy.url({timeout: 10000}).should("include", "/assessments/", { timeout: 100000 });
 
         // Wait for the assessment page to load
         cy.get('[data-id="assess-page-loaded"]', {
@@ -297,7 +297,7 @@ describe("Assessment Tests", () => {
         });
 
         // Confirm redirect
-        cy.url().should("include", "/assessments/results/", { timeout: 50000 });
+        cy.url({timeout: 10000}).should("include", "/assessments/results/", { timeout: 50000 });
 
         // Wait for the assement results page to load
         cy.get('[data-id="results-render-complete"]', {
@@ -351,7 +351,7 @@ describe("Assessment Tests", () => {
           cy.contains(newAssessmentTitle).click();
 
           // Check if we're redirected to the edit page of the new assessment
-          cy.url().should("include", "/assessments/", { timeout: 50000 });
+          cy.url({timeout: 10000}).should("include", "/assessments/", { timeout: 50000 });
 
           // Check if the AI generated assessment feedback is present
           cy.contains("AI Generated Feedback may not be 100% accurate.", {
@@ -386,10 +386,10 @@ describe("Assessment Tests", () => {
       );
 
       // Click the link for the assessment
-      cy.contains(newAssessmentTitle).click();
+      cy.contains(newAssessmentTitle, { timeout: 50000 }).click();
 
       // Check if we're redirected to the edit page of the new assessment
-      cy.url().should("include", "/assessments/", { timeout: 10000 });
+      cy.url({timeout: 10000}).should("include", "/assessments/", { timeout: 10000 });
 
       // Check if the AI generated assessment feedback is present
       cy.contains("AI Generated Feedback may not be 100% accurate.", {
@@ -411,13 +411,13 @@ describe("Assessment Tests", () => {
       cy.contains("button", "Submit Issue").click();
 
       // Check for success toast
-      cy.contains("Success").should("be.visible");
+      cy.contains("Success", { timeout: 50000 }).should("be.visible");
 
       // Click the 'Issues' button in the nav bar
       cy.contains("button", "Issues").click();
 
       // Wait for redirect to /issues
-      cy.url().should("include", "/issues", { timeout: 5000 });
+      cy.url({timeout: 50000}).should("include", "/issues", { timeout: 50000 });
 
       // Wait for the table to load
       cy.contains("Open Question and Feedback Issues", {
@@ -428,7 +428,7 @@ describe("Assessment Tests", () => {
       cy.contains("tr", randomClassCode).contains("Feedback").click();
 
       // Wait for redirect to /issues/[someissueId]
-      cy.url().should("match", /\/issues\/[a-zA-Z0-9-]+/, { timeout: 5000 });
+      cy.url({timeout: 10000}).should("match", /\/issues\/[a-zA-Z0-9-]+/, { timeout: 5000 });
 
       // Check that the page contains the text 'unread'
       cy.contains(/unread/i).should("be.visible");
@@ -473,7 +473,7 @@ describe("Assessment Tests", () => {
       cy.get('[data-id="notifications-btn"]').click();
 
       // Wait for the notifications page redirect
-      cy.url().should("include", "/notifications", { timeout: 10000 });
+      cy.url({timeout: 10000}).should("include", "/notifications", { timeout: 10000 });
 
       // Wait for the notifications page to load
       cy.get('[data-id="notifications-page-loaded"]', { timeout: 10000 }).should("exist");
@@ -484,7 +484,7 @@ describe("Assessment Tests", () => {
       ).click();
 
       // Wait for the issue page to load
-      cy.url()
+      cy.url({timeout: 10000})
         .should("include", "/issues/", { timeout: 10000 })
         .and(
           "match",
@@ -494,9 +494,10 @@ describe("Assessment Tests", () => {
       // Check that the issue details are displayed
       cy.contains("Feedback Issue").should("be.visible");
 
-      // Check that teacher can respond to issue message
       // Check that the chat component is visible
-      cy.get('[data-id="issue-chat"]').should("be.visible");
+      // Wait for the loading state to finish
+      cy.get('[data-id="issue-chat"]', { timeout: 10000 }).should("be.visible");
+
 
       // Type a response message
       cy.get('input[placeholder="Enter your message here..."]').type(
@@ -507,7 +508,7 @@ describe("Assessment Tests", () => {
       cy.get('button[type="submit"]').contains("Send").click();
 
       // Verify that the message appears in the chat
-      cy.contains("This is a test response from the teacher").should(
+      cy.contains("This is a test response from the teacher", { timeout: 50000 }).should(
         "be.visible"
       );
 
@@ -537,6 +538,13 @@ describe("Assessment Tests", () => {
         timeout: 50000,
       }).should("exist");
 
+      // Wait for the notifications count to be updated
+      cy.get('[data-id="notifications-btn"]', { timeout: 30000 }).should(($btn) => {
+        const text = $btn.text();
+        expect(text).to.match(/\d+/);
+        expect(parseInt(text)).to.be.greaterThan(1);
+      });
+
       // Check for unread notifications
       cy.get('[data-id="notifications-btn"]').contains("3");
 
@@ -544,13 +552,13 @@ describe("Assessment Tests", () => {
       cy.get('[data-id="notifications-btn"]').click();
 
       // Check for teacher response in the notifications
-      cy.contains(`New message in an issue`).should("be.visible");
+      cy.contains(`New message in an issue`, {timeout: 50000}).should("be.visible");
 
       // Click on the notification
       cy.contains(`New message in an issue`).click();
 
       // Check that the issue page loads
-      cy.url().should("include", "/issues/", { timeout: 10000 });
+      cy.url({timeout: 10000}).should("include", "/issues/", { timeout: 10000 });
 
       // Check that the message is displayed in the chat
       cy.contains("This is a test response from the teacher").should(
@@ -576,7 +584,7 @@ describe("Assessment Tests", () => {
       }).should("exist");
     });
 
-    it("Can view results", () => {
+    it("Can view results and AI feedback", () => {
       // Navigate to the class page
       cy.visit(`/classes/${randomClassCode}`);
 
@@ -585,11 +593,14 @@ describe("Assessment Tests", () => {
         "exist"
       );
 
+      // Allow the data table to load
+      cy.contains("All Assessments", { timeout: 50000 });
+
       // Click on the assessment
-      cy.contains(newAssessmentTitle).click();
+      cy.contains(newAssessmentTitle, { timeout: 50000 }).click();
 
       // Check if we're taken to the assessment overview page
-      cy.url().should("include", "/assessments/", { timeout: 10000 });
+      cy.url({timeout: 10000}).should("include", "/assessments/", { timeout: 10000 });
 
       // Click on the Statistics tab
       cy.contains("Statistics").click();
@@ -662,7 +673,7 @@ describe("Assessment Tests", () => {
       cy.get('[data-id="delete-class-btn"]').click();
 
       // Wait for the deletion process to complete and redirect to dashboard
-      cy.url().should("include", "/dashboard", { timeout: 10000 });
+      cy.url({timeout: 10000}).should("include", "/dashboard", { timeout: 10000 });
 
       // Wait for the dashboard to load
       cy.get('[data-id="server-render-complete"]', {

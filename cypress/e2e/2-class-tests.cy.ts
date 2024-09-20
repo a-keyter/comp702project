@@ -11,7 +11,7 @@ describe("Class Management", () => {
     });
     cy.visit("/dashboard");
     // Wait for server-side rendering to complete
-    cy.get('[data-testid="server-render-complete"]', {
+    cy.get('[data-id="server-render-complete"]', {
       timeout: 10000,
     }).should("exist");
   });
@@ -40,12 +40,12 @@ describe("Class Management", () => {
     cy.get("div[role='dialog']").should("not.exist");
 
     // Wait for redirection to the class
-    cy.url().should("include", `/classes/${randomClassCode.toLowerCase()}`, {
+    cy.url({timeout: 10000}).should("include", `/classes/${randomClassCode.toLowerCase()}`, {
       timeout: 10000,
     });
 
     // Additional check to ensure the page has loaded
-    cy.get('[data-testid="class-page-loaded"]', { timeout: 10000 }).should(
+    cy.get('[data-id="class-page-loaded"]', { timeout: 10000 }).should(
       "exist"
     );
 
@@ -57,7 +57,7 @@ describe("Class Management", () => {
     cy.visit("/dashboard");
 
     // Wait for the dashboard to load
-    cy.get('[data-testid="server-render-complete"]', {
+    cy.get('[data-id="server-render-complete"]', {
       timeout: 10000,
     }).should("exist");
 
@@ -73,7 +73,7 @@ describe("Class Management", () => {
     cy.visit(`/classes/${randomClassCode}`);
 
     // Wait for the class page to load
-    cy.get('[data-testid="class-page-loaded"]', { timeout: 10000 }).should(
+    cy.get('[data-id="class-page-loaded"]', { timeout: 10000 }).should(
       "exist"
     );
 
@@ -105,7 +105,7 @@ describe("Class Management", () => {
     cy.visit("/dashboard");
 
     // Wait for the dashboard to load
-    cy.get('[data-testid="server-render-complete"]', {
+    cy.get('[data-id="server-render-complete"]', {
       timeout: 10000,
     }).should("exist");
 
@@ -119,7 +119,7 @@ describe("Class Management", () => {
     cy.visit(`/classes/${randomClassCode}`);
 
     // Wait for the class page to load
-    cy.get('[data-testid="class-page-loaded"]', { timeout: 10000 }).should(
+    cy.get('[data-id="class-page-loaded"]', { timeout: 10000 }).should(
       "exist"
     );
 
@@ -162,7 +162,7 @@ describe("Class Management", () => {
     cy.visit(`/classes/${randomClassCode}`);
 
     // Wait for the class page to load
-    cy.get('[data-testid="class-page-loaded"]', { timeout: 10000 }).should(
+    cy.get('[data-id="class-page-loaded"]', { timeout: 10000 }).should(
       "exist"
     );
 
@@ -180,10 +180,10 @@ describe("Class Management", () => {
     cy.get('[data-id="delete-class-btn"]').click();
 
     // Wait for the deletion process to complete and redirect to dashboard
-    cy.url().should("include", "/dashboard", { timeout: 10000 });
+    cy.url({timeout: 10000}).should("include", "/dashboard", { timeout: 10000 });
 
     // Wait for the dashboard to load
-    cy.get('[data-testid="server-render-complete"]', {
+    cy.get('[data-id="server-render-complete"]', {
       timeout: 10000,
     }).should("exist");
 

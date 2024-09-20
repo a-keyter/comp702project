@@ -110,10 +110,10 @@ export default function IssueChat({
         {loading ? (
           <Skeleton className="h-full w-full" />
         ) : (
-          <div className="gap-y-2 flex flex-col-reverse">
+          <div className="gap-y-2 flex flex-col-reverse" data-id="issue-chat">
             <div ref={messagesEndRef} />
             {messages.map((message) => (
-              <div
+              <div              
                 key={message.id}
                 className={`p-2 rounded-lg border ${
                   userName === message.sender.name

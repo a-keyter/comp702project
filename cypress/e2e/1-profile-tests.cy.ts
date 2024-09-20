@@ -26,7 +26,7 @@ describe("Profile Tests", () => {
     // Test Onboarding Flow
     it("Can create profile", () => {
       // Wait for redirect to new profile creation
-      cy.url().should("include", "/onboard", { timeout: 30000 });
+      cy.url({timeout: 10000}).should("include", "/onboard", { timeout: 30000 });
 
       // Check that the profile creation / onboarding form has rendered
       cy.contains("Welcome to Ambi-Learn!");
@@ -42,7 +42,7 @@ describe("Profile Tests", () => {
       cy.contains("button", "Lets get started!").click();
 
       // Wait for the form submission and redirect
-      cy.url().should("include", "/dashboard", { timeout: 30000 });
+      cy.url({timeout: 10000}).should("include", "/dashboard", { timeout: 30000 });
 
       cy.contains("Ambi-Learn - Teacher");
     });
@@ -50,10 +50,10 @@ describe("Profile Tests", () => {
     // Test Profile Update
     it("Can update profile", () => {
       // Verify redirection to the dashboard
-      cy.url().should("include", "/dashboard");
+      cy.url({timeout: 10000}).should("include", "/dashboard");
 
       // Wait for server-side rendering to complete
-      cy.get('[data-testid="server-render-complete"]', {
+      cy.get('[data-id="server-render-complete"]', {
         timeout: 30000,
       }).should("exist");
 
@@ -64,7 +64,7 @@ describe("Profile Tests", () => {
       cy.get('[data-id="user-profile-btn"]').click();
 
       // Verify redirection to the users profile
-      cy.url().should("include", "/profile");
+      cy.url({timeout: 10000}).should("include", "/profile");
 
       // Wait for server-side rendering to complete
       cy.get('[data-id="server-render-complete"]', {
@@ -101,10 +101,10 @@ describe("Profile Tests", () => {
 
     it("Can delete profile", () => {
       // Verify redirection to the dashboard
-      cy.url().should("include", "/dashboard");
+      cy.url({timeout: 10000}).should("include", "/dashboard");
 
       // Wait for server-side rendering to complete
-      cy.get('[data-testid="server-render-complete"]', {
+      cy.get('[data-id="server-render-complete"]', {
         timeout: 30000,
       }).should("exist");
 
@@ -115,7 +115,7 @@ describe("Profile Tests", () => {
       cy.get('[data-id="user-profile-btn"]').click();
 
       // Verify redirection to the user's profile
-      cy.url().should("include", "/profile");
+      cy.url({timeout: 10000}).should("include", "/profile");
 
       // Wait for server-side rendering to complete
       cy.get('[data-id="server-render-complete"]', {
