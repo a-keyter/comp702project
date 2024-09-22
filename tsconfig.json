@@ -22,7 +22,8 @@
       "@/*": ["*"],
       "@/components/*": ["components/*"],
       "@/lib/*": ["lib/*"],
-    }
+    },
+    "types": ["jest"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "cypress/support/commands.ts"],
   "exclude": ["node_modules"]
