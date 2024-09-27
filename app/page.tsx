@@ -6,7 +6,7 @@ import Link from "next/link";
 // Heavily modified version of a V0 landing page design
 /**
  * v0 by Vercel.
- * @see https://v0.dev/t/gQas9h5GGEV
+ * @see https://v0.dev/t/k6R8R9JwmL3
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
 

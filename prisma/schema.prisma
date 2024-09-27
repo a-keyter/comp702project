@@ -8,43 +8,11 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
+
+// This model is used to store users.
 enum Role {
   TEACHER
   STUDENT
-}
-
-enum AssessmentStatus {
-  DRAFT
-  LIVE
-}
-
-enum AssessmentItemType {
-  MCQ
-  CONTEXT
-}
-
-enum IssueType {
-  CLASS_JOIN_REQUEST
-  QUESTION_ISSUE
-  FEEDBACK_ISSUE
-}
-
-enum IssueStatus {
-  UNREAD
-  OPEN
-  RESOLVED
-  REJECTED
-}
-
-enum NotificationType {
-  NEW_ASSESSMENT
-  CLASS_JOIN_REQUEST
-  CLASS_JOIN_REJECTED
-  CLASS_JOIN_ACCEPTED
-  FEEDBACK_ISSUE_RAISED
-  QUESTION_ISSUE_RAISED
-  NEW_ISSUE_MESSAGE
-  CLASS_REMOVAL
 }
 
 model User {
@@ -53,7 +21,6 @@ model User {
   nickname           String         @unique
   email              String         @unique
   createdAt          DateTime       @default(now()) @map(name: "created_at")
-  updatedAt          DateTime       @updatedAt @map(name: "updated_at")
   role               Role
   taughtClasses      Class[]        @relation("TaughtBy")
   memberOfClasses    Class[]        @relation("ClassMembers")
@@ -68,6 +35,7 @@ model User {
   queuedStudents QueuedClassJoin[] @relation("QueuedStudents")
 }
 
+// This model is used to store classes.
 model Class {
   id            String         @id
   title         String
@@ -81,6 +49,13 @@ model Class {
   notifications Notification[] @relation("ClassNotifications")
   futureStudents QueuedClassJoin[] @relation("FutureClassStudents")
 }
+
+// This model is used to store assessments.
+enum AssessmentStatus {
+  DRAFT
+  LIVE
+}
+
 
 model Assessment {
   id              String           @id @default(uuid())
@@ -101,15 +76,10 @@ model Assessment {
   notifications   Notification[]   @relation("AssessmentNotifications")
 }
 
-model TeacherFeedback {
-  id               String     @id @default(uuid())
-  content          String
-  assessment       Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
-  assessmentId     String     @unique
-  submissionCount  Int
-  lastSubmission   Submission @relation(fields: [lastSubmissionId], references: [id], onDelete: Cascade)
-  lastSubmissionId String     @unique
-  createdAt        DateTime   @default(now()) @map(name: "created_at")
+// This model is used to store assessment items.
+enum AssessmentItemType {
+  MCQ
+  CONTEXT
 }
 
 model AssessmentItem {
@@ -124,6 +94,7 @@ model AssessmentItem {
   issues         Issue[]
 }
 
+// This model is used to store answers to assessment items.
 model Answer {
   id               String         @id @default(uuid())
   content          String
@@ -133,6 +104,20 @@ model Answer {
   responses        Response[]
 }
 
+// This model is used to store teacher feedback for assessments.
+model TeacherFeedback {
+  id               String     @id @default(uuid())
+  content          String
+  assessment       Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  assessmentId     String     @unique
+  submissionCount  Int
+  lastSubmission   Submission @relation(fields: [lastSubmissionId], references: [id], onDelete: Cascade)
+  lastSubmissionId String     @unique
+  createdAt        DateTime   @default(now()) @map(name: "created_at")
+}
+
+
+// This model is used to store submissions for assessments.
 model Submission {
   id               String           @id @default(uuid())
   createdAt        DateTime         @default(now()) @map(name: "created_at")
@@ -147,6 +132,7 @@ model Submission {
   issues           Issue[]
 }
 
+// This model is used to store responses to assessment items.
 model Response {
   id               String         @id @default(uuid())
   createdAt        DateTime       @default(now()) @map(name: "created_at")
@@ -159,6 +145,20 @@ model Response {
   givenAnswer      Answer         @relation(fields: [givenAnswerId], references: [id], onDelete: Cascade)
   givenAnswerId    String
   isCorrect        Boolean
+}
+
+// This model is used to store issues raised by users.
+enum IssueType {
+  CLASS_JOIN_REQUEST
+  QUESTION_ISSUE
+  FEEDBACK_ISSUE
+}
+
+enum IssueStatus {
+  UNREAD
+  OPEN
+  RESOLVED
+  REJECTED
 }
 
 model Issue {
@@ -191,14 +191,27 @@ model Issue {
   submissionId          String?
 }
 
+// This model is used to store messages for issues.
 model Message {
   id        String   @id @default(uuid())
   content   String
   createdAt DateTime @default(now()) @map(name: "created_at")
-  sender    User     @relation("UserMessages", fields: [senderId], references: [id])
-  senderId  String
+  sender    User?     @relation("UserMessages", fields: [senderId], references: [id], onDelete: SetNull)
+  senderId  String?
   issue     Issue    @relation("IssueMessages", fields: [issueId], references: [id], onDelete: Cascade)
   issueId   String
+}
+
+// This model is used to store notifications for users. # Added later in the project
+enum NotificationType {
+  NEW_ASSESSMENT
+  CLASS_JOIN_REQUEST
+  CLASS_JOIN_REJECTED
+  CLASS_JOIN_ACCEPTED
+  FEEDBACK_ISSUE_RAISED
+  QUESTION_ISSUE_RAISED
+  NEW_ISSUE_MESSAGE
+  CLASS_REMOVAL
 }
 
 model Notification {
@@ -221,6 +234,7 @@ model Notification {
   @@unique([type, issueId, senderId, recipientId])
 }
 
+// This model is used to store student emails who have been added to a class but not yet created an account.
 model QueuedClassJoin {
   id           String           @id @default(uuid())
   email        String

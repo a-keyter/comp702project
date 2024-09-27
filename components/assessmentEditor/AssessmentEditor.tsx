@@ -26,7 +26,7 @@ import { generateAnswers } from "@/lib/langchainGenerations/generateAnswers";
 import { generateFalseAnswers } from "@/lib/langchainGenerations/generateFalseAnswers";
 import { setAssessmentLive } from "@/lib/assessmentUtils/setAssessmentLive";
 
-// Define the arguments that will be passed to the component
+// Here I define the types of arguments that will be passed to the component
 interface AssessmentEditorProps {
   assessmentId: string;
   classId: string;
