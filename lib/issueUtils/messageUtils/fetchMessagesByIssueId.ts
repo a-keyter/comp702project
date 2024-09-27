@@ -39,8 +39,8 @@ async function fetchIssueMessages(issueId: string): Promise<IssueMessage[] | nul
       content: message.content,
       createdAt: message.createdAt,
       sender: {
-        name: message.sender.name,
-        role: message.sender.role
+        name: message.sender?.name ?? 'deleted user',
+        role: message.sender?.role ?? 'teacher'
       },
     }));
   } catch (error) {

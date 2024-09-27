@@ -87,8 +87,8 @@ export async function sendNewMessage(
       content: newMessage.content,
       createdAt: newMessage.createdAt,
       sender: {
-        id: newMessage.sender.id,
-        name: newMessage.sender.name,
+        id: newMessage.sender?.id ?? 'deleted user',
+        name: newMessage.sender?.name ?? 'deleted user',
       },
     };
   } catch (error) {

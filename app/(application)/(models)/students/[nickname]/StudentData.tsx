@@ -5,7 +5,6 @@ interface StudentDataProps {
   nickname: string;
   email: string;
   createdAt: Date;
-  updatedAt: Date;
   role: string;
 }
 
