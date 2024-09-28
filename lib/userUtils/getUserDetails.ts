@@ -4,7 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import { prisma } from "../initPrisma";
 import { User } from "@prisma/client";
 
-// Util for fetching User - NEVER PASS THE USER ID TO CLIENT
+// Util for fetching User by ID
 export async function getUserById(id: string): Promise<User | null> {
   try {
     const user = await prisma.user.findUnique({
@@ -17,6 +17,37 @@ export async function getUserById(id: string): Promise<User | null> {
   } finally {
     await prisma.$disconnect();
   }
+}
+
+// Frontend should NEVER see userId.
+export type SafeUser = {
+  name: string;
+  nickname: string;
+  role: string;
+  email: string;
+};
+
+// GET CURRENT USER DETAILS - Frontend should NEVER see userId.
+export async function getCurrentUser(): Promise<SafeUser | null> {
+  const { userId } = auth();
+
+  if (!userId) {
+    return null;
+  }
+
+  const user = await getUserById(userId);
+
+  if (!user) {
+    return null
+  }
+
+  // Only return safe, non-sensitive user information
+  return {
+    name: user.name,
+    nickname: user.nickname,
+    role: user.role,
+    email: user.email,
+  };
 }
 
 // Util for fetching User - NEVER PASS THE USER ID TO CLIENT
@@ -54,35 +85,6 @@ export async function getUserByEmail(userEmail: string): Promise<User | null> {
   }
 }
 
-// Frontend should NEVER see userId.
-export type SafeUser = {
-  name: string;
-  nickname: string;
-  role: string;
-  email: string;
-};
 
-// GET CURRENT USER DETAILS
-export async function getUserDetails(): Promise<SafeUser | null> {
-  const { userId } = auth();
-
-  if (!userId) {
-    return null;
-  }
-
-  const user = await getUserById(userId);
-
-  if (!user) {
-    return null
-  }
-
-  // Only return safe, non-sensitive user information
-  return {
-    name: user.name,
-    nickname: user.nickname,
-    role: user.role,
-    email: user.email,
-  };
-}
 
 

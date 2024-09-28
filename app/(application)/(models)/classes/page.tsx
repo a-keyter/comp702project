@@ -1,11 +1,11 @@
 import { classColumns } from "@/components/classesTable/columns";
 import { ClassDataTable } from "@/components/classesTable/data-table";
 import { getUserClasses } from "@/lib/classUtils/getClassDetails";
-import { getUserDetails } from "@/lib/userUtils/getUserDetails";
+import { getCurrentUser } from "@/lib/userUtils/getUserDetails";
 import { redirect } from "next/navigation";
 
 async function page() {
-  const user = await getUserDetails();
+  const user = await getCurrentUser();
   if (!user) {
     return redirect("/onboard");
   }

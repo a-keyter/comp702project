@@ -2,11 +2,11 @@ import { classColumns } from "@/components/classesTable/columns";
 import { ClassDataTable } from "@/components/classesTable/data-table";
 import UserDetails from "@/components/profileDialogs/UserDetails";
 import { getUserClasses } from "@/lib/classUtils/getClassDetails";
-import { getUserDetails } from "@/lib/userUtils/getUserDetails";
+import { getCurrentUser } from "@/lib/userUtils/getUserDetails";
 import { redirect } from "next/navigation";
 
 export default async function ProfilePage() {
-  const user = await getUserDetails();
+  const user = await getCurrentUser();
   if (!user) {
     return redirect("/onboard");
   }

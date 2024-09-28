@@ -9,7 +9,7 @@ import { UpdateAssessmentDetailsDialog } from "@/components/assessmentDialogs/Up
 import { getAssessmentById } from "@/lib/assessmentUtils/getAssessmentDetails";
 import { getResultsByAssessmentId } from "@/lib/assessmentUtils/getAssessmentSubmissions";
 import { getStudentResultsByAssessmentId } from "@/lib/assessmentUtils/getStudentResultsByAssessmentId";
-import { getUserDetails } from "@/lib/userUtils/getUserDetails";
+import { getCurrentUser } from "@/lib/userUtils/getUserDetails";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { AssessmentViewSelect } from "@/components/assessmentStatistics/AssessmentViewSelect";
@@ -22,7 +22,7 @@ async function AssessmentPage({ params }: { params: { id: string } }) {
     notFound();
   }
 
-  const user = await getUserDetails();
+  const user = await getCurrentUser();
 
   if (!user) {
     return redirect("/onboard");

@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import UpdateClassDialog from "@/components/classDialogs/UpdateClassDialog";
 
 import { getClassById } from "@/lib/classUtils/getClassDetails";
-import { getUserDetails } from "@/lib/userUtils/getUserDetails";
+import { getCurrentUser } from "@/lib/userUtils/getUserDetails";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import LeaveClassDialog from "@/components/classDialogs/LeaveClassDialog";
@@ -19,7 +19,7 @@ async function ClassPage({ params }: { params: { id: string } }) {
     redirect("/dashboard");
   }
 
-  const user = await getUserDetails();
+  const user = await getCurrentUser();
   const userRole = user?.role;
 
   if (!user) {

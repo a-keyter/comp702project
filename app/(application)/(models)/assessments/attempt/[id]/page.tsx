@@ -1,7 +1,7 @@
 import AttemptAssessment from "@/components/assessmentAttempt/AttemptAssessment";
 import { getAssessmentById } from "@/lib/assessmentUtils/getAssessmentDetails";
 import { loadAssessmentItems } from "@/lib/assessmentUtils/getAssessmentItems";
-import { getUserDetails } from "@/lib/userUtils/getUserDetails";
+import { getCurrentUser } from "@/lib/userUtils/getUserDetails";
 import { notFound, redirect } from "next/navigation";
 
 async function AttemptAssessmentPage({ params }: { params: { id: string } }) {
@@ -18,7 +18,7 @@ async function AttemptAssessmentPage({ params }: { params: { id: string } }) {
 
   const assessmentItems = await loadAssessmentItems(params.id);
 
-  const user = await getUserDetails();
+  const user = await getCurrentUser();
 
   if (!user) {
     return redirect("/onboard");

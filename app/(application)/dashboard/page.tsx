@@ -1,7 +1,7 @@
 import { classColumns } from "@/components/classesTable/columns";
 import { ClassDataTable } from "@/components/classesTable/data-table";
 import { getUserClasses } from "@/lib/classUtils/getClassDetails";
-import { getUserDetails } from "@/lib/userUtils/getUserDetails";
+import { getCurrentUser } from "@/lib/userUtils/getUserDetails";
 import { AssessmentDataTable } from "@/components/assessmentsTable/data-table";
 import { assessmentColumns } from "@/components/assessmentsTable/columns";
 import {
@@ -14,7 +14,7 @@ import RedirectToOnboarding from "./RedirectToOnboarding";
 import { studentAssessmentColumns } from "@/components/assessmentsTable/studentAssessmentColumns";
 
 export default async function Dashboard() {
-  const user = await getUserDetails();
+  const user = await getCurrentUser();
   if (!user) {
     return <RedirectToOnboarding/>
   } 

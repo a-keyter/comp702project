@@ -3,11 +3,11 @@ import { ClassStudentsDataTable } from "@/components/studentsTable/data-table";
 import { Card } from "@/components/ui/card";
 import { getClassById } from "@/lib/classUtils/getClassDetails";
 import { getStudentsByClassWithStats } from "@/lib/studentUtils/getStudentsByClassWithStats";
-import { getUserDetails } from "@/lib/userUtils/getUserDetails";
+import { getCurrentUser } from "@/lib/userUtils/getUserDetails";
 import { redirect } from "next/navigation";
 
 async function ClassStudentsPage({ params }: { params: { id: string } }) {
-  const user = await getUserDetails();
+  const user = await getCurrentUser();
 
   if (!user) {
     return redirect("/onboard");

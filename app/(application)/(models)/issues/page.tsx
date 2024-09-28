@@ -1,11 +1,11 @@
 import LateLoadQuestionFeedbackIssues from "@/components/issuesTable/LateLoadIssuesTable";
 import LateLoadJoinRequests from "@/components/joinClassTable/LateLoadJoinRequests";
 import { Card } from "@/components/ui/card";
-import { getUserDetails } from "@/lib/userUtils/getUserDetails";
+import { getCurrentUser } from "@/lib/userUtils/getUserDetails";
 import { redirect } from "next/navigation";
 
 export default async function IssuesPage() {
-  const user = await getUserDetails();
+  const user = await getCurrentUser();
 
   if (!user) {
     redirect("/onboard");
