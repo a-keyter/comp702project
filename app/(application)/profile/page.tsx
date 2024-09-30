@@ -1,10 +1,9 @@
 import { getCurrentUser } from "@/lib/userUtils/getUserDetails";
+import { redirect } from "next/navigation";
 
 import DeleteProfileDialog from "@/components/profile/DeleteProfileDialog";
 import UpdateUserDialog from "@/components/profile/UpdateUserDialog";
 import UserDetails from "@/components/profile/UserDetails";
-
-import { redirect } from "next/navigation";
 import { Card } from "@/components/ui/card";
 
 export default async function ProfilePage() {
@@ -20,7 +19,7 @@ export default async function ProfilePage() {
         <h1 className="text-2xl font-bold">Your Profile</h1>
         <div className="flex gap-x-4">  
           <UpdateUserDialog user={user} />
-          <DeleteProfileDialog nickname={user.nickname} />
+          <DeleteProfileDialog />
         </div>
       </div>
       <UserDetails user={user} />
