@@ -50,7 +50,7 @@ export async function getCurrentUser(): Promise<SafeUser | null> {
   };
 }
 
-// Util for fetching User - NEVER PASS THE USER ID TO CLIENT
+// Util for fetching User by nickname - NEVER PASS THE USER ID TO CLIENT
 export async function getUserByNickname(nickname: string): Promise<User | null> {
   try {
     const user = await prisma.user.findUnique({
@@ -68,6 +68,7 @@ export async function getUserByNickname(nickname: string): Promise<User | null> 
   }
 }
 
+// Util for fetching User by email - NEVER PASS THE USER ID TO CLIENT
 export async function getUserByEmail(userEmail: string): Promise<User | null> {
   try {
     const user = await prisma.user.findFirst({

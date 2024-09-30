@@ -15,10 +15,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Switch } from "./ui/switch";
+import { Switch } from "../ui/switch";
 import { useState } from "react";
 import { createUser } from "@/lib/userUtils/createNewUser";
-import LoadingSpinner from "./LoadingSpinner";
+import LoadingSpinner from "../LoadingSpinner";
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -30,12 +30,11 @@ const FormSchema = z.object({
     message: "Nickname must contain only alphanumeric characters (No spaces).",
   }),
   teachermode: z.boolean().default(false).optional(),
-});
+}); 
 
 export function OnboardForm() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false)
-
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -53,8 +52,6 @@ export function OnboardForm() {
 
       // Call the createUser function
       await createUser(data);
-
-      await new Promise(resolve => setTimeout(resolve, 2000));
 
       setLoading(false)
       // If successful, redirect to dashboard

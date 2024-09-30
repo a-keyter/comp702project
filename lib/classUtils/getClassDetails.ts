@@ -2,24 +2,9 @@
 
 import { Class } from "@prisma/client";
 import { prisma } from "../initPrisma";
-import { getUserById, SafeUser } from "../userUtils/getUserDetails";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-
-export type SafeClass = {
-  id: string;
-  title: string;
-  description: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export type ClassWithCreator = {
-  class: SafeClass;
-  creator: SafeUser | null;
-};
-
-// FETCH SPECIFIC CLASS
+// Fetch specific class by id
 export async function getClassById(
   classId: string
 ): Promise<(Class & { memberCount: number }) | null> {
@@ -95,28 +80,27 @@ export async function getClassTitleById(
 // FETCH ALL CLASSES BY USER ID
 export async function getUserClasses() {
   const { userId } = auth();
-
   if (!userId) {
     return null;
   }
-
-  const user = await getUserById(userId);
-
-  if (!user) {
-    return null;
-  }
-
-  let classes: SafeClass[];
-
-  if (user.role === "TEACHER") {
-    // If user.role === TEACHER, fetch all classes where class.createdBy === user.id
-    classes = await prisma.class.findMany({
+  const classes = await prisma.class.findMany({
       where: {
-        taughtBy: {
-          some: {
-            id: userId,
+        OR: [
+          {
+            taughtBy: {
+              some: {
+                id: userId,
+              },
+            },
           },
-        },
+          {
+            members: {
+              some: {
+                id: userId,
+              },
+            },
+          },
+        ],
       },
       select: {
         id: true,
@@ -128,32 +112,12 @@ export async function getUserClasses() {
       orderBy: {
         updatedAt: "desc",
       },
-    });
-  } else if (user.role === "STUDENT") {
-    // If user.role === STUDENT, fetch all classes where class.members contains user.Id
-    classes = await prisma.class.findMany({
-      where: {
-        members: {
-          some: {
-            id: user.id,
-          },
-        },
-      },
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-      orderBy: {
-        updatedAt: "desc",
-      },
-    });
-  } else {
-    // If the role is neither TEACHER nor STUDENT, return null
-    return null;
-  }
-
+  });
   return classes;
 }
+
+
+
+
+
+

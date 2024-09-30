@@ -1,9 +1,11 @@
-import { classColumns } from "@/components/classesTable/columns";
-import { ClassDataTable } from "@/components/classesTable/data-table";
-import UserDetails from "@/components/profileDialogs/UserDetails";
-import { getUserClasses } from "@/lib/classUtils/getClassDetails";
 import { getCurrentUser } from "@/lib/userUtils/getUserDetails";
+
+import DeleteProfileDialog from "@/components/profile/DeleteProfileDialog";
+import UpdateUserDialog from "@/components/profile/UpdateUserDialog";
+import UserDetails from "@/components/profile/UserDetails";
+
 import { redirect } from "next/navigation";
+import { Card } from "@/components/ui/card";
 
 export default async function ProfilePage() {
   const user = await getCurrentUser();
@@ -11,23 +13,21 @@ export default async function ProfilePage() {
     return redirect("/onboard");
   }
 
-  const classes = await getUserClasses();
-
   return (
-    <div className="flex flex-col w-full max-w-4xl gap-y-4">
+    <div className="flex flex-col w-full max-w-4xl gap-y-4 py-4">
+      <Card className="p-4 flex flex-col gap-y-4">
+      <div className="flex w-full justify-between px-1 items-center">
+        <h1 className="text-2xl font-bold">Your Profile</h1>
+        <div className="flex gap-x-4">  
+          <UpdateUserDialog user={user} />
+          <DeleteProfileDialog nickname={user.nickname} />
+        </div>
+      </div>
       <UserDetails user={user} />
-      {classes && (
-        <ClassDataTable
-          columns={classColumns}
-          data={classes}
-          role={user.role}
-          tableSize="small"
-        />
-      )}
-      <div
-        data-id="server-render-complete"
-        style={{ display: "none" }}
-      ></div>
+      </Card>
     </div>
   );
 }
+
+
+

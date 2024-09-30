@@ -35,10 +35,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SafeClass } from "@/lib/classUtils/getClassDetails";
 import { Plus } from "lucide-react";
 import { toast } from "../ui/use-toast";
 import bulkAddStudentsToClass from "@/lib/teacherUtils/bulkAddStudents";
+import { Class } from "@prisma/client";
 
 const FormSchema = z.object({
   classId: z
@@ -64,7 +64,7 @@ function AddStudentsDialog({
 }: {
   classId: string | null;
   classTitle: string | null;
-  classes: SafeClass[] | null;
+  classes: Class[] | null;
   variant: "icon" | "text";
 }) {
   const [open, setOpen] = useState(false);

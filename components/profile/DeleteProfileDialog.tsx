@@ -24,16 +24,15 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import LoadingSpinner from "../LoadingSpinner";
-import { deleteUserByNickname } from "@/lib/userUtils/deleteUserByNickname";
+import { deleteUser } from "@/lib/userUtils/deleteUser";
 import { useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
-// Import the deleteUserByNickname function
 const FormSchema = z.object({
   confirmPhrase: z.string().min(1),
 });
 
-function DeleteProfileDialog({ nickname }: { nickname: string }) {
+function DeleteProfileDialog() {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -57,12 +56,13 @@ function DeleteProfileDialog({ nickname }: { nickname: string }) {
       setError(null);
       setLoading(true);
 
-      // Call the deleteUserByNickname function
-      await deleteUserByNickname(nickname);
+      // Call the deleteUser function
+      await deleteUser();
 
       setLoading(false);
       setOpen(false);
 
+      // Redirect to the landing page
       router.push("/");
 
       // Log the user out

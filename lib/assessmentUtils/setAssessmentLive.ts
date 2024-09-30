@@ -30,6 +30,14 @@ export async function setAssessmentLive(assessmentId: string) {
                 }
             }
         });
+        
+        // Update the class updatedAt timestamp
+        await prisma.class.update({
+            where: { id: updatedAssessment.classId },
+            data: {
+              updatedAt: new Date(), // Update the 'updatedAt' timestamp
+            },
+          });
 
         await Promise.all(updatedAssessment.class.members.map(student => 
             newAssessmentNotification(updatedAssessment.id, updatedAssessment.classId, userId, student.id)

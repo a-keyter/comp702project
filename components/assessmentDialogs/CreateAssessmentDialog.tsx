@@ -37,11 +37,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SafeClass } from "@/lib/classUtils/getClassDetails";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { CalendarIcon, Plus } from "lucide-react";
 import { Calendar } from "../ui/calendar";
+import { Class } from "@prisma/client";
 
 const FormSchema = z.object({
   classId: z
@@ -75,7 +75,7 @@ function CreateAssessmentDialog({
 }: {
   classId: string | null;
   classTitle: string | null;
-  classes: SafeClass[] | null;
+  classes: Class[] | null;
   variant: "icon" | "text";
 }) {
   const [open, setOpen] = useState(false);

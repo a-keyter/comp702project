@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/table";
 import { Input } from "../ui/input";
 import CreateAssessmentDialog from "../assessmentDialogs/CreateAssessmentDialog";
-import { SafeClass } from "@/lib/classUtils/getClassDetails";
+import { Class } from "@prisma/client";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -51,7 +51,7 @@ export function AssessmentDataTable<TData, TValue>({
   display: "Upcoming" | "All";
   classId: string | null;
   classTitle: string | null;
-  classes: SafeClass[] | null;
+  classes: Class[] | null;
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(

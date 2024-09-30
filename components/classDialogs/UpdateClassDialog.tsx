@@ -27,8 +27,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import LoadingSpinner from "../LoadingSpinner";
-import { SafeClass } from "@/lib/classUtils/getClassDetails";
 import { updateClassDetails } from "@/lib/classUtils/updateClassDetails";
+import { Class } from "@prisma/client";
 
 const FormSchema = z.object({
   title: z.string().min(2, {
@@ -39,7 +39,7 @@ const FormSchema = z.object({
   }),
 });
 
-function UpdateClassDialog({ classData }: { classData: SafeClass }) {
+function UpdateClassDialog({ classData }: { classData: Class }) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);

@@ -67,7 +67,7 @@ async function UserNav() {
           </Button>
         </Link>
 
-        <NotificationsButton />
+        {/* <NotificationsButton /> */}
         <Link href={"/dashboard"}>
           <Button variant={"ghost"} className="flex flex-col px-2">
             <div>

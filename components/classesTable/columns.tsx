@@ -1,6 +1,5 @@
 "use client";
 
-import { SafeClass } from "@/lib/classUtils/getClassDetails";
 import { ColumnDef } from "@tanstack/react-table";
 
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
@@ -14,8 +13,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
+import { Class } from "@prisma/client";
 
-export const classColumns: ColumnDef<SafeClass>[] = [
+export const classColumns: ColumnDef<Class>[] = [
   {
     accessorKey: "title",
     header: ({ column }) => {

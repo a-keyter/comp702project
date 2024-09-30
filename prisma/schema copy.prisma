@@ -1,0 +1,181 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+
+// This model is used to store users.
+enum Role {
+  TEACHER
+  STUDENT
+}
+
+model User {
+  id                 String         @id
+  name               String
+  nickname           String         @unique
+  email              String         @unique
+  createdAt          DateTime       @default(now()) @map(name: "created_at")
+  role               Role
+  taughtClasses      Class[]        @relation("TaughtBy")
+  memberOfClasses    Class[]        @relation("ClassMembers")
+  createdAssessments Assessment[]   @relation("AssessmentCreator")
+  submissions        Submission[]   @relation("UserSubmissions")
+  responses          Response[]     @relation("UserResponses")
+  raisedIssues       Issue[]        @relation("UserIssues")
+  messages           Message[]      @relation("UserMessages")
+  lastUpdatedIssues  Issue[]        @relation("LastUpdatedBy")
+}
+
+// This model is used to store classes.
+model Class {
+  id            String         @id
+  title         String
+  description   String
+  createdAt     DateTime       @default(now()) @map(name: "created_at")
+  updatedAt     DateTime       @updatedAt @map(name: "updated_at")
+}
+
+// This model is used to store assessments.
+enum AssessmentStatus {
+  DRAFT
+  LIVE
+}
+
+model Assessment {
+  id              String           @id @default(uuid())
+  title           String
+  objectives      String
+  status          AssessmentStatus @default(DRAFT)
+  createdAt       DateTime         @default(now()) @map(name: "created_at")
+  updatedAt       DateTime         @updatedAt @map(name: "updated_at")
+  dueDate         DateTime
+}
+
+// This model is used to store assessment items.
+enum AssessmentItemType {
+  MCQ
+  CONTEXT
+}
+
+model AssessmentItem {
+  id             String             @id @default(uuid())
+  index          Int
+  content        String
+  type           AssessmentItemType
+}
+
+// This model is used to store answers to assessment items.
+model Answer {
+  id               String         @id @default(uuid())
+  content          String
+  isCorrect        Boolean
+}
+
+// This model is used to store teacher feedback for assessments.
+model TeacherFeedback {
+  id               String     @id @default(uuid())
+  content          String
+  createdAt        DateTime   @default(now()) @map(name: "created_at")
+}
+
+
+// This model is used to store submissions for assessments.
+model Submission {
+  id               String           @id @default(uuid())
+  createdAt        DateTime         @default(now()) @map(name: "created_at")
+  feedback         String?
+  score            Float?
+}
+
+// This model is used to store responses to assessment items.
+model Response {
+  id               String         @id @default(uuid())
+  createdAt        DateTime       @default(now()) @map(name: "created_at")
+  isCorrect        Boolean
+}
+
+// This model is used to store issues raised by users.
+enum IssueType {
+  CLASS_JOIN_REQUEST
+  QUESTION_ISSUE
+  FEEDBACK_ISSUE
+}
+
+enum IssueStatus {
+  UNREAD
+  OPEN
+  RESOLVED
+  REJECTED
+}
+
+model Issue {
+  id                    String         @id @default(uuid())
+  type                  IssueType
+  status                IssueStatus    @default(UNREAD)
+  createdAt             DateTime       @default(now()) @map(name: "created_at")
+  updatedAt             DateTime       @updatedAt @map(name: "updated_at")
+  
+  // Fields for question issues
+  question              String?
+  givenAnswer           String?
+  correctAnswer         String?
+  
+  // Fields for feedback issues
+  feedback              String?
+
+}
+
+// This model is used to store messages for issues.
+model Message {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now()) @map(name: "created_at")
+}
+
+// This model is used to store notifications for users. # Added later in the project
+enum NotificationType {
+  NEW_ASSESSMENT
+  CLASS_JOIN_REQUEST
+  CLASS_JOIN_REJECTED
+  CLASS_JOIN_ACCEPTED
+  FEEDBACK_ISSUE_RAISED
+  QUESTION_ISSUE_RAISED
+  NEW_ISSUE_MESSAGE
+  CLASS_REMOVAL
+}
+
+model Notification {
+  id           String           @id @default(uuid())
+  type         NotificationType
+  recipient    User             @relation("UserNotifications", fields: [recipientId], references: [id], onDelete: Cascade)
+  recipientId  String
+  sender       User             @relation("NotificationSender", fields: [senderId], references: [id], onDelete: Cascade)
+  senderId     String
+  class        Class?           @relation("ClassNotifications", fields: [classId], references: [id], onDelete: Cascade)
+  classId      String?
+  assessment   Assessment?      @relation("AssessmentNotifications", fields: [assessmentId], references: [id], onDelete: Cascade)
+  assessmentId String?
+  issue        Issue?           @relation("IssueNotifications", fields: [issueId], references: [id], onDelete: Cascade)
+  issueId      String?
+  is_unread    Boolean          @default(true)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@unique([type, issueId, senderId, recipientId])
+}
+
+// This model is used to store student emails who have been added to a class but not yet created an account.
+model QueuedClassJoin {
+  id           String           @id @default(uuid())
+  email        String
+  class        Class?           @relation("FutureClassStudents", fields: [classId], references: [id], onDelete: Cascade)
+  classId      String? 
+  raisedBy     User           @relation("QueuedStudents", fields: [raisedById], references: [id])
+  raisedById   String
+}

@@ -1,4 +1,4 @@
-import { OnboardForm } from "@/components/OnboardForm";
+import { OnboardForm } from "@/components/onboarding/OnboardForm";
 import { Card } from "@/components/ui/card";
 import { getUserById } from "@/lib/userUtils/getUserDetails";
 import { redirect } from "next/navigation";

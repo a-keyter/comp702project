@@ -35,6 +35,8 @@ const FormSchema = z.object({
   }),
   nickname: z.string().min(2, {
     message: "Nickname must be at least 2 characters.",
+  }).regex(/^[a-zA-Z0-9-]+$/, {
+    message: "Nickname must contain only alphanumeric characters (No spaces).",
   }),
 });
 

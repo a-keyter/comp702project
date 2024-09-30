@@ -10,8 +10,8 @@ import {
 } from "@/lib/assessmentUtils/getAssessmentDetails";
 
 import { Card } from "@/components/ui/card";
-import RedirectToOnboarding from "./RedirectToOnboarding";
 import { studentAssessmentColumns } from "@/components/assessmentsTable/studentAssessmentColumns";
+import RedirectToOnboarding from "@/components/onboarding/RedirectToOnboarding";
 
 export default async function Dashboard() {
   const user = await getCurrentUser();
