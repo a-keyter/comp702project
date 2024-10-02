@@ -2,7 +2,7 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "../initPrisma";
-import { addStudentToClass } from "../studentUtils/addStudentToClass";
+import { addUserToClass } from "../classUtils/addUserToClass";
 import { newClassNotification } from "../notificationUtils/newClassNotification";
 
 export default async function bulkAddStudentsToClass(
@@ -39,7 +39,7 @@ export default async function bulkAddStudentsToClass(
   // Check class membership and add students if they're not already members
   const addExistingStudentsPromises = existingUsers.map(async (user) => {
     try {
-      await addStudentToClass(classId, user.id);
+      await addUserToClass(classId, user.id);
       await newClassNotification(classId, userId, user.id);
       return { success: true, email: user.email };
     } catch (error) {

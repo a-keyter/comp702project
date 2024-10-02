@@ -1,6 +1,6 @@
-import LateLoadAssessmentsGraph from "@/components/assessmentsTable/LateLoadAssessmentsGraph";
 import LateLoadTeacherAssessmentTable from "@/components/assessmentsTable/LateLoadTeacherAssessmentTable";
 import LateLoadStudentsByClassTable from "@/components/studentsTable/LateLoadStudentsByClassTable";
+import LateLoadAssessmentsGraph from "@/components/assessmentStatistics/LateLoadAssessmentsGraph";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 

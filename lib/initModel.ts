@@ -22,3 +22,6 @@ export const model = new ChatOpenAI({
 //   model: "mistral-large-latest",
 //   temperature: 0.3,
 // });
+
+
+

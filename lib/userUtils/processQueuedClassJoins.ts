@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/initPrisma";
-import { addStudentToClass } from "../studentUtils/addStudentToClass";
+import { addUserToClass } from "../classUtils/addUserToClass";
 import { newClassNotification } from "../notificationUtils/newClassNotification";
 
 export async function processQueuedClassJoins(userEmail: string) {
@@ -25,7 +25,7 @@ export async function processQueuedClassJoins(userEmail: string) {
       queuedJoins.map(async (queuedJoin) => {
         try {
           // Add the student to the class
-          await addStudentToClass(queuedJoin.classId!, user.id);
+          await addUserToClass(queuedJoin.classId!, user.id);
 
           // Send a notification
           await newClassNotification(queuedJoin.classId!, queuedJoin.raisedById, user.id);

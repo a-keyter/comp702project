@@ -2,7 +2,7 @@
 
 import { prisma } from "../initPrisma";
 
-export async function addStudentToClass(classId: string, studentId: string) {
+export async function addUserToClass(classId: string, userId: string) {
   try {
     // Find the class
     const classToJoin = await prisma.class.findUnique({
@@ -19,7 +19,7 @@ export async function addStudentToClass(classId: string, studentId: string) {
         id: classId,
         members: {
           some: {
-            id: studentId,
+            id: userId,
           },
         },
       },
@@ -34,7 +34,7 @@ export async function addStudentToClass(classId: string, studentId: string) {
       where: { id: classId },
       data: {
         members: {
-          connect: { id: studentId },
+          connect: { id: userId },
         },
       },
     });
@@ -42,7 +42,7 @@ export async function addStudentToClass(classId: string, studentId: string) {
     // Delete any associateed join requests for students who may have requested to join that class.
     await prisma.issue.deleteMany({
         where: {
-            raisedById: studentId,
+            raisedById: userId,
             relevantClassId: classId,
             type: "CLASS_JOIN_REQUEST"
         },

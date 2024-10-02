@@ -48,7 +48,11 @@ export async function getResultsByAssessmentId(
           feedback: submission.feedback,
           username: submission.user.name,
           usernickname: submission.user.nickname,
-          attemptCount: stats ? stats._count.id : 1,
+          attemptCount: stats ? stats._count.id : 1, 
+          // Return the number of attempts for this user, or 1 if no attempts found
+          // The attemptCount represents how many times the user has submitted this assessment.
+          // If stats exist for the user, we return the count of their submissions.
+          // If no stats are found (which shouldn't happen normally), we default to 1 attempt.
         };
       }
     );

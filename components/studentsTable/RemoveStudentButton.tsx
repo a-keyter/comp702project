@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { useToast } from "../ui/use-toast";
-import { removeStudentByNickname } from "@/lib/studentUtils/removeStudentByNickname";
+import { removeStudentByNickname } from "@/lib/classUtils/removeStudentByNickname";
 
 function RemoveStudentButton({
   studentNickname,

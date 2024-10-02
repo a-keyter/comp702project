@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { removeStudentByNickname } from "@/lib/studentUtils/removeStudentByNickname";
+import { removeStudentByNickname } from "@/lib/classUtils/removeStudentByNickname";
 
 import {
   Dialog,

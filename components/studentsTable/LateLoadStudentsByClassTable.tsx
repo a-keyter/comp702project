@@ -1,9 +1,9 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { getStudentsByClassWithStats } from "@/lib/studentUtils/getStudentsByClassWithStats";
 import { ClassStudentsDataTable } from "./data-table";
 import { classStudentsColumns } from "./columns";
 import { Skeleton } from "../ui/skeleton";
+import { getStudentsByClassWithStats } from "@/lib/classUtils/getStudentsByClassWithStats";
 
 type Student = {
   name: string;

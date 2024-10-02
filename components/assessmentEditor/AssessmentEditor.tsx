@@ -52,12 +52,14 @@ function AssessmentEditor({
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [publishLoading, setPublishLoading] = useState<boolean>(false);
+
   const [assessmentItems, setAssessmentItems] = useState<AssessmentItem[]>(
     initialItems || []
   );
   const [mcqAnswers, setMcqAnswers] = useState<Record<string, Answer[]>>(
     initialMcqAnswers || {}
   );
+  
   const [showAiWarning, setShowAiWarning] = useState<boolean>(false);
   const [hasUsedAiGeneration, setHasUsedAiGeneration] = useState<boolean>(true);
   const [newAssessmentOptionsDialog, showNewAssessmentOptionsDialog] =
