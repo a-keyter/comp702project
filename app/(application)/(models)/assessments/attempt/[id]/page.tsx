@@ -1,14 +1,15 @@
 import AttemptAssessment from "@/components/assessmentAttempt/AttemptAssessment";
+import NoAccessRedirect from "@/components/redirect/NoAccess";
 import { getAssessmentById } from "@/lib/assessmentUtils/getAssessmentDetails";
 import { loadAssessmentItems } from "@/lib/assessmentUtils/getAssessmentItems";
 import { getCurrentUser } from "@/lib/userUtils/getUserDetails";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 
 async function AttemptAssessmentPage({ params }: { params: { id: string } }) {
   const assessmentData = await getAssessmentById(params.id);
 
   if (!assessmentData) {
-    notFound();
+    return <NoAccessRedirect redirectTo="/dashboard" />;
   }
 
   if (assessmentData.status === "DRAFT") {

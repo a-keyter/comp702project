@@ -1,4 +1,5 @@
 import PreviewDisplay from "@/components/assessmentPreview/PreviewDisplay";
+import NoAccessRedirect from "@/components/redirect/NoAccess";
 
 import { getAssessmentById } from "@/lib/assessmentUtils/getAssessmentDetails";
 import { loadAssessmentItems } from "@/lib/assessmentUtils/getAssessmentItems";
@@ -10,7 +11,7 @@ async function PreviewAssessmentPage({ params }: { params: { id: string } }) {
   const assessmentData = await getAssessmentById(params.id);
 
   if (!assessmentData) {
-    redirect("/dashboard")
+    return <NoAccessRedirect redirectTo="/dashboard" />;
   }
   
   const assessmentItems = await loadAssessmentItems(params.id);
@@ -18,11 +19,11 @@ async function PreviewAssessmentPage({ params }: { params: { id: string } }) {
   const user = await getCurrentUser();
 
   if (!user) {
-    redirect("/onboard");
+    return redirect("/onboard");
   }
 
   if (user.role === "STUDENT") {
-    redirect(`/assessments/${params.id}`);
+    return <NoAccessRedirect redirectTo={`/dashboard`} />;
   }
 
   return (

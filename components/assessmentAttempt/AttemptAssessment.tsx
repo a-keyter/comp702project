@@ -101,20 +101,22 @@ function AttemptAssessment({
         {assessmentObjectives}
       </p>
       </Card>
-      {items.map((item, index) => (
-        <Card
-          data-id={`question-${index}`}
-          key={item.id}
-          className="flex flex-col border-2 p-3 rounded-md w-full"
-        >
-          <AttemptItemWrapper
-            item={item}
-            answers={item.type === "MCQ" ? mcqAnswers[item.id] : undefined}
-            selectedAnswerId={responses[item.id] || null} // Provide a fallback value of null
-            onSelect={(answerId) => handleResponseChange(item.id, answerId)}
-          />
-        </Card>
-      ))}
+      {items
+        .sort((a, b) => a.index - b.index)
+        .map((item, index) => (
+          <Card
+            data-id={`question-${index}`}
+            key={item.id}
+            className="flex flex-col border-2 p-3 rounded-md w-full"
+          >
+            <AttemptItemWrapper
+              item={item}
+              answers={item.type === "MCQ" ? mcqAnswers[item.id] : undefined}
+              selectedAnswerId={responses[item.id] || null} // Provide a fallback value of null
+              onSelect={(answerId) => handleResponseChange(item.id, answerId)}
+            />
+          </Card>
+        ))}
       <div className="flex justify-end">
       <Button onClick={handleSubmit} className="mt-4" data-id="submit-assessment">
         Submit

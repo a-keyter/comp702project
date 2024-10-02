@@ -56,7 +56,7 @@ export async function getAssessmentById(id: string) {
     }
 
     if (assessment.class.taughtBy.length === 0 && assessment.class.members.length === 0) {
-      redirect('/dashboard'); // Redirect to dashboard if user doesn't have access to assessment.
+      return(null); // Redirect to dashboard if user doesn't have access to assessment.
     }
 
     return {

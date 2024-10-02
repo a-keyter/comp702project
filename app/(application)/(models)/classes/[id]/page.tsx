@@ -11,12 +11,13 @@ import LeaveClassDialog from "@/components/classDialogs/LeaveClassDialog";
 import { getAssessmentCount } from "@/lib/assessmentUtils/getAssessmentCount";
 import TeacherViewSelect from "./TeacherViewSelect";
 import StudentViewSelect from "./StudentViewSelect";
+import NoAccessRedirect from "@/components/redirect/NoAccess";
 
 async function ClassPage({ params }: { params: { id: string } }) {
   const classData = await getClassById(params.id);
 
   if (!classData) {
-    redirect("/dashboard");
+    return <NoAccessRedirect redirectTo="/dashboard" />;
   }
 
   const user = await getCurrentUser();

@@ -44,10 +44,6 @@ export async function getSubmissionResults(submissionId: string): Promise<Submis
                   where: { id: userId },
                   select: { id: true },
                 },
-                members: {
-                  where: { id: userId },
-                  select: { id: true },
-                },
               },
             },
             createdBy: true,
@@ -68,9 +64,9 @@ export async function getSubmissionResults(submissionId: string): Promise<Submis
     }
 
     const isTeacher = submission.assessment.class.taughtBy.length > 0;
-    const isMember = submission.assessment.class.members.length > 0;
+    const isSubmitter = submission.user.id === userId;
 
-    if (!isTeacher && !isMember) {
+    if (!isTeacher && !isSubmitter) {
       console.error('User is not authorized to view these results');
       return null;
     }

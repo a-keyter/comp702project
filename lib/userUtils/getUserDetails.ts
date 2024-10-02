@@ -52,12 +52,29 @@ export async function getCurrentUser(): Promise<SafeUser | null> {
 
 // Util for fetching User by nickname - NEVER PASS THE USER ID TO CLIENT
 export async function getUserByNickname(nickname: string): Promise<User | null> {
+  const {userId} = auth();
+
+  if (!userId) {
+    return null;
+  }
+
   try {
     const user = await prisma.user.findUnique({
       where: {
         nickname: nickname,
       },
+      include: {
+        memberOfClasses: {
+          where: {
+            taughtBy: {some: {id: userId}},
+          },
+        },
+      },
     });
+
+    if (user?.memberOfClasses.length === 0) {
+      return null;
+    }
 
     return user;
   } catch (error) {

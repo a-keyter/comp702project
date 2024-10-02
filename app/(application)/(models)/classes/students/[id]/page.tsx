@@ -1,3 +1,4 @@
+import NoAccessRedirect from "@/components/redirect/NoAccess";
 import { classStudentsColumns } from "@/components/studentsTable/columns";
 import { ClassStudentsDataTable } from "@/components/studentsTable/data-table";
 import { Card } from "@/components/ui/card";
@@ -14,13 +15,13 @@ async function ClassStudentsPage({ params }: { params: { id: string } }) {
   }
 
   if (user.role !== "TEACHER") {
-    return redirect(`/classes/${params.id}`);
+    return <NoAccessRedirect redirectTo="/dashboard" />;
   }
 
   const classData = await getClassById(params.id)
 
   if (!classData) {
-    return redirect("/dashboard")
+    return <NoAccessRedirect redirectTo="/dashboard" />;
   }
 
   const classStudentsData = await getStudentsByClassWithStats(params.id);

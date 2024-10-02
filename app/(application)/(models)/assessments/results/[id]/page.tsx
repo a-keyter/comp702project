@@ -1,12 +1,12 @@
 import ResultsDisplay from "@/components/assessmentAttempt/ResultsDisplay";
+import NoAccessRedirect from "@/components/redirect/NoAccess";
 import { getSubmissionResults } from "@/lib/assessmentUtils/getSubmissionResults";
-import { redirect } from "next/navigation";
 
 async function AssessmentResultsPage({ params }: { params: { id: string } }) {
   const results = await getSubmissionResults(params.id);
 
   if (!results) {
-    redirect("/dashboard");
+    return <NoAccessRedirect redirectTo="/dashboard" />;
   }
 
   return (

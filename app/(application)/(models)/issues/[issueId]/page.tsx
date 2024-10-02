@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { getUserById } from "@/lib/userUtils/getUserDetails";
 import IssueChat from "@/components/issues/IssueChat";
+import NoAccessRedirect from "@/components/redirect/NoAccess";
 
 export default async function IssuePage({
   params,
@@ -24,7 +25,7 @@ export default async function IssuePage({
   const issueData = await fetchIssueById(params.issueId);
 
   if (!issueData) {
-    redirect("/issues");
+    return <NoAccessRedirect redirectTo="/dashboard" />;
   }
 
   return (

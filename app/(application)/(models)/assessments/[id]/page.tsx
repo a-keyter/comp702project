@@ -11,21 +11,26 @@ import { getResultsByAssessmentId } from "@/lib/assessmentUtils/getAssessmentSub
 import { getStudentResultsByAssessmentId } from "@/lib/assessmentUtils/getStudentResultsByAssessmentId";
 import { getCurrentUser } from "@/lib/userUtils/getUserDetails";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { AssessmentViewSelect } from "@/components/assessmentStatistics/AssessmentViewSelect";
 import ReportIssueDialog from "@/components/issuesDialog/ReportIssueDialog";
+import NoAccessRedirect from "@/components/redirect/NoAccess";
 
 async function AssessmentPage({ params }: { params: { id: string } }) {
   const assessmentData = await getAssessmentById(params.id);
 
   if (!assessmentData) {
-    notFound();
+    return <NoAccessRedirect redirectTo="/dashboard" />;
   }
 
   const user = await getCurrentUser();
 
   if (!user) {
     return redirect("/onboard");
+  }
+
+  if (assessmentData.status === "DRAFT" && user.role === "STUDENT") {
+    return <NoAccessRedirect redirectTo="/dashboard" />;
   }
 
   const results =
