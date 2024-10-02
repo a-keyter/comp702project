@@ -78,7 +78,7 @@ It aims to provide personalized feedback to students on their performance and in
 - Create a new database.
 - The original project was created using Vercel Postgres, but any other PostgreSQL database should do.
 - See also [Supabase](https://supabase.com/) or [Neon](https://neon.tech/), for an altenrative, free and easy to use database provider.
-- Alternatively, use Docker to run a PostgreSQL database.
+- Alternatively, use Docker to run a PostgreSQL database locally.
 - Get your connection string and update the `.env` file with the correct connection string.
 
 ### Clerk API keys
