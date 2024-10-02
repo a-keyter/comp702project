@@ -3,7 +3,7 @@ import { classStudentsColumns } from "@/components/studentsTable/columns";
 import { ClassStudentsDataTable } from "@/components/studentsTable/data-table";
 import { Card } from "@/components/ui/card";
 import { getClassById } from "@/lib/classUtils/getClassDetails";
-import { getStudentsByClassWithStats } from "@/lib/studentUtils/getStudentsByClassWithStats";
+import { getStudentsByClassWithStats } from "@/lib/classUtils/getStudentsByClassWithStats";
 import { getCurrentUser } from "@/lib/userUtils/getUserDetails";
 import { redirect } from "next/navigation";
 
