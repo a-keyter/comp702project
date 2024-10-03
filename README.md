@@ -4,7 +4,7 @@
 
 This project implements an online assessment platform with bi-directional feedback using Large Language Models (LLMs). 
 
-It aims to provide personalized feedback to students on their performance and insights to teachers based on aggregate student performance.
+It aims to provide personalised feedback to students on their performance and insights to teachers based on aggregate student performance.
 
 ## Features
 
@@ -17,15 +17,22 @@ It aims to provide personalized feedback to students on their performance and in
 
 ## Technologies Used
 
-- Next.js 14.2.5 (with App Router)
+- Next.js 14.2.13 (with App Router)
 - React 18
-- TypeScript
-- Tailwind CSS
-- Prisma (with PostgreSQL)
+- TypeScript 5
+- Tailwind CSS 3.4.1 (with Tailwind CSS Animate and Tailwind Merge)
+- Prisma 5.17.0 (with PostgreSQL)
 - Clerk for authentication
-- LangChain for LLM integration
-- Attempted use of Jest
-- Successful use of Cypress for testing
+- LangChain (core and OpenAI integration) for LLM implementation
+- React Hook Form for form management
+- Radix UI components (accordion, checkbox, dialog, dropdown, label, popover, select, slot, switch, tabs, toast)
+- Recharts for data visualization
+- Cypress for end-to-end testing
+- Jest and Testing Library for unit testing (attempted use)
+- ESLint for linting
+- Date-fns for date management
+- Zod for schema validation
+- UUIDv4 for unique ID generation
 
 ## Prerequisites
 
@@ -36,10 +43,9 @@ It aims to provide personalized feedback to students on their performance and in
 
 ## Installation
 
-1. Clone the repository (or unpack the .zip if downloaded):
+1. Unpack the .zip and cd into the project folder:
 
    ```
-   git clone https://github.com/a-keyter/comp702project.git
    cd comp702project
    ```
 
@@ -128,4 +134,3 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments
 
 - This project was developed as part of an MSc thesis at University of Liverpool.
-- Special thanks to Dr. Olga Anosova for supervision and guidance.
