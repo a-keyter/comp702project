@@ -1,65 +1,97 @@
+"use server";
+
 import { prisma } from "../initPrisma";
 
-export interface OrderedQuestionStatistics {
-  assessmentItemId: string;
-  question: string;
-  responseAccuracy: number;
-}
-
-export async function fetchOrderedQuestionsStats(assessmentId: string): Promise<OrderedQuestionStatistics[]> {
+export async function fetchAssessmentPerformanceData({
+  assessmentId,
+}: {
+  assessmentId: string;
+}) {
   try {
-    const submissions = await prisma.submission.findMany({
-      where: {
-        assessmentId: assessmentId,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      distinct: ['userId'],
+    const latestSubmissionsData = await prisma.assessment.findUnique({
+      where: { id: assessmentId },
       include: {
-        responses: {
+        submissions: {
+          orderBy: { createdAt: "desc" },
+          distinct: ["userId"],
           include: {
-            assessmentItem: {
-              select: {
-                id: true,
-                content: true,
-              },
-            },
+            responses: true,
           },
+        },
+        assessmentItems: {
+          orderBy: { index: "asc" },
+          where: { type: "MCQ" },
+          include: { answers: true },
         },
       },
     });
 
-    const questionStats: Map<string, OrderedQuestionStatistics> = new Map();
+    // console.log("Assessment Items:", latestSubmissionsData?.assessmentItems);
+    // console.log("Submissions:", latestSubmissionsData?.submissions);
 
-    submissions.forEach(submission => {
-      submission.responses.forEach(response => {
-        const { id: assessmentItemId, content: question } = response.assessmentItem;
-        
-        if (!questionStats.has(assessmentItemId)) {
-          questionStats.set(assessmentItemId, {
-            assessmentItemId,
-            question,
-            responseAccuracy: 0,
-          });
-        }
+    const questionResponseBreakdown =
+      latestSubmissionsData?.assessmentItems.map((item) => {
+        const correctAnswer = item.answers.find((answer) => answer.isCorrect);
+        const incorrectAnswers = item.answers.filter(
+          (answer) => !answer.isCorrect
+        );
 
-        const stats = questionStats.get(assessmentItemId)!;
-        const totalResponses = (stats.responseAccuracy * questionStats.size) || 0;
-        const newTotalResponses = totalResponses + 1;
-        const newCorrectResponses = response.isCorrect ? 
-          (totalResponses * stats.responseAccuracy) + 1 : 
-          (totalResponses * stats.responseAccuracy);
-        
-        stats.responseAccuracy = newCorrectResponses / newTotalResponses;
+        // console.log("Correct Answer for question:", item.id, correctAnswer);
+
+        const totalResponses = latestSubmissionsData.submissions.length;
+        const correctResponses = latestSubmissionsData.submissions.filter((submission) => {
+          const hasCorrectResponse = submission.responses.some(
+            (response) =>
+              response.givenAnswerId === correctAnswer?.id &&
+              response.assessmentItemId === item.id
+          );
+          // console.log("Submission:", submission.id, "Has correct response:", hasCorrectResponse);
+          return hasCorrectResponse;
+        }).length;
+
+        const percentCorrect = totalResponses > 0
+          ? ((correctResponses / totalResponses) * 100).toFixed(2)
+          : "0.00";
+
+        // console.log("Question:", item.id, "Total responses:", totalResponses, "Correct responses:", correctResponses, "Percent correct:", percentCorrect);
+
+        const incorrectAnswerDistribution: Record<string, string> = {};
+        incorrectAnswers.forEach((answer) => {
+          const answerCount = latestSubmissionsData.submissions.filter(
+            (submission) =>
+              submission.responses.some(
+                (response) =>
+                  response.givenAnswerId === answer.id &&
+                  response.assessmentItemId === item.id
+              )
+          ).length;
+          incorrectAnswerDistribution[answer.content] = (
+            (answerCount / totalResponses) *
+            100
+          ).toFixed(2);
+        });
+
+        return {
+          questionId: item.id,
+          question: item.content,
+          correct_answer: correctAnswer ? correctAnswer.content : "",
+          percent_correct: percentCorrect,
+          incorrect_answers: incorrectAnswerDistribution,
+        };
       });
-    });
 
-    return Array.from(questionStats.values())
+    const returnObject = {
+      assessmentTitle: latestSubmissionsData?.title,
+      assessmentObjectives: latestSubmissionsData?.objectives,
+      lastSubmission: latestSubmissionsData?.submissions[0]?.id,
+      questions: questionResponseBreakdown,
+    };
+
+    // console.log("Return object:", returnObject);
+
+    return returnObject;
   } catch (error) {
-    console.error('Error fetching question stats:', error);
+    console.error("Error fetching class performance data:", error);
     throw error;
-  } finally {
-    await prisma.$disconnect();
   }
 }

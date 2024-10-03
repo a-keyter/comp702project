@@ -7,7 +7,7 @@ import { getStudentsByClassWithStats } from "@/lib/classUtils/getStudentsByClass
 import { getCurrentUser } from "@/lib/userUtils/getUserDetails";
 import { redirect } from "next/navigation";
 
-async function ClassStudentsPage({ params }: { params: { id: string } }) {
+async function ClassStudentsPage({ params }: { params: { classId: string } }) {
   const user = await getCurrentUser();
 
   if (!user) {
@@ -18,18 +18,18 @@ async function ClassStudentsPage({ params }: { params: { id: string } }) {
     return <NoAccessRedirect redirectTo="/dashboard" />;
   }
 
-  const classData = await getClassById(params.id)
+  const classData = await getClassById(params.classId)
 
   if (!classData) {
     return <NoAccessRedirect redirectTo="/dashboard" />;
   }
 
-  const classStudentsData = await getStudentsByClassWithStats(params.id);
+  const classStudentsData = await getStudentsByClassWithStats(params.classId);
 
   return (
     <div className="w-full max-w-4xl">
       <Card className="w-full p-2">
-        <ClassStudentsDataTable classId={params.id} classTitle={classData?.title} tableSize="large" columns={classStudentsColumns} data={classStudentsData}/>
+        <ClassStudentsDataTable classId={params.classId} classTitle={classData?.title} tableSize="large" columns={classStudentsColumns} data={classStudentsData}/>
       </Card>
     </div>
   );

@@ -17,14 +17,22 @@ export default function AttemptItemWrapper({
   onSelect,
 }: AttemptItemWrapperProps) {
   const [randomizedAnswers, setRandomizedAnswers] = useState<Answer[]>([]);
-
   useEffect(() => {
+    // Check if answers array exists
     if (answers) {
-      const shuffled = [...answers].sort(() => Math.random() - 0.5);
+      // Create a copy of the answers array
+      const shuffled = [...answers];
+      
+      // Fisher-Yates shuffle - https://en.wikipedia.org/wiki/Fisher-Yates_shuffle
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      
+      // Update the state with the shuffled answers
       setRandomizedAnswers(shuffled);
     }
   }, [answers]);
-
   if (item.type === "CONTEXT") {
     return <div className="whitespace-pre-wrap">{item.content}</div>;
   } else if (item.type === "MCQ") {
@@ -37,7 +45,7 @@ export default function AttemptItemWrapper({
               <div
                 key={answer.id}
                 className="flex items-center justify-between"
-              >
+              > 
                 <span>{answer.content}</span>
                 <Checkbox
                   checked={selectedAnswerId === answer.id}

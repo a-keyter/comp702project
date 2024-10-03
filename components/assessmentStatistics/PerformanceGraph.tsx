@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  fetchOriginalQuestionStats,
+  fetchQuestionStats,
   QuestionStatistics,
 } from "@/lib/analysisUtils/assessmentStats";
 import React, { useState, useEffect } from "react";
@@ -24,7 +24,7 @@ function PerformanceGraph({ assessmentId }: { assessmentId: string }) {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const result = await fetchOriginalQuestionStats(assessmentId);
+        const result = await fetchQuestionStats(assessmentId);
         setData(result.questionStats);
       } catch (error) {
         console.error("Error fetching question stats:", error);

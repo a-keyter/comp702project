@@ -15,18 +15,15 @@ export default async function ProfilePage() {
   return (
     <div className="flex flex-col w-full max-w-4xl gap-y-4 py-4">
       <Card className="p-4 flex flex-col gap-y-4">
-      <div className="flex w-full justify-between px-1 items-center">
-        <h1 className="text-2xl font-bold">Your Profile</h1>
-        <div className="flex gap-x-4">  
-          <UpdateUserDialog user={user} />
-          <DeleteProfileDialog />
+        <div className="flex w-full justify-between px-1 items-center">
+          <h1 className="text-2xl font-bold">Your Profile</h1>
+          <div className="flex gap-x-4">
+            <UpdateUserDialog user={user} />
+            <DeleteProfileDialog />
+          </div>
         </div>
-      </div>
-      <UserDetails user={user} />
+        <UserDetails user={user} />
       </Card>
     </div>
   );
 }
-
-
-

@@ -21,7 +21,7 @@ export default function Home() {
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2 text-center lg:text-left">
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                    Revolutionize Teaching with Ambi-learn
+                    Revolutionise Teaching with Ambi-learn
                   </h1>
                   <p className="max-w-[600px] text-muted-foreground md:text-xl mx-auto lg:mx-0">
                     Ambi-learn&apos;s innovative MCQ platform delivers

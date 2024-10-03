@@ -7,8 +7,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { fetchAssessmentPerformanceData } from "@/lib/analysisUtils/createTeacherFeedback";
 import { Skeleton } from "../ui/skeleton";
+import { fetchAssessmentPerformanceData } from "@/lib/analysisUtils/assessmentPerformance";
 
 interface Question {
   questionId: string;

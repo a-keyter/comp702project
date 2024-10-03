@@ -11,8 +11,6 @@ async function AssessmentResultsPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="w-full max-w-4xl">
-      {!results && <div>no results found</div>}
-
       {results && (
         <ResultsDisplay
           submissionId={params.id}
@@ -34,3 +32,5 @@ async function AssessmentResultsPage({ params }: { params: { id: string } }) {
 }
 
 export default AssessmentResultsPage;
+
+

@@ -46,7 +46,6 @@ export async function getSubmissionResults(submissionId: string): Promise<Submis
                 },
               },
             },
-            createdBy: true,
           } 
         },
         responses: {
@@ -59,15 +58,19 @@ export async function getSubmissionResults(submissionId: string): Promise<Submis
       },
     });
 
+    // If the submission does not exist, return null
     if (!submission) {
       return null;
     }
 
+    // Check if the user is neither teaching the class of the assessment
+    // nor the submitter of the submission
     const isTeacher = submission.assessment.class.taughtBy.length > 0;
     const isSubmitter = submission.user.id === userId;
 
+    // If the user is not authorised to view the results, return null
     if (!isTeacher && !isSubmitter) {
-      console.error('User is not authorized to view these results');
+      console.error('User is not authorised to view these results');
       return null;
     }
 

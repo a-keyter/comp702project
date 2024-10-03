@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { getUserNotifications } from "@/lib/notificationUtils/getUserNotifications";
 import { clearUnreadNotifications } from "@/lib/notificationUtils/clearNotifications";
 import { NotificationType } from "@prisma/client";
-import NotificationItemWrapper from "../../../../components/notifications/NotificationItemWrapper";
+import NotificationItemWrapper from "@/components/notifications/NotificationItemWrapper";
 import LoadingSpinner from '@/components/LoadingSpinner';
 
 // Updated Notification interface

@@ -72,8 +72,10 @@ export async function getUserByNickname(nickname: string): Promise<User | null> 
       },
     });
 
+    // Check if the requested user is a member of classes taught by the current user
     if (user?.memberOfClasses.length === 0) {
-      return null;
+      // If user is not a member of any classes taught by the current user
+      return null; // Return null to trigger redirect to dashboard 
     }
 
     return user;

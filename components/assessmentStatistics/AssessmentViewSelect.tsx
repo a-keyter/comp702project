@@ -1,4 +1,4 @@
-import TeacherFeedback from "@/components/assessmentStatistics/GroupFeedback";
+import TeacherFeedback from "@/components/assessmentStatistics/TeacherFeedback";
 import HardestQuestions from "@/components/assessmentStatistics/HardestQuestions";
 import PerformanceGraph from "@/components/assessmentStatistics/PerformanceGraph";
 import {

@@ -35,12 +35,12 @@ export async function getClassById(
     });
 
     if (!classData) {
-      return null;
+      return null; // Return null to trigger redirect to dashboard if class doesn't exist.
     }
 
     // Check if the user is neither teaching nor a member of the class
     if (classData.taughtBy.length === 0 && classData.members.length === 0) {
-      return null;
+      return null; // Return null to trigger redirect to dashboard if user doesn't have access to class.
     }
 
     return {

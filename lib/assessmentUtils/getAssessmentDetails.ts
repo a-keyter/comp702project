@@ -55,8 +55,9 @@ export async function getAssessmentById(id: string) {
       return null;
     }
 
+    // Check if the user is neither teaching nor a member of the class of the assessment
     if (assessment.class.taughtBy.length === 0 && assessment.class.members.length === 0) {
-      return(null); // Redirect to dashboard if user doesn't have access to assessment.
+      return null; // Return null to trigger redirect to dashboard if user doesn't have access to assessment.
     }
 
     return {

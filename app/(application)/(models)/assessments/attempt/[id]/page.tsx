@@ -2,8 +2,6 @@ import AttemptAssessment from "@/components/assessmentAttempt/AttemptAssessment"
 import NoAccessRedirect from "@/components/redirect/NoAccess";
 import { getAssessmentById } from "@/lib/assessmentUtils/getAssessmentDetails";
 import { loadAssessmentItems } from "@/lib/assessmentUtils/getAssessmentItems";
-import { getCurrentUser } from "@/lib/userUtils/getUserDetails";
-import { redirect } from "next/navigation";
 
 async function AttemptAssessmentPage({ params }: { params: { id: string } }) {
   const assessmentData = await getAssessmentById(params.id);
@@ -13,17 +11,10 @@ async function AttemptAssessmentPage({ params }: { params: { id: string } }) {
   }
 
   if (assessmentData.status === "DRAFT") {
-    redirect("/dashboard")
+    return <NoAccessRedirect redirectTo="/dashboard" />;
   }
-
 
   const assessmentItems = await loadAssessmentItems(params.id);
-
-  const user = await getCurrentUser();
-
-  if (!user) {
-    return redirect("/onboard");
-  }
 
   return (
     <div className="w-full max-w-4xl">

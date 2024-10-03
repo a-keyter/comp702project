@@ -58,7 +58,7 @@ const CustomTooltip = ({ active, payload }: any) => {
         <p>
           Status:
           {data.submissionDate
-            ? ` Submitted on ${formatDate(new Date(data.submissionDate))}`
+            ? ` Submitted on ${formatDate(data.submissionDate)}`
             : " Not Submitted"}
         </p>
       </div>

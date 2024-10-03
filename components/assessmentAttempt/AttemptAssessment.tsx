@@ -64,7 +64,7 @@ function AttemptAssessment({
         throw new Error("Invalid response data received");
       }
   
-      // Step 3: Finalize submission
+      // Step 3: Finalise submission
       const finalResult = await finaliseSubmission(
         submissionId, 
         assessmentTitle, 
@@ -74,7 +74,7 @@ function AttemptAssessment({
         responsesResult.incorrectResponses
       );
       if (!finalResult.success) {
-        throw new Error(finalResult.error || "Failed to finalize submission");
+        throw new Error(finalResult.error || "Failed to finalise submission");
       }
       router.push(`/assessments/results/${submissionId}`);
       setLoading(false);

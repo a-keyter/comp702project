@@ -10,7 +10,7 @@ export interface QuestionStatistics {
   questionNumber: string;
 }
 
-export async function fetchOriginalQuestionStats(assessmentId: string) {
+export async function fetchQuestionStats(assessmentId: string) {
   try {
     const submissions = await prisma.submission.findMany({
       where: {

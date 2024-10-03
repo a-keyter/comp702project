@@ -44,7 +44,7 @@ export async function joinClassRequest(
         relevantClassId: classId,
         raisedById: userId,
         status: {
-          not: IssueStatus.REJECTED, // Assuming RESOLVED status is used for rejected requests
+          not: IssueStatus.REJECTED,
         },
       },
     });
@@ -57,7 +57,7 @@ export async function joinClassRequest(
       };
     }
 
-    // Create the issue
+    // Create the join class request issue
     const issue = await prisma.issue.create({
       data: {
         type: IssueType.CLASS_JOIN_REQUEST,

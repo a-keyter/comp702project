@@ -34,11 +34,17 @@ async function IndividualStudentPage({
     classId: c.id,
   }));
 
-  // Render the JSX
   return (
     <div className="flex flex-col w-full max-w-4xl gap-y-4">
       {/* Render student data */}
       <StudentData student={studentData} />
+
+      {/* Render assessment stats */}
+      <LateLoadStudentAssessmentStats
+        studentName={studentData.name}
+        studentNickname={studentData.nickname}
+        classes={classes}
+      />
 
       {/* Render class data table */}
       <SingleStudentClassDataTable
@@ -46,13 +52,6 @@ async function IndividualStudentPage({
         data={studentClassData}
         studentName={studentData?.name || ""}
         tableSize="small"
-      />
-
-      {/* Render assessment stats */}
-      <LateLoadStudentAssessmentStats
-        studentName={studentData.name}
-        studentNickname={studentData.nickname}
-        classes={classes}
       />
     </div>
   );

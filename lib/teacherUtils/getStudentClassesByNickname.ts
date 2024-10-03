@@ -13,11 +13,22 @@ export async function getStudentClassesByNickname(studentNickname: string) {
       members: {
         some: { nickname: studentNickname },
       },
-      taughtBy: {
-        some: {
-          id: userId,
+      OR: [
+        {
+          taughtBy: {
+            some: {
+              id: userId,
+            },
+          },
         },
-      },
+        {
+          members: {
+            some: {
+              id: userId,
+            },
+          },
+        },
+      ],
     },
   });
 
