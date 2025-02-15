@@ -6,6 +6,8 @@ This project implements an online assessment platform with bi-directional feedba
 
 It aims to provide personalised feedback to students on their performance and insights to teachers based on aggregate student performance.
 
+Demo is available at: https://comp702project.vercel.app/
+
 ## Features
 
 - User authentication for teachers and students
